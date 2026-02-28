@@ -1,9 +1,9 @@
 {
-  "_hash": "wf-h_YvdaHdvHmfWJ88X4IzZZX6JbnorHlbPs2XXNQk",
+  "_hash": "MDIA9VCKPxZOihtVB_QAtkHe4C2mlEqU3FbPRjGmxXg",
   "project": {
-    "rootDir": "C:/Users/hp/Documents/portfolio-ayodeji"
+    "rootDir": "/Users/mac/Documents/new-portfolio"
   },
   "versions": {
-    "nuxt": "3.20.2"
+    "nuxt": "3.13.0"
   }
 }

@@ -1,57 +1,176 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Kalnia:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties (Light / Dark) ── */
 @layer base {
+  :root {
+    --bg-base: #F5F5F0;
+    --bg-surface: #EAEAE5;
+    --bg-panel: #FFFFFF;
+    --txt-primary: #1A1918;
+    --txt-secondary: #5C5855;
+    --txt-muted: #9CA3AF;
+    --accent: #6B5D52;
+    --accent-dim: rgba(107, 93, 82, 0.1);
+    --line: #D1D1CB;
+  }
+
+  .dark {
+    --bg-base: #0A0A0A;
+    --bg-surface: #141414;
+    --bg-panel: #1A1A1A;
+    --txt-primary: #F0EDE8;
+    --txt-secondary: #A8A29E;
+    --txt-muted: #6B7280;
+    --accent: #C4B5A6;
+    --accent-dim: rgba(196, 181, 166, 0.1);
+    --line: #2A2A2A;
+  }
+
+  html {
+    scroll-behavior: auto;
+    /* Lenis handles this */
+  }
+
   body {
-    background-color: #171717;
-    color: white;
-    /* Prefer Poppins for a clean bold UI; fall back to system fonts */
-    font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background-color: var(--bg-base);
+    color: var(--txt-primary);
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.5s ease, color 0.5s ease;
   }
-  
-  /* Custom scrollbar with hot pink accent */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    @apply bg-dark-bg;
-  }
-  
-  /* Remove scrollbars completely across browsers */
-  html, body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
+
+  /* Hide scrollbar */
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   ::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--accent);
+    color: var(--bg-base);
+  }
 }
 
-@layer utilities {
-
-  /* Loading fact text styling */
-  .loading-fact {
-    font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    font-style: italic;
-    color: rgba(255, 255, 255, 0.7); /* Softer white for a more cinematic feel */
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+/* ── Grain Texture Overlay ── */
+@layer components {
+  .grain-overlay::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
   }
 
-
-  .glow-accent {
-    box-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
+  /* Glass Card */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
   }
-  
-  /* Smooth transitions for interactive elements */
+
+  .dark .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Architectural Grid Lines */
+  .architectural-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(90deg,
+        var(--line) 0px,
+        var(--line) 1px,
+        transparent 1px,
+        transparent calc(100% / 12));
+    opacity: 0.08;
+  }
+
+  /* Section Base */
+  .section-base {
+    @apply relative w-full min-h-screen px-6 md:px-24 py-24 md:py-32;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* Monospace Tag */
+  .mono-tag {
+    @apply font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-txt-muted;
+  }
+
+  /* Accent Divider */
+  .accent-divider {
+    @apply h-px w-16 md:w-24;
+    background-color: var(--accent);
+    opacity: 0.5;
+  }
+
+  /* Navigation Blur Bar */
+  .nav-blur {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(245, 245, 240, 0.8);
+  }
+
+  .dark .nav-blur {
+    background: rgba(10, 10, 10, 0.8);
+  }
+}
+
+/* ── Utility Animations ── */
+@layer utilities {
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-premium {
+    transition: all 0.5s cubic-bezier(0.15, 0.9, 0.25, 1);
+  }
+
+  /* Hover lift */
+  .hover-lift {
+    transition: transform 0.4s cubic-bezier(0.15, 0.9, 0.25, 1), box-shadow 0.4s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .hover-lift:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Image grayscale hover */
+  .img-hover-color {
+    filter: grayscale(100%);
+    transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.15, 0.9, 0.25, 1);
+  }
+
+  .img-hover-color:hover {
+    filter: grayscale(0%);
+    transform: scale(1.02);
   }
 }

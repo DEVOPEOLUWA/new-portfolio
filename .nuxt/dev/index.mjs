@@ -1,44 +1,43 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseStatus, setResponseHeader, send, getRequestHeaders, getRequestURL, getResponseHeader, setResponseHeaders, appendResponseHeader, removeResponseHeader, createError, getResponseStatus, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, readBody, getQuery as getQuery$1, getResponseStatusText } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/h3@1.15.4/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, getResponseStatus, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, getResponseStatusText } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/h3/dist/index.mjs';
-import { escapeHtml } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/@vue/shared/dist/shared.cjs.js';
-import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/ufo/dist/index.mjs';
-import process$1 from 'node:process';
-import { renderToString } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/vue/server-renderer/index.mjs';
-import { klona } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/defu/dist/defu.mjs';
-import destr, { destr as destr$1 } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/destr/dist/index.mjs';
-import { snakeCase } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/scule/dist/index.mjs';
-import { createHead as createHead$1, propsToString, renderSSRHead } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unhead/dist/server.mjs';
-import { stringify, uneval } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/devalue/index.js';
-import { isVNode, toValue, isRef } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/vue/index.mjs';
-import { DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unhead/dist/plugins.mjs';
-import { createHooks } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/ofetch/dist/node.mjs';
-import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/node-mock-http/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unstorage/drivers/fs.mjs';
-import { digest } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/ohash/dist/index.mjs';
-import { toRouteMatcher, createRouter } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/radix3/dist/index.mjs';
+import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/vue-bundle-renderer@2.2.0/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { stringify, uneval } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/devalue@5.6.1/node_modules/devalue/index.js';
+import destr from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/destr@2.0.5/node_modules/destr/dist/index.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/ufo@1.6.1/node_modules/ufo/dist/index.mjs';
+import { renderToString } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/vue@3.5.25/node_modules/vue/server-renderer/index.mjs';
+import { propsToString, renderSSRHead } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/@unhead+ssr@1.11.20/node_modules/@unhead/ssr/dist/index.mjs';
+import { createHooks } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/hookable@5.5.3/node_modules/hookable/dist/index.mjs';
+import { createFetch, Headers as Headers$1 } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/ofetch@1.5.1/node_modules/ofetch/dist/node.mjs';
+import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/node-mock-http@1.0.4/node_modules/node-mock-http/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/unstorage@1.17.3_db0@0.3.4_ioredis@5.8.2/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/unstorage@1.17.3_db0@0.3.4_ioredis@5.8.2/node_modules/unstorage/drivers/fs.mjs';
+import { digest } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/ohash@2.0.11/node_modules/ohash/dist/index.mjs';
+import { klona } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/klona@2.0.6/node_modules/klona/dist/index.mjs';
+import defu, { defuFn } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/defu@6.1.4/node_modules/defu/dist/defu.mjs';
+import { snakeCase } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/scule@1.3.0/node_modules/scule/dist/index.mjs';
+import { getContext } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/unctx@2.4.1/node_modules/unctx/dist/index.mjs';
+import { toRouteMatcher, createRouter } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/radix3@1.1.2/node_modules/radix3/dist/index.mjs';
 import { readFile } from 'node:fs/promises';
-import consola, { consola as consola$1 } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/consola/dist/index.mjs';
-import { ErrorParser } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/youch-core/build/index.js';
-import { Youch } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/youch/build/index.js';
-import { SourceMapConsumer } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/source-map/source-map.js';
+import consola, { consola as consola$1 } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/index.mjs';
+import { ErrorParser } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/youch-core@0.3.3/node_modules/youch-core/build/index.js';
+import { Youch } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/youch@4.1.0-beta.13/node_modules/youch/build/index.js';
+import { SourceMapConsumer } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/source-map@0.7.6/node_modules/source-map/source-map.js';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { getContext } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unctx/dist/index.mjs';
-import { captureRawStackTrace, parseRawStackTrace } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/errx/dist/index.js';
+import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/errx@0.1.0/node_modules/errx/dist/index.js';
+import { isVNode, unref, version } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/vue@3.5.25/node_modules/vue/index.mjs';
 import { promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname as dirname$1, resolve as resolve$1, isAbsolute } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/pathe/dist/index.mjs';
-import { walkResolver } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/unhead/dist/utils.mjs';
-import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'file://C:/Users/hp/Documents/portfolio-ayodeji/node_modules/ipx/dist/index.mjs';
+import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/pathe@1.1.2/node_modules/pathe/dist/index.mjs';
+import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/ipx@2.1.1_db0@0.3.4_ioredis@5.8.2/node_modules/ipx/dist/index.mjs';
+import { isAbsolute } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/pathe@2.0.3/node_modules/pathe/dist/index.mjs';
+import { createServerHead as createServerHead$1, CapoPlugin } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/unhead@1.11.20/node_modules/unhead/dist/index.mjs';
+import { defineHeadPlugin } from 'file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/@unhead+shared@1.11.20/node_modules/@unhead/shared/dist/index.mjs';
 
-const serverAssets = [{"baseName":"server","dir":"C:/Users/hp/Documents/portfolio-ayodeji/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"/Users/mac/Documents/new-portfolio/server/assets"}];
 
 const assets$1 = createStorage();
 
@@ -50,11 +49,11 @@ const storage = createStorage({});
 
 storage.mount('/assets', assets$1);
 
-storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/hp/Documents/portfolio-ayodeji","watchOptions":{"ignored":[null]}}));
-storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/hp/Documents/portfolio-ayodeji/server","watchOptions":{"ignored":[null]}}));
-storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:/Users/hp/Documents/portfolio-ayodeji/.nuxt"}));
-storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:/Users/hp/Documents/portfolio-ayodeji/.nuxt/cache"}));
-storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"C:/Users/hp/Documents/portfolio-ayodeji/.data/kv"}));
+storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/mac/Documents/new-portfolio"}));
+storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/mac/Documents/new-portfolio/server"}));
+storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/mac/Documents/new-portfolio/.nuxt"}));
+storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/mac/Documents/new-portfolio/.nuxt/cache"}));
+storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/Users/mac/Documents/new-portfolio/.data/kv"}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage, base) : storage;
@@ -655,7 +654,7 @@ const _inlineRuntimeConfig = {
     "alias": {},
     "fs": {
       "dir": [
-        "C:/Users/hp/Documents/portfolio-ayodeji/public"
+        "/Users/mac/Documents/new-portfolio/public"
       ]
     },
     "http": {
@@ -705,6 +704,11 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
     }
     return void 0;
   }
+});
+
+getContext("nitro-app", {
+  asyncContext: false,
+  AsyncLocalStorage: void 0
 });
 
 const config = useRuntimeConfig();
@@ -819,365 +823,55 @@ function hasReqHeader(event, name, includes) {
   const value = getRequestHeader(event, name);
   return value && typeof value === "string" && value.toLowerCase().includes(includes);
 }
-
-const iframeStorageBridge = (nonce) => (
-  /* js */
-  `
-(function() {
-  const memoryStore = {};
-
-  const NONCE = ${JSON.stringify(nonce)}
-  
-  const mockStorage = {
-    getItem: function(key) {
-      return memoryStore[key] !== undefined ? memoryStore[key] : null;
-    },
-    setItem: function(key, value) {
-      memoryStore[key] = String(value);
-      window.parent.postMessage({
-        type: 'storage-set',
-        key: key,
-        value: String(value),
-        nonce: NONCE
-      }, '*');
-    },
-    removeItem: function(key) {
-      delete memoryStore[key];
-      window.parent.postMessage({
-        type: 'storage-remove',
-        key: key,
-        nonce: NONCE
-      }, '*');
-    },
-    clear: function() {
-      for (const key in memoryStore) {
-        delete memoryStore[key];
-      }
-      window.parent.postMessage({
-        type: 'storage-clear',
-        nonce: NONCE
-      }, '*');
-    },
-    key: function(index) {
-      const keys = Object.keys(memoryStore);
-      return keys[index] !== undefined ? keys[index] : null;
-    },
-    get length() {
-      return Object.keys(memoryStore).length;
-    }
-  };
-  
-  try {
-    Object.defineProperty(window, 'localStorage', {
-      value: mockStorage,
-      writable: false,
-      configurable: true
-    });
-  } catch (e) {
-    window.localStorage = mockStorage;
-  }
-  
-  window.addEventListener('message', function(event) {
-    if (event.data.type === 'storage-sync-data' && event.data.nonce === NONCE) {
-      const data = event.data.data;
-      for (const key in data) {
-        if (Object.prototype.hasOwnProperty.call(data, key)) {
-          memoryStore[key] = data[key];
-        }
-      }
-      if (typeof window.initTheme === 'function') {
-        window.initTheme();
-      }
-      window.dispatchEvent(new Event('storage-ready'));
-    }
+function normalizeError(error, isDev) {
+  const cwd = typeof process.cwd === "function" ? process.cwd() : "/";
+  const stack = (error.unhandled || error.fatal) ? [] : (error.stack || "").split("\n").splice(1).filter((line) => line.includes("at ")).map((line) => {
+    const text = line.replace(cwd + "/", "./").replace("webpack:/", "").replace("file://", "").trim();
+    return {
+      text,
+      internal: line.includes("node_modules") && !line.includes(".cache") || line.includes("internal") || line.includes("new Promise")
+    };
   });
-  
-  window.parent.postMessage({ 
-    type: 'storage-sync-request',
-    nonce: NONCE
-  }, '*');
-})();
-`
-);
-const parentStorageBridge = (nonce) => (
-  /* js */
-  `
-(function() {
-  const host = document.querySelector('nuxt-error-overlay');
-  if (!host) return;
-  
-  // Wait for shadow root to be attached
-  const checkShadow = setInterval(function() {
-    if (host.shadowRoot) {
-      clearInterval(checkShadow);
-      const iframe = host.shadowRoot.getElementById('frame');
-      if (!iframe) return;
+  const statusCode = error.statusCode || 500;
+  const statusMessage = error.statusMessage ?? (statusCode === 404 ? "Not Found" : "");
+  const message = error.unhandled ? "internal server error" : error.message || error.toString();
+  return {
+    stack,
+    statusCode,
+    statusMessage,
+    message
+  };
+}
 
-      const NONCE = ${JSON.stringify(nonce)}
-      
-      window.addEventListener('message', function(event) {
-        if (!event.data || event.data.nonce !== NONCE) return;
-        
-        const data = event.data;
-        
-        if (data.type === 'storage-set') {
-          localStorage.setItem(data.key, data.value);
-        } else if (data.type === 'storage-remove') {
-          localStorage.removeItem(data.key);
-        } else if (data.type === 'storage-clear') {
-          localStorage.clear();
-        } else if (data.type === 'storage-sync-request') {
-          const allData = {};
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            allData[key] = localStorage.getItem(key);
-          }
-          iframe.contentWindow.postMessage({
-            type: 'storage-sync-data',
-            data: allData,
-            nonce: NONCE
-          }, '*');
-        }
-      });
-    }
-  }, 10);
-})();
-`
-);
-const errorCSS = (
-  /* css */
-  `
-:host {
-  --preview-width: 240px;
-  --preview-height: 180px;
-  --base-width: 1200px;
-  --base-height: 900px;
-  --z-base: 999999998;
-  all: initial;
-  display: contents;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-#frame {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  border: none;
-  z-index: var(--z-base);
-}
-#frame[inert] {
-  right: 5px;
-  bottom: 5px;
-  left: auto;
-  top: auto;
-  width: var(--base-width);
-  height: var(--base-height);
-  transform: scale(calc(240 / 1200));
-  transform-origin: bottom right;
-  overflow: hidden;
-  border-radius: calc(1200 * 8px / 240);
-}
-#preview {
-  position: fixed;
-  right: 5px;
-  bottom: 5px;
-  width: var(--preview-width);
-  height: var(--preview-height);
-  overflow: hidden;
-  border-radius: 8px;
-  pointer-events: none;
-  z-index: var(--z-base);
-  background: white;
-  display: none;
-}
-#frame:not([inert]) + #preview {
-  display: block;
-}
-#toggle {
-  position: fixed;
-  right: 5px;
-  bottom: 5px;
-  width: var(--preview-width);
-  height: var(--preview-height);
-  background: none;
-  border: 3px solid #00DC82;
-  border-radius: 8px;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s, box-shadow 0.2s;
-  z-index: calc(var(--z-base) + 1);
-}
-#toggle:hover,
-#toggle:focus {
-  opacity: 1;
-  box-shadow: 0 0 20px rgba(0, 220, 130, 0.6);
-}
-#toggle:focus-visible {
-  outline: 3px solid #00DC82;
-  outline-offset: 3px;
-  box-shadow: 0 0 24px rgba(0, 220, 130, 0.8);
-}
-@media (prefers-reduced-motion: reduce) {
-  #toggle {
-    transition: none;
+const errorHandler$0 = (async function errorhandler(error, event) {
+  const { stack, statusCode, statusMessage, message } = normalizeError(error);
+  const errorObject = {
+    url: event.path,
+    statusCode,
+    statusMessage,
+    message,
+    stack: statusCode !== 404 ? `<pre>${stack.map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n")}</pre>` : "",
+    // TODO: check and validate error.data for serialisation into query
+    data: error.data
+  };
+  if (error.unhandled || error.fatal) {
+    const tags = [
+      "[nuxt]",
+      "[request error]",
+      error.unhandled && "[unhandled]",
+      error.fatal && "[fatal]",
+      Number(errorObject.statusCode) !== 200 && `[${errorObject.statusCode}]`
+    ].filter(Boolean).join(" ");
+    console.error(tags, errorObject.message + "\n" + stack.map((l) => "  " + l.text).join("  \n"));
   }
-}
-`
-);
-function webComponentScript(base64HTML, startMinimized) {
-  return (
-    /* js */
-    `
-  (function() {
-    try {
-      const host = document.querySelector('nuxt-error-overlay');
-      if (!host) return;
-      
-      const shadow = host.attachShadow({ mode: 'open' });
-      
-      // Create elements
-      const style = document.createElement('style');
-      style.textContent = ${JSON.stringify(errorCSS)};
-      
-      const iframe = document.createElement('iframe');
-      iframe.id = 'frame';
-      iframe.src = 'data:text/html;base64,${base64HTML}';
-      iframe.title = 'Detailed error stack trace';
-      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-      
-      const preview = document.createElement('div');
-      preview.id = 'preview';
-      
-      const button = document.createElement('button');
-      button.id = 'toggle';
-      button.setAttribute('aria-expanded', 'true');
-      button.setAttribute('type', 'button');
-      button.innerHTML = '<span class="sr-only">Toggle detailed error view</span>';
-      
-      const liveRegion = document.createElement('div');
-      liveRegion.setAttribute('role', 'status');
-      liveRegion.setAttribute('aria-live', 'polite');
-      liveRegion.className = 'sr-only';
-      
-      // Update preview snapshot
-      function updatePreview() {
-        try {
-          let previewIframe = preview.querySelector('iframe');
-          if (!previewIframe) {
-            previewIframe = document.createElement('iframe');
-            previewIframe.style.cssText = 'width: 1200px; height: 900px; transform: scale(0.2); transform-origin: top left; border: none;';
-            previewIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-            preview.appendChild(previewIframe);
-          }
-          
-          const doctype = document.doctype ? '<!DOCTYPE ' + document.doctype.name + '>' : '';
-          const cleanedHTML = document.documentElement.outerHTML
-            .replace(/<nuxt-error-overlay[^>]*>.*?<\\/nuxt-error-overlay>/gs, '')
-            .replace(/<script[^>]*>.*?<\\/script>/gs, '');
-          
-          const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
-          iframeDoc.open();
-          iframeDoc.write(doctype + cleanedHTML);
-          iframeDoc.close();
-        } catch (error) {
-          console.error('Failed to update preview:', error);
-        }
-      }
-      
-      function toggleView() {
-        const isMinimized = iframe.hasAttribute('inert');
-        
-        if (isMinimized) {
-          updatePreview();
-          iframe.removeAttribute('inert');
-          button.setAttribute('aria-expanded', 'true');
-          liveRegion.textContent = 'Showing detailed error view';
-          setTimeout(function() {
-            try { iframe.contentWindow.focus(); } catch {}
-          }, 100);
-        } else {
-          iframe.setAttribute('inert', '');
-          button.setAttribute('aria-expanded', 'false');
-          liveRegion.textContent = 'Showing error page';
-          button.focus();
-        }
-      }
-      
-      button.onclick = toggleView;
-      
-      document.addEventListener('keydown', function(e) {
-        if ((e.key === 'Escape' || e.key === 'Esc') && !iframe.hasAttribute('inert')) {
-          toggleView();
-        }
-      });
-      
-      // Append to shadow DOM
-      shadow.appendChild(style);
-      shadow.appendChild(liveRegion);
-      shadow.appendChild(iframe);
-      shadow.appendChild(preview);
-      shadow.appendChild(button);
-      
-      if (${startMinimized}) {
-        iframe.setAttribute('inert', '');
-        button.setAttribute('aria-expanded', 'false');
-      }
-      
-      // Initialize preview
-      setTimeout(updatePreview, 100);
-      
-    } catch (error) {
-      console.error('Failed to initialize Nuxt error overlay:', error);
-    }
-  })();
-  `
-  );
-}
-function generateErrorOverlayHTML(html, options) {
-  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
-  const errorPage = html.replace("<head>", `<head><script>${iframeStorageBridge(nonce)}<\/script>`);
-  const base64HTML = Buffer.from(errorPage, "utf8").toString("base64");
-  return `
-    <script>${parentStorageBridge(nonce)}<\/script>
-    <nuxt-error-overlay></nuxt-error-overlay>
-    <script>${webComponentScript(base64HTML, options?.startMinimized ?? false)}<\/script>
-  `;
-}
-
-const errorHandler$0 = (async function errorhandler(error, event, { defaultHandler }) {
-  if (event.handled || isJsonRequest(event)) {
+  if (event.handled) {
     return;
   }
-  const defaultRes = await defaultHandler(error, event, { json: true });
-  const statusCode = error.statusCode || 500;
-  if (statusCode === 404 && defaultRes.status === 302) {
-    setResponseHeaders(event, defaultRes.headers);
-    setResponseStatus(event, defaultRes.status, defaultRes.statusText);
-    return send(event, JSON.stringify(defaultRes.body, null, 2));
+  setResponseStatus(event, errorObject.statusCode !== 200 && errorObject.statusCode || 500, errorObject.statusMessage);
+  if (isJsonRequest(event)) {
+    setResponseHeader(event, "Content-Type", "application/json");
+    return send(event, JSON.stringify(errorObject));
   }
-  if (typeof defaultRes.body !== "string" && Array.isArray(defaultRes.body.stack)) {
-    defaultRes.body.stack = defaultRes.body.stack.join("\n");
-  }
-  const errorObject = defaultRes.body;
-  const url = new URL(errorObject.url);
-  errorObject.url = withoutBase(url.pathname, useRuntimeConfig(event).app.baseURL) + url.search + url.hash;
-  errorObject.message ||= "Server Error";
-  errorObject.data ||= error.data;
-  errorObject.statusMessage ||= error.statusMessage;
-  delete defaultRes.headers["content-type"];
-  delete defaultRes.headers["content-security-policy"];
-  setResponseHeaders(event, defaultRes.headers);
   const reqHeaders = getRequestHeaders(event);
   const isRenderingError = event.path.startsWith("/__nuxt_error") || !!reqHeaders["x-nuxt-error"];
   const res = isRenderingError ? null : await useNitroApp().localFetch(
@@ -1187,30 +881,25 @@ const errorHandler$0 = (async function errorhandler(error, event, { defaultHandl
       redirect: "manual"
     }
   ).catch(() => null);
-  if (event.handled) {
-    return;
-  }
   if (!res) {
-    const { template } = await Promise.resolve().then(function () { return error500; });
+    const { template } = await Promise.resolve().then(function () { return errorDev; }) ;
     {
       errorObject.description = errorObject.message;
+    }
+    if (event.handled) {
+      return;
     }
     setResponseHeader(event, "Content-Type", "text/html;charset=UTF-8");
     return send(event, template(errorObject));
   }
   const html = await res.text();
+  if (event.handled) {
+    return;
+  }
   for (const [header, value] of res.headers.entries()) {
-    if (header === "set-cookie") {
-      appendResponseHeader(event, header, value);
-      continue;
-    }
     setResponseHeader(event, header, value);
   }
-  setResponseStatus(event, res.status && res.status !== 200 ? res.status : defaultRes.status, res.statusText || defaultRes.statusText);
-  if (!globalThis._importMeta_.test && typeof html === "string") {
-    const prettyResponse = await defaultHandler(error, event, { json: false });
-    return send(event, html.replace("</body>", `${generateErrorOverlayHTML(prettyResponse.body, { startMinimized: 300 <= statusCode && statusCode < 500 })}</body>`));
-  }
+  setResponseStatus(event, res.status && res.status !== 200 ? res.status : void 0, res.statusText);
   return send(event, html);
 });
 
@@ -1365,15 +1054,15 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _yJA_X26j1rT8aDyQK1aFC5qfG51rEnftShv6b3oN4 = (function(nitro) {
+const _apBOYyGhJM4agH8WU_lSwc3tTTSVbVIhGwFgFDjU6w = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script$1}<\/script>`);
   });
 });
 
-const rootDir = "C:/Users/hp/Documents/portfolio-ayodeji";
+const rootDir = "/Users/mac/Documents/new-portfolio";
 
-const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Frontend Engineer specializing in enterprise applications"}],"link":[{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600;700&display=swap"},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap"},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"Opeoluwa Ayodeji | Frontend Engineer"};
+const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Frontend Engineer crafting intuitive digital experiences with Vue, Nuxt, and modern web technologies."},{"name":"theme-color","content":"#F5F5F0"},{"property":"og:title","content":"Opeoluwa Ayodeji — Frontend Engineer"},{"property":"og:description","content":"Frontend Engineer crafting intuitive digital experiences with Vue, Nuxt, and modern web technologies."},{"property":"og:type","content":"website"}],"link":[{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Kalnia:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"}],"style":[{"innerHTML":"\n            body:not(.app-ready) { visibility: hidden; }\n            body.app-ready { visibility: visible; }\n          "}],"script":[{"innerHTML":"\n            (function() {\n              var mode = 'light';\n              try { mode = localStorage.getItem('nuxt-color-mode') || 'light'; } catch(e) {}\n              document.documentElement.style.backgroundColor = mode === 'dark' ? '#0A0A0A' : '#F5F5F0';\n              document.documentElement.className = mode;\n            })();\n          ","type":"text/javascript","tagPosition":"head"}],"noscript":[],"title":"Opeoluwa Ayodeji — Frontend Engineer","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -1390,7 +1079,7 @@ const devReducers = {
   URL: (data) => data instanceof URL ? data.toString() : void 0
 };
 const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _RDTzYmsIDHm29a_mWVN8BKCqDh6e3zrRZls6Jz6blmY = (nitroApp) => {
+const _OAFfz7TzVnW_PZdFQ4wPRaNgKum6ny3DLWh3qrTU6dA = (nitroApp) => {
   const handler = nitroApp.h3App.handler;
   nitroApp.h3App.handler = (event) => {
     return asyncContext.callAsync({ logs: [], event }, () => handler(event));
@@ -1441,8 +1130,7 @@ const _RDTzYmsIDHm29a_mWVN8BKCqDh6e3zrRZls6Jz6blmY = (nitroApp) => {
       return;
     }
     try {
-      const reducers = Object.assign(/* @__PURE__ */ Object.create(null), devReducers, ctx.event.context._payloadReducers);
-      htmlContext.bodyAppend.unshift(`<script type="application/json" data-nuxt-logs="${appId}">${stringify(ctx.logs, reducers)}<\/script>`);
+      htmlContext.bodyAppend.unshift(`<script type="application/json" data-nuxt-logs="${appId}">${stringify(ctx.logs, { ...devReducers, ...ctx.event.context._payloadReducers })}<\/script>`);
     } catch (e) {
       const shortError = e instanceof Error && "toString" in e ? ` Received \`${e.toString()}\`.` : "";
       console.warn(`[nuxt] Failed to stringify dev server logs.${shortError} You can define your own reducer/reviver for rich types following the instructions in https://nuxt.com/docs/api/composables/use-nuxt-app#payload.`);
@@ -1459,21 +1147,36 @@ function onConsoleLog(callback) {
   consola$1.wrapConsole();
 }
 
-const script = "\"use strict\";(()=>{const t=window,e=document.documentElement,c=[\"dark\",\"light\"],n=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"dark\";let i=n===\"system\"?u():n;const r=e.getAttribute(\"data-color-mode-forced\");r&&(i=r),l(i),t[\"__NUXT_COLOR_MODE__\"]={preference:n,value:i,getColorScheme:u,addColorScheme:l,removeColorScheme:d};function l(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.add(s):e.className+=\" \"+s,a&&e.setAttribute(\"data-\"+a,o)}function d(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.remove(s):e.className=e.className.replace(new RegExp(s,\"g\"),\"\"),a&&e.removeAttribute(\"data-\"+a)}function f(o){return t.matchMedia(\"(prefers-color-scheme\"+o+\")\")}function u(){if(t.matchMedia&&f(\"\").media!==\"not all\"){for(const o of c)if(f(\":\"+o).matches)return o}return\"dark\"}})();function getStorageValue(t,e){switch(t){case\"localStorage\":return window.localStorage.getItem(e);case\"sessionStorage\":return window.sessionStorage.getItem(e);case\"cookie\":return getCookie(e);default:return null}}function getCookie(t){const c=(\"; \"+window.document.cookie).split(\"; \"+t+\"=\");if(c.length===2)return c.pop()?.split(\";\").shift()}";
+const script = "\"use strict\";(()=>{const t=window,e=document.documentElement,c=[\"dark\",\"light\"],n=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"light\";let i=n===\"system\"?u():n;const r=e.getAttribute(\"data-color-mode-forced\");r&&(i=r),l(i),t[\"__NUXT_COLOR_MODE__\"]={preference:n,value:i,getColorScheme:u,addColorScheme:l,removeColorScheme:d};function l(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.add(s):e.className+=\" \"+s,a&&e.setAttribute(\"data-\"+a,o)}function d(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.remove(s):e.className=e.className.replace(new RegExp(s,\"g\"),\"\"),a&&e.removeAttribute(\"data-\"+a)}function f(o){return t.matchMedia(\"(prefers-color-scheme\"+o+\")\")}function u(){if(t.matchMedia&&f(\"\").media!==\"not all\"){for(const o of c)if(f(\":\"+o).matches)return o}return\"light\"}})();function getStorageValue(t,e){switch(t){case\"localStorage\":return window.localStorage.getItem(e);case\"sessionStorage\":return window.sessionStorage.getItem(e);case\"cookie\":return getCookie(e);default:return null}}function getCookie(t){const c=(\"; \"+window.document.cookie).split(\"; \"+t+\"=\");if(c.length===2)return c.pop()?.split(\";\").shift()}";
 
-const _ByC2HjNBJGD0j9KHhHvKisPhfHsTwgzYK9pkab3zygc = (function(nitro) {
+const _WMWrrB2UibW7cEmEAIlJyPW8By6okr5OgvYEs5UODxI = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
 });
 
 const plugins = [
-  _yJA_X26j1rT8aDyQK1aFC5qfG51rEnftShv6b3oN4,
-_RDTzYmsIDHm29a_mWVN8BKCqDh6e3zrRZls6Jz6blmY,
-_ByC2HjNBJGD0j9KHhHvKisPhfHsTwgzYK9pkab3zygc
+  _apBOYyGhJM4agH8WU_lSwc3tTTSVbVIhGwFgFDjU6w,
+_OAFfz7TzVnW_PZdFQ4wPRaNgKum6ny3DLWh3qrTU6dA,
+_WMWrrB2UibW7cEmEAIlJyPW8By6okr5OgvYEs5UODxI
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"136bf-tdeNFMqNf3bbqIRbmNQUToAfLrM\"",
+    "mtime": "2026-02-26T18:13:34.208Z",
+    "size": 79551,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"46d66-EEwyepx9Hov85zMPl9TeOmQe/jU\"",
+    "mtime": "2026-02-26T18:13:34.208Z",
+    "size": 290150,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -1498,7 +1201,7 @@ function getAsset (id) {
 
 const METHODS = /* @__PURE__ */ new Set(["HEAD", "GET"]);
 const EncodingMap = { gzip: ".gz", br: ".br" };
-const _lZiXaV = eventHandler((event) => {
+const _AVmwqS = eventHandler((event) => {
   if (event.method && !METHODS.has(event.method)) {
     return;
   }
@@ -1561,327 +1264,6 @@ const _lZiXaV = eventHandler((event) => {
   }
   return readAsset(id);
 });
-
-const VueResolver = (_, value) => {
-  return isRef(value) ? toValue(value) : value;
-};
-
-const headSymbol = "usehead";
-// @__NO_SIDE_EFFECTS__
-function vueInstall(head) {
-  const plugin = {
-    install(app) {
-      app.config.globalProperties.$unhead = head;
-      app.config.globalProperties.$head = head;
-      app.provide(headSymbol, head);
-    }
-  };
-  return plugin.install;
-}
-
-// @__NO_SIDE_EFFECTS__
-function resolveUnrefHeadInput(input) {
-  return walkResolver(input, VueResolver);
-}
-
-// @__NO_SIDE_EFFECTS__
-function createHead(options = {}) {
-  const head = createHead$1({
-    ...options,
-    propResolvers: [VueResolver]
-  });
-  head.install = vueInstall(head);
-  return head;
-}
-
-const unheadOptions = {
-  disableDefaults: true,
-  disableCapoSorting: false,
-  plugins: [DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin],
-};
-
-function createSSRContext(event) {
-  const ssrContext = {
-    url: event.path,
-    event,
-    runtimeConfig: useRuntimeConfig(event),
-    noSSR: event.context.nuxt?.noSSR || (false),
-    head: createHead(unheadOptions),
-    error: false,
-    nuxt: void 0,
-    /* NuxtApp */
-    payload: {},
-    _payloadReducers: /* @__PURE__ */ Object.create(null),
-    modules: /* @__PURE__ */ new Set()
-  };
-  return ssrContext;
-}
-function setSSRError(ssrContext, error) {
-  ssrContext.error = true;
-  ssrContext.payload = { error };
-  ssrContext.url = error.url;
-}
-
-function buildAssetsDir() {
-  return useRuntimeConfig().app.buildAssetsDir;
-}
-function buildAssetsURL(...path) {
-  return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
-}
-function publicAssetsURL(...path) {
-  const app = useRuntimeConfig().app;
-  const publicBase = app.cdnURL || app.baseURL;
-  return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
-}
-
-const APP_ROOT_OPEN_TAG = `<${appRootTag}${propsToString(appRootAttrs)}>`;
-const APP_ROOT_CLOSE_TAG = `</${appRootTag}>`;
-const getServerEntry = () => import('file://C:/Users/hp/Documents/portfolio-ayodeji/.nuxt//dist/server/server.mjs').then((r) => r.default || r);
-const getClientManifest = () => import('file://C:/Users/hp/Documents/portfolio-ayodeji/.nuxt//dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
-const getSSRRenderer = lazyCachedFunction(async () => {
-  const createSSRApp = await getServerEntry();
-  if (!createSSRApp) {
-    throw new Error("Server bundle is not available");
-  }
-  const precomputed = void 0 ;
-  const renderer = createRenderer(createSSRApp, {
-    precomputed,
-    manifest: await getClientManifest() ,
-    renderToString: renderToString$1,
-    buildAssetsURL
-  });
-  async function renderToString$1(input, context) {
-    const html = await renderToString(input, context);
-    if (process$1.env.NUXT_VITE_NODE_OPTIONS) {
-      renderer.rendererContext.updateManifest(await getClientManifest());
-    }
-    return APP_ROOT_OPEN_TAG + html + APP_ROOT_CLOSE_TAG;
-  }
-  return renderer;
-});
-const getSPARenderer = lazyCachedFunction(async () => {
-  const precomputed = void 0 ;
-  const spaTemplate = await Promise.resolve().then(function () { return _virtual__spaTemplate; }).then((r) => r.template).catch(() => "").then((r) => {
-    {
-      return APP_ROOT_OPEN_TAG + r + APP_ROOT_CLOSE_TAG;
-    }
-  });
-  const renderer = createRenderer(() => () => {
-  }, {
-    precomputed,
-    manifest: await getClientManifest() ,
-    renderToString: () => spaTemplate,
-    buildAssetsURL
-  });
-  const result = await renderer.renderToString({});
-  const renderToString = (ssrContext) => {
-    const config = useRuntimeConfig(ssrContext.event);
-    ssrContext.modules ||= /* @__PURE__ */ new Set();
-    ssrContext.payload.serverRendered = false;
-    ssrContext.config = {
-      public: config.public,
-      app: config.app
-    };
-    return Promise.resolve(result);
-  };
-  return {
-    rendererContext: renderer.rendererContext,
-    renderToString
-  };
-});
-function lazyCachedFunction(fn) {
-  let res = null;
-  return () => {
-    if (res === null) {
-      res = fn().catch((err) => {
-        res = null;
-        throw err;
-      });
-    }
-    return res;
-  };
-}
-function getRenderer(ssrContext) {
-  return ssrContext.noSSR ? getSPARenderer() : getSSRRenderer();
-}
-const getSSRStyles = lazyCachedFunction(() => Promise.resolve().then(function () { return styles$1; }).then((r) => r.default || r));
-
-async function renderInlineStyles(usedModules) {
-  const styleMap = await getSSRStyles();
-  const inlinedStyles = /* @__PURE__ */ new Set();
-  for (const mod of usedModules) {
-    if (mod in styleMap && styleMap[mod]) {
-      for (const style of await styleMap[mod]()) {
-        inlinedStyles.add(style);
-      }
-    }
-  }
-  return Array.from(inlinedStyles).map((style) => ({ innerHTML: style }));
-}
-
-const ROOT_NODE_REGEX = new RegExp(`^<${appRootTag}[^>]*>([\\s\\S]*)<\\/${appRootTag}>$`);
-function getServerComponentHTML(body) {
-  const match = body.match(ROOT_NODE_REGEX);
-  return match?.[1] || body;
-}
-const SSR_SLOT_TELEPORT_MARKER = /^uid=([^;]*);slot=(.*)$/;
-const SSR_CLIENT_TELEPORT_MARKER = /^uid=([^;]*);client=(.*)$/;
-const SSR_CLIENT_SLOT_MARKER = /^island-slot=([^;]*);(.*)$/;
-function getSlotIslandResponse(ssrContext) {
-  if (!ssrContext.islandContext || !Object.keys(ssrContext.islandContext.slots).length) {
-    return void 0;
-  }
-  const response = {};
-  for (const [name, slot] of Object.entries(ssrContext.islandContext.slots)) {
-    response[name] = {
-      ...slot,
-      fallback: ssrContext.teleports?.[`island-fallback=${name}`]
-    };
-  }
-  return response;
-}
-function getClientIslandResponse(ssrContext) {
-  if (!ssrContext.islandContext || !Object.keys(ssrContext.islandContext.components).length) {
-    return void 0;
-  }
-  const response = {};
-  for (const [clientUid, component] of Object.entries(ssrContext.islandContext.components)) {
-    const html = ssrContext.teleports?.[clientUid]?.replaceAll("<!--teleport start anchor-->", "") || "";
-    response[clientUid] = {
-      ...component,
-      html,
-      slots: getComponentSlotTeleport(clientUid, ssrContext.teleports ?? {})
-    };
-  }
-  return response;
-}
-function getComponentSlotTeleport(clientUid, teleports) {
-  const entries = Object.entries(teleports);
-  const slots = {};
-  for (const [key, value] of entries) {
-    const match = key.match(SSR_CLIENT_SLOT_MARKER);
-    if (match) {
-      const [, id, slot] = match;
-      if (!slot || clientUid !== id) {
-        continue;
-      }
-      slots[slot] = value;
-    }
-  }
-  return slots;
-}
-function replaceIslandTeleports(ssrContext, html) {
-  const { teleports, islandContext } = ssrContext;
-  if (islandContext || !teleports) {
-    return html;
-  }
-  for (const key in teleports) {
-    const matchClientComp = key.match(SSR_CLIENT_TELEPORT_MARKER);
-    if (matchClientComp) {
-      const [, uid, clientId] = matchClientComp;
-      if (!uid || !clientId) {
-        continue;
-      }
-      html = html.replace(new RegExp(` data-island-uid="${uid}" data-island-component="${clientId}"[^>]*>`), (full) => {
-        return full + teleports[key];
-      });
-      continue;
-    }
-    const matchSlot = key.match(SSR_SLOT_TELEPORT_MARKER);
-    if (matchSlot) {
-      const [, uid, slot] = matchSlot;
-      if (!uid || !slot) {
-        continue;
-      }
-      html = html.replace(new RegExp(` data-island-uid="${uid}" data-island-slot="${slot}"[^>]*>`), (full) => {
-        return full + teleports[key];
-      });
-    }
-  }
-  return html;
-}
-
-const ISLAND_SUFFIX_RE = /\.json(?:\?.*)?$/;
-const _SxA8c9 = defineEventHandler(async (event) => {
-  const nitroApp = useNitroApp();
-  setResponseHeaders(event, {
-    "content-type": "application/json;charset=utf-8",
-    "x-powered-by": "Nuxt"
-  });
-  const islandContext = await getIslandContext(event);
-  const ssrContext = {
-    ...createSSRContext(event),
-    islandContext,
-    noSSR: false,
-    url: islandContext.url
-  };
-  const renderer = await getSSRRenderer();
-  const renderResult = await renderer.renderToString(ssrContext).catch(async (err) => {
-    await ssrContext.nuxt?.hooks.callHook("app:error", err);
-    throw err;
-  });
-  if (ssrContext.payload?.error) {
-    throw ssrContext.payload.error;
-  }
-  const inlinedStyles = await renderInlineStyles(ssrContext.modules ?? []);
-  await ssrContext.nuxt?.hooks.callHook("app:rendered", { ssrContext, renderResult });
-  if (inlinedStyles.length) {
-    ssrContext.head.push({ style: inlinedStyles });
-  }
-  {
-    const { styles } = getRequestDependencies(ssrContext, renderer.rendererContext);
-    const link = [];
-    for (const resource of Object.values(styles)) {
-      if ("inline" in getQuery(resource.file)) {
-        continue;
-      }
-      if (resource.file.includes("scoped") && !resource.file.includes("pages/")) {
-        link.push({ rel: "stylesheet", href: renderer.rendererContext.buildAssetsURL(resource.file), crossorigin: "" });
-      }
-    }
-    if (link.length) {
-      ssrContext.head.push({ link }, { mode: "server" });
-    }
-  }
-  const islandHead = {};
-  for (const entry of ssrContext.head.entries.values()) {
-    for (const [key, value] of Object.entries(resolveUnrefHeadInput(entry.input))) {
-      const currentValue = islandHead[key];
-      if (Array.isArray(currentValue)) {
-        currentValue.push(...value);
-      }
-      islandHead[key] = value;
-    }
-  }
-  islandHead.link ||= [];
-  islandHead.style ||= [];
-  const islandResponse = {
-    id: islandContext.id,
-    head: islandHead,
-    html: getServerComponentHTML(renderResult.html),
-    components: getClientIslandResponse(ssrContext),
-    slots: getSlotIslandResponse(ssrContext)
-  };
-  await nitroApp.hooks.callHook("render:island", islandResponse, { event, islandContext });
-  return islandResponse;
-});
-async function getIslandContext(event) {
-  let url = event.path || "";
-  const componentParts = url.substring("/__nuxt_island".length + 1).replace(ISLAND_SUFFIX_RE, "").split("_");
-  const hashId = componentParts.length > 1 ? componentParts.pop() : void 0;
-  const componentName = componentParts.join("_");
-  const context = event.method === "GET" ? getQuery$1(event) : await readBody(event);
-  const ctx = {
-    url: "/",
-    ...context,
-    id: hashId,
-    name: componentName,
-    props: destr$1(context.props) || {},
-    slots: {},
-    components: {}
-  };
-  return ctx;
-}
 
 function defineRenderHandler(render) {
   const runtimeConfig = useRuntimeConfig();
@@ -1959,7 +1341,19 @@ async function runTask(name, {
   }
 }
 
-const _90MDPh = lazyEventHandler(() => {
+function buildAssetsDir() {
+  return useRuntimeConfig().app.buildAssetsDir;
+}
+function buildAssetsURL(...path) {
+  return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
+}
+function publicAssetsURL(...path) {
+  const app = useRuntimeConfig().app;
+  const publicBase = app.cdnURL || app.baseURL;
+  return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
+}
+
+const _wEnKee = lazyEventHandler(() => {
   const opts = useRuntimeConfig().ipx || {};
   const fsDir = opts?.fs?.dir ? (Array.isArray(opts.fs.dir) ? opts.fs.dir : [opts.fs.dir]).map((dir) => isAbsolute(dir) ? dir : fileURLToPath(new URL(dir, globalThis._importMeta_.url))) : void 0;
   const fsStorage = opts.fs?.dir ? ipxFSStorage({ ...opts.fs, dir: fsDir }) : void 0;
@@ -1977,14 +1371,13 @@ const _90MDPh = lazyEventHandler(() => {
   return useBase(opts.baseURL, ipxHandler);
 });
 
-const _lazy_We8bHW = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_y9wb6V = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '', handler: _lZiXaV, lazy: false, middleware: true, method: undefined },
-  { route: '/__nuxt_error', handler: _lazy_We8bHW, lazy: true, middleware: false, method: undefined },
-  { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/_ipx/**', handler: _90MDPh, lazy: false, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_We8bHW, lazy: true, middleware: false, method: undefined }
+  { route: '', handler: _AVmwqS, lazy: false, middleware: true, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_y9wb6V, lazy: true, middleware: false, method: undefined },
+  { route: '/_ipx/**', handler: _wEnKee, lazy: false, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_y9wb6V, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -2214,31 +1607,371 @@ async function shutdown() {
   parentPort?.postMessage({ event: "exit" });
 }
 
-const _messages = { "appName": "Nuxt", "version": "", "statusCode": 500, "statusMessage": "Server error", "description": "This page is temporarily unavailable." };
+const _messages = { "appName": "Nuxt", "version": "", "statusCode": 500, "statusMessage": "Server error", "description": "An error occurred in the application and the page could not be served. If you are the application owner, check your server logs for details.", "stack": "" };
 const template$1 = (messages) => {
   messages = { ..._messages, ...messages };
-  return '<!DOCTYPE html><html lang="en"><head><title>' + escapeHtml(messages.statusCode) + " - " + escapeHtml(messages.statusMessage) + " | " + escapeHtml(messages.appName) + `</title><meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport"><style>.spotlight{background:linear-gradient(45deg,#00dc82,#36e4da 50%,#0047e1);filter:blur(20vh)}*,:after,:before{border-color:var(--un-default-border-color,#e5e7eb);border-style:solid;border-width:0;box-sizing:border-box}:after,:before{--un-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-moz-tab-size:4;tab-size:4;-webkit-tap-highlight-color:transparent}body{line-height:inherit;margin:0}h1{font-size:inherit;font-weight:inherit}h1,p{margin:0}*,:after,:before{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 transparent;--un-ring-shadow:0 0 transparent;--un-shadow-inset: ;--un-shadow:0 0 transparent;--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgba(147,197,253,.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: }.fixed{position:fixed}.-bottom-1\\/2{bottom:-50%}.left-0{left:0}.right-0{right:0}.grid{display:grid}.mb-16{margin-bottom:4rem}.mb-8{margin-bottom:2rem}.h-1\\/2{height:50%}.max-w-520px{max-width:520px}.min-h-screen{min-height:100vh}.place-content-center{place-content:center}.overflow-hidden{overflow:hidden}.bg-white{--un-bg-opacity:1;background-color:rgb(255 255 255/var(--un-bg-opacity))}.px-8{padding-left:2rem;padding-right:2rem}.text-center{text-align:center}.text-8xl{font-size:6rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-black{--un-text-opacity:1;color:rgb(0 0 0/var(--un-text-opacity))}.font-light{font-weight:300}.font-medium{font-weight:500}.leading-tight{line-height:1.25}.font-sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}@media(prefers-color-scheme:dark){.dark\\:bg-black{--un-bg-opacity:1;background-color:rgb(0 0 0/var(--un-bg-opacity))}.dark\\:text-white{--un-text-opacity:1;color:rgb(255 255 255/var(--un-text-opacity))}}@media(min-width:640px){.sm\\:px-0{padding-left:0;padding-right:0}.sm\\:text-4xl{font-size:2.25rem;line-height:2.5rem}}</style><script>!function(){const e=document.createElement("link").relList;if(!(e&&e.supports&&e.supports("modulepreload"))){for(const e of document.querySelectorAll('link[rel="modulepreload"]'))r(e);new MutationObserver((e=>{for(const o of e)if("childList"===o.type)for(const e of o.addedNodes)"LINK"===e.tagName&&"modulepreload"===e.rel&&r(e)})).observe(document,{childList:!0,subtree:!0})}function r(e){if(e.ep)return;e.ep=!0;const r=function(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),"use-credentials"===e.crossOrigin?r.credentials="include":"anonymous"===e.crossOrigin?r.credentials="omit":r.credentials="same-origin",r}(e);fetch(e.href,r)}}();<\/script></head><body class="antialiased bg-white dark:bg-black dark:text-white font-sans grid min-h-screen overflow-hidden place-content-center text-black"><div class="-bottom-1/2 fixed h-1/2 left-0 right-0 spotlight"></div><div class="max-w-520px text-center"><h1 class="font-medium mb-8 sm:text-10xl text-8xl">` + escapeHtml(messages.statusCode) + '</h1><p class="font-light leading-tight mb-16 px-8 sm:px-0 sm:text-4xl text-xl">' + escapeHtml(messages.description) + "</p></div></body></html>";
+  return '<!DOCTYPE html><html lang="en"><head><title>' + messages.statusCode + " - " + messages.statusMessage + " | " + messages.appName + `</title><meta charset="utf-8"><meta content="width=device-width,initial-scale=1,minimum-scale=1" name="viewport"><style>.spotlight{background:linear-gradient(45deg, #00DC82 0%, #36E4DA 50%, #0047E1 100%);opacity:0.8;filter:blur(30vh);height:60vh;bottom:-40vh}*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:var(--un-default-border-color, #e5e7eb)}:before,:after{--un-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1{font-size:inherit;font-weight:inherit}pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}h1,p,pre{margin:0}*,:before,:after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / .5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: }.fixed{position:fixed}.left-0{left:0}.right-0{right:0}.z-10{z-index:10}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.h-auto{height:auto}.min-h-screen{min-height:100vh}.flex{display:flex}.flex-1{flex:1 1 0%}.flex-col{flex-direction:column}.overflow-y-auto{overflow-y:auto}.rounded-t-md{border-top-left-radius:.375rem;border-top-right-radius:.375rem}.bg-black\\/5{background-color:#0000000d}.bg-white{--un-bg-opacity:1;background-color:rgb(255 255 255 / var(--un-bg-opacity))}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.pt-14{padding-top:3.5rem}.text-6xl{font-size:3.75rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-black{--un-text-opacity:1;color:rgb(0 0 0 / var(--un-text-opacity))}.font-light{font-weight:300}.font-medium{font-weight:500}.leading-tight{line-height:1.25}.font-sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}@media (prefers-color-scheme: dark){.dark\\:bg-black{--un-bg-opacity:1;background-color:rgb(0 0 0 / var(--un-bg-opacity))}.dark\\:bg-white\\/10{background-color:#ffffff1a}.dark\\:text-white{--un-text-opacity:1;color:rgb(255 255 255 / var(--un-text-opacity))}}@media (min-width: 640px){.sm\\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\\:text-8xl{font-size:6rem;line-height:1}}</style><script>(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))i(e);new MutationObserver(e=>{for(const r of e)if(r.type==="childList")for(const o of r.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&i(o)}).observe(document,{childList:!0,subtree:!0});function s(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?r.credentials="include":e.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function i(e){if(e.ep)return;e.ep=!0;const r=s(e);fetch(e.href,r)}})();<\/script></head><body class="font-sans antialiased bg-white px-10 pt-14 dark:bg-black text-black dark:text-white min-h-screen flex flex-col"><div class="fixed left-0 right-0 spotlight"></div><h1 class="text-6xl sm:text-8xl font-medium mb-6">` + messages.statusCode + '</h1><p class="text-xl sm:text-2xl font-light mb-8 leading-tight">' + messages.description + '</p><div class="bg-white rounded-t-md bg-black/5 dark:bg-white/10 flex-1 overflow-y-auto h-auto"><pre class="text-xl font-light leading-tight z-10 p-8">' + messages.stack + "</pre></div></body></html>";
 };
 
-const error500 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const errorDev = /*#__PURE__*/Object.freeze({
   __proto__: null,
   template: template$1
-}, Symbol.toStringTag, { value: 'Module' }));
+});
 
-const template = "";
+const Vue3 = version[0] === "3";
 
-const _virtual__spaTemplate = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  template: template
-}, Symbol.toStringTag, { value: 'Module' }));
+function resolveUnref(r) {
+  return typeof r === "function" ? r() : unref(r);
+}
+function resolveUnrefHeadInput(ref) {
+  if (ref instanceof Promise || ref instanceof Date || ref instanceof RegExp)
+    return ref;
+  const root = resolveUnref(ref);
+  if (!ref || !root)
+    return root;
+  if (Array.isArray(root))
+    return root.map((r) => resolveUnrefHeadInput(r));
+  if (typeof root === "object") {
+    const resolved = {};
+    for (const k in root) {
+      if (!Object.prototype.hasOwnProperty.call(root, k)) {
+        continue;
+      }
+      if (k === "titleTemplate" || k[0] === "o" && k[1] === "n") {
+        resolved[k] = unref(root[k]);
+        continue;
+      }
+      resolved[k] = resolveUnrefHeadInput(root[k]);
+    }
+    return resolved;
+  }
+  return root;
+}
 
-const styles = {};
+const VueReactivityPlugin = defineHeadPlugin({
+  hooks: {
+    "entries:resolve": (ctx) => {
+      for (const entry of ctx.entries)
+        entry.resolvedInput = resolveUnrefHeadInput(entry.input);
+    }
+  }
+});
 
-const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: styles
-}, Symbol.toStringTag, { value: 'Module' }));
+const headSymbol = "usehead";
+function vueInstall(head) {
+  const plugin = {
+    install(app) {
+      if (Vue3) {
+        app.config.globalProperties.$unhead = head;
+        app.config.globalProperties.$head = head;
+        app.provide(headSymbol, head);
+      }
+    }
+  };
+  return plugin.install;
+}
+function createServerHead(options = {}) {
+  const head = createServerHead$1(options);
+  head.use(VueReactivityPlugin);
+  head.install = vueInstall(head);
+  return head;
+}
 
+const unheadPlugins = true ? [CapoPlugin({ track: true })] : [];
+
+const renderSSRHeadOptions = {"omitLineBreaks":false};
+
+globalThis.__buildAssetsURL = buildAssetsURL;
+globalThis.__publicAssetsURL = publicAssetsURL;
+const getClientManifest = () => import('file:///Users/mac/Documents/new-portfolio/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
+const getServerEntry = () => import('file:///Users/mac/Documents/new-portfolio/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
+const getSSRStyles = lazyCachedFunction(() => Promise.resolve().then(function () { return styles$1; }).then((r) => r.default || r));
+const getSSRRenderer = lazyCachedFunction(async () => {
+  const manifest = await getClientManifest();
+  if (!manifest) {
+    throw new Error("client.manifest is not available");
+  }
+  const createSSRApp = await getServerEntry();
+  if (!createSSRApp) {
+    throw new Error("Server bundle is not available");
+  }
+  const options = {
+    manifest,
+    renderToString: renderToString$1,
+    buildAssetsURL
+  };
+  const renderer = createRenderer(createSSRApp, options);
+  async function renderToString$1(input, context) {
+    const html = await renderToString(input, context);
+    if (process.env.NUXT_VITE_NODE_OPTIONS) {
+      renderer.rendererContext.updateManifest(await getClientManifest());
+    }
+    return APP_ROOT_OPEN_TAG + html + APP_ROOT_CLOSE_TAG;
+  }
+  return renderer;
+});
+const getSPARenderer = lazyCachedFunction(async () => {
+  const manifest = await getClientManifest();
+  const spaTemplate = await Promise.resolve().then(function () { return _virtual__spaTemplate; }).then((r) => r.template).catch(() => "").then((r) => APP_ROOT_OPEN_TAG + r + APP_ROOT_CLOSE_TAG);
+  const options = {
+    manifest,
+    renderToString: () => spaTemplate,
+    buildAssetsURL
+  };
+  const renderer = createRenderer(() => () => {
+  }, options);
+  const result = await renderer.renderToString({});
+  const renderToString = (ssrContext) => {
+    const config = useRuntimeConfig(ssrContext.event);
+    ssrContext.modules = ssrContext.modules || /* @__PURE__ */ new Set();
+    ssrContext.payload = {
+      serverRendered: false
+    };
+    ssrContext.config = {
+      public: config.public,
+      app: config.app
+    };
+    return Promise.resolve(result);
+  };
+  return {
+    rendererContext: renderer.rendererContext,
+    renderToString
+  };
+});
+const ISLAND_SUFFIX_RE = /\.json(\?.*)?$/;
+async function getIslandContext(event) {
+  let url = event.path || "";
+  const componentParts = url.substring("/__nuxt_island".length + 1).replace(ISLAND_SUFFIX_RE, "").split("_");
+  const hashId = componentParts.length > 1 ? componentParts.pop() : void 0;
+  const componentName = componentParts.join("_");
+  const context = event.method === "GET" ? getQuery$1(event) : await readBody(event);
+  const ctx = {
+    url: "/",
+    ...context,
+    id: hashId,
+    name: componentName,
+    props: destr(context.props) || {},
+    slots: {},
+    components: {}
+  };
+  return ctx;
+}
+const HAS_APP_TELEPORTS = !!(appTeleportAttrs.id);
+const APP_TELEPORT_OPEN_TAG = HAS_APP_TELEPORTS ? `<${appTeleportTag}${propsToString(appTeleportAttrs)}>` : "";
+const APP_TELEPORT_CLOSE_TAG = HAS_APP_TELEPORTS ? `</${appTeleportTag}>` : "";
+const APP_ROOT_OPEN_TAG = `<${appRootTag}${propsToString(appRootAttrs)}>`;
+const APP_ROOT_CLOSE_TAG = `</${appRootTag}>`;
+const PAYLOAD_URL_RE = /\/_payload.json(\?.*)?$/ ;
+const ROOT_NODE_REGEX = new RegExp(`^<${appRootTag}[^>]*>([\\s\\S]*)<\\/${appRootTag}>$`);
+const renderer = defineRenderHandler(async (event) => {
+  const nitroApp = useNitroApp();
+  const ssrError = event.path.startsWith("/__nuxt_error") ? getQuery$1(event) : null;
+  if (ssrError && ssrError.statusCode) {
+    ssrError.statusCode = Number.parseInt(ssrError.statusCode);
+  }
+  if (ssrError && !("__unenv__" in event.node.req)) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Page Not Found: /__nuxt_error"
+    });
+  }
+  const isRenderingIsland = event.path.startsWith("/__nuxt_island");
+  const islandContext = isRenderingIsland ? await getIslandContext(event) : void 0;
+  let url = ssrError?.url || islandContext?.url || event.path;
+  const isRenderingPayload = PAYLOAD_URL_RE.test(url) && !isRenderingIsland;
+  if (isRenderingPayload) {
+    url = url.substring(0, url.lastIndexOf("/")) || "/";
+    event._path = url;
+    event.node.req.url = url;
+  }
+  const routeOptions = getRouteRules(event);
+  const head = createServerHead({
+    plugins: unheadPlugins
+  });
+  const headEntryOptions = { mode: "server" };
+  if (!isRenderingIsland) {
+    head.push(appHead, headEntryOptions);
+  }
+  const ssrContext = {
+    url,
+    event,
+    runtimeConfig: useRuntimeConfig(event),
+    noSSR: event.context.nuxt?.noSSR || routeOptions.ssr === false && !isRenderingIsland || (false),
+    head,
+    error: !!ssrError,
+    nuxt: void 0,
+    /* NuxtApp */
+    payload: ssrError ? { error: ssrError } : {},
+    _payloadReducers: {},
+    modules: /* @__PURE__ */ new Set(),
+    islandContext
+  };
+  const renderer = ssrContext.noSSR ? await getSPARenderer() : await getSSRRenderer();
+  const _rendered = await renderer.renderToString(ssrContext).catch(async (error) => {
+    if (ssrContext._renderResponse && error.message === "skipping render") {
+      return {};
+    }
+    const _err = !ssrError && ssrContext.payload?.error || error;
+    await ssrContext.nuxt?.hooks.callHook("app:error", _err);
+    throw _err;
+  });
+  await ssrContext.nuxt?.hooks.callHook("app:rendered", { ssrContext, renderResult: _rendered });
+  if (ssrContext._renderResponse) {
+    return ssrContext._renderResponse;
+  }
+  if (ssrContext.payload?.error && !ssrError) {
+    throw ssrContext.payload.error;
+  }
+  if (isRenderingPayload) {
+    const response2 = renderPayloadResponse(ssrContext);
+    return response2;
+  }
+  const inlinedStyles = isRenderingIsland ? await renderInlineStyles(ssrContext.modules ?? []) : [];
+  const NO_SCRIPTS = routeOptions.experimentalNoScripts;
+  const { styles, scripts } = getRequestDependencies(ssrContext, renderer.rendererContext);
+  if (inlinedStyles.length) {
+    head.push({ style: inlinedStyles });
+  }
+  {
+    const link = [];
+    for (const style in styles) {
+      const resource = styles[style];
+      if ("inline" in getQuery(resource.file)) {
+        continue;
+      }
+      if (!isRenderingIsland || resource.file.includes("scoped") && !resource.file.includes("pages/")) {
+        link.push({ rel: "stylesheet", href: renderer.rendererContext.buildAssetsURL(resource.file) });
+      }
+    }
+    if (link.length) {
+      head.push({ link }, headEntryOptions);
+    }
+  }
+  if (!NO_SCRIPTS && !isRenderingIsland) {
+    head.push({
+      link: getPreloadLinks(ssrContext, renderer.rendererContext)
+    }, headEntryOptions);
+    head.push({
+      link: getPrefetchLinks(ssrContext, renderer.rendererContext)
+    }, headEntryOptions);
+    head.push({
+      script: renderPayloadJsonScript({ ssrContext, data: ssrContext.payload }) 
+    }, {
+      ...headEntryOptions,
+      // this should come before another end of body scripts
+      tagPosition: "bodyClose",
+      tagPriority: "high"
+    });
+  }
+  if (!routeOptions.experimentalNoScripts && !isRenderingIsland) {
+    head.push({
+      script: Object.values(scripts).map((resource) => ({
+        type: resource.module ? "module" : null,
+        src: renderer.rendererContext.buildAssetsURL(resource.file),
+        defer: resource.module ? null : true,
+        // if we are rendering script tag payloads that import an async payload
+        // we need to ensure this resolves before executing the Nuxt entry
+        tagPosition: "head",
+        crossorigin: ""
+      }))
+    }, headEntryOptions);
+  }
+  const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await renderSSRHead(head, renderSSRHeadOptions);
+  const htmlContext = {
+    island: isRenderingIsland,
+    htmlAttrs: htmlAttrs ? [htmlAttrs] : [],
+    head: normalizeChunks([headTags]),
+    bodyAttrs: bodyAttrs ? [bodyAttrs] : [],
+    bodyPrepend: normalizeChunks([bodyTagsOpen, ssrContext.teleports?.body]),
+    body: [
+      replaceIslandTeleports(ssrContext, _rendered.html) ,
+      APP_TELEPORT_OPEN_TAG + (HAS_APP_TELEPORTS ? joinTags([ssrContext.teleports?.[`#${appTeleportAttrs.id}`]]) : "") + APP_TELEPORT_CLOSE_TAG
+    ],
+    bodyAppend: [bodyTags]
+  };
+  await nitroApp.hooks.callHook("render:html", htmlContext, { event });
+  if (isRenderingIsland && islandContext) {
+    const islandHead = {};
+    for (const entry of head.headEntries()) {
+      for (const [key, value] of Object.entries(resolveUnrefHeadInput(entry.input))) {
+        const currentValue = islandHead[key];
+        if (Array.isArray(currentValue)) {
+          currentValue.push(...value);
+        }
+        islandHead[key] = value;
+      }
+    }
+    islandHead.link = islandHead.link || [];
+    islandHead.style = islandHead.style || [];
+    const islandResponse = {
+      id: islandContext.id,
+      head: islandHead,
+      html: getServerComponentHTML(htmlContext.body),
+      components: getClientIslandResponse(ssrContext),
+      slots: getSlotIslandResponse(ssrContext)
+    };
+    await nitroApp.hooks.callHook("render:island", islandResponse, { event, islandContext });
+    const response2 = {
+      body: JSON.stringify(islandResponse, null, 2),
+      statusCode: getResponseStatus(event),
+      statusMessage: getResponseStatusText(event),
+      headers: {
+        "content-type": "application/json;charset=utf-8",
+        "x-powered-by": "Nuxt"
+      }
+    };
+    return response2;
+  }
+  const response = {
+    body: renderHTMLDocument(htmlContext),
+    statusCode: getResponseStatus(event),
+    statusMessage: getResponseStatusText(event),
+    headers: {
+      "content-type": "text/html;charset=utf-8",
+      "x-powered-by": "Nuxt"
+    }
+  };
+  return response;
+});
+function lazyCachedFunction(fn) {
+  let res = null;
+  return () => {
+    if (res === null) {
+      res = fn().catch((err) => {
+        res = null;
+        throw err;
+      });
+    }
+    return res;
+  };
+}
+function normalizeChunks(chunks) {
+  return chunks.filter(Boolean).map((i) => i.trim());
+}
+function joinTags(tags) {
+  return tags.join("");
+}
+function joinAttrs(chunks) {
+  if (chunks.length === 0) {
+    return "";
+  }
+  return " " + chunks.join(" ");
+}
+function renderHTMLDocument(html) {
+  return `<!DOCTYPE html><html${joinAttrs(html.htmlAttrs)}><head>${joinTags(html.head)}</head><body${joinAttrs(html.bodyAttrs)}>${joinTags(html.bodyPrepend)}${joinTags(html.body)}${joinTags(html.bodyAppend)}</body></html>`;
+}
+async function renderInlineStyles(usedModules) {
+  const styleMap = await getSSRStyles();
+  const inlinedStyles = /* @__PURE__ */ new Set();
+  for (const mod of usedModules) {
+    if (mod in styleMap) {
+      for (const style of await styleMap[mod]()) {
+        inlinedStyles.add(style);
+      }
+    }
+  }
+  return Array.from(inlinedStyles).map((style) => ({ innerHTML: style }));
+}
 function renderPayloadResponse(ssrContext) {
   return {
     body: stringify(splitPayload(ssrContext).payload, ssrContext._payloadReducers) ,
@@ -2279,162 +2012,103 @@ function splitPayload(ssrContext) {
     payload: { data, prerenderedAt }
   };
 }
-
-const renderSSRHeadOptions = {"omitLineBreaks":false};
-
-globalThis.__buildAssetsURL = buildAssetsURL;
-globalThis.__publicAssetsURL = publicAssetsURL;
-const HAS_APP_TELEPORTS = !!(appTeleportAttrs.id);
-const APP_TELEPORT_OPEN_TAG = HAS_APP_TELEPORTS ? `<${appTeleportTag}${propsToString(appTeleportAttrs)}>` : "";
-const APP_TELEPORT_CLOSE_TAG = HAS_APP_TELEPORTS ? `</${appTeleportTag}>` : "";
-const PAYLOAD_URL_RE = /^[^?]*\/_payload.json(?:\?.*)?$/ ;
-const renderer = defineRenderHandler(async (event) => {
-  const nitroApp = useNitroApp();
-  const ssrError = event.path.startsWith("/__nuxt_error") ? getQuery$1(event) : null;
-  if (ssrError && !("__unenv__" in event.node.req)) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Page Not Found: /__nuxt_error"
-    });
+function getServerComponentHTML(body) {
+  const match = body[0].match(ROOT_NODE_REGEX);
+  return match ? match[1] : body[0];
+}
+const SSR_SLOT_TELEPORT_MARKER = /^uid=([^;]*);slot=(.*)$/;
+const SSR_CLIENT_TELEPORT_MARKER = /^uid=([^;]*);client=(.*)$/;
+const SSR_CLIENT_SLOT_MARKER = /^island-slot=[^;]*;(.*)$/;
+function getSlotIslandResponse(ssrContext) {
+  if (!ssrContext.islandContext || !Object.keys(ssrContext.islandContext.slots).length) {
+    return void 0;
   }
-  const ssrContext = createSSRContext(event);
-  const headEntryOptions = { mode: "server" };
-  ssrContext.head.push(appHead, headEntryOptions);
-  if (ssrError) {
-    ssrError.statusCode &&= Number.parseInt(ssrError.statusCode);
-    setSSRError(ssrContext, ssrError);
+  const response = {};
+  for (const slot in ssrContext.islandContext.slots) {
+    response[slot] = {
+      ...ssrContext.islandContext.slots[slot],
+      fallback: ssrContext.teleports?.[`island-fallback=${slot}`]
+    };
   }
-  const isRenderingPayload = PAYLOAD_URL_RE.test(ssrContext.url);
-  if (isRenderingPayload) {
-    const url = ssrContext.url.substring(0, ssrContext.url.lastIndexOf("/")) || "/";
-    ssrContext.url = url;
-    event._path = event.node.req.url = url;
+  return response;
+}
+function getClientIslandResponse(ssrContext) {
+  if (!ssrContext.islandContext || !Object.keys(ssrContext.islandContext.components).length) {
+    return void 0;
   }
-  const routeOptions = getRouteRules(event);
-  if (routeOptions.ssr === false) {
-    ssrContext.noSSR = true;
+  const response = {};
+  for (const clientUid in ssrContext.islandContext.components) {
+    const html = ssrContext.teleports?.[clientUid].replaceAll("<!--teleport start anchor-->", "") || "";
+    response[clientUid] = {
+      ...ssrContext.islandContext.components[clientUid],
+      html,
+      slots: getComponentSlotTeleport(ssrContext.teleports ?? {})
+    };
   }
-  const renderer = await getRenderer(ssrContext);
-  const _rendered = await renderer.renderToString(ssrContext).catch(async (error) => {
-    if (ssrContext._renderResponse && error.message === "skipping render") {
-      return {};
+  return response;
+}
+function getComponentSlotTeleport(teleports) {
+  const entries = Object.entries(teleports);
+  const slots = {};
+  for (const [key, value] of entries) {
+    const match = key.match(SSR_CLIENT_SLOT_MARKER);
+    if (match) {
+      const [, slot] = match;
+      if (!slot) {
+        continue;
+      }
+      slots[slot] = value;
     }
-    const _err = !ssrError && ssrContext.payload?.error || error;
-    await ssrContext.nuxt?.hooks.callHook("app:error", _err);
-    throw _err;
-  });
-  const inlinedStyles = [];
-  await ssrContext.nuxt?.hooks.callHook("app:rendered", { ssrContext, renderResult: _rendered });
-  if (ssrContext._renderResponse) {
-    return ssrContext._renderResponse;
   }
-  if (ssrContext.payload?.error && !ssrError) {
-    throw ssrContext.payload.error;
+  return slots;
+}
+function replaceIslandTeleports(ssrContext, html) {
+  const { teleports, islandContext } = ssrContext;
+  if (islandContext || !teleports) {
+    return html;
   }
-  if (isRenderingPayload) {
-    const response = renderPayloadResponse(ssrContext);
-    return response;
-  }
-  const NO_SCRIPTS = routeOptions.noScripts;
-  const { styles, scripts } = getRequestDependencies(ssrContext, renderer.rendererContext);
-  if (ssrContext._preloadManifest && !NO_SCRIPTS) {
-    ssrContext.head.push({
-      link: [
-        { rel: "preload", as: "fetch", fetchpriority: "low", crossorigin: "anonymous", href: buildAssetsURL(`builds/meta/${ssrContext.runtimeConfig.app.buildId}.json`) }
-      ]
-    }, { ...headEntryOptions, tagPriority: "low" });
-  }
-  if (inlinedStyles.length) {
-    ssrContext.head.push({ style: inlinedStyles });
-  }
-  const link = [];
-  for (const resource of Object.values(styles)) {
-    if ("inline" in getQuery(resource.file)) {
+  for (const key in teleports) {
+    const matchClientComp = key.match(SSR_CLIENT_TELEPORT_MARKER);
+    if (matchClientComp) {
+      const [, uid, clientId] = matchClientComp;
+      if (!uid || !clientId) {
+        continue;
+      }
+      html = html.replace(new RegExp(` data-island-uid="${uid}" data-island-component="${clientId}"[^>]*>`), (full) => {
+        return full + teleports[key];
+      });
       continue;
     }
-    link.push({ rel: "stylesheet", href: renderer.rendererContext.buildAssetsURL(resource.file), crossorigin: "" });
-  }
-  if (link.length) {
-    ssrContext.head.push({ link }, headEntryOptions);
-  }
-  if (!NO_SCRIPTS) {
-    ssrContext.head.push({
-      link: getPreloadLinks(ssrContext, renderer.rendererContext)
-    }, headEntryOptions);
-    ssrContext.head.push({
-      link: getPrefetchLinks(ssrContext, renderer.rendererContext)
-    }, headEntryOptions);
-    ssrContext.head.push({
-      script: renderPayloadJsonScript({ ssrContext, data: ssrContext.payload }) 
-    }, {
-      ...headEntryOptions,
-      // this should come before another end of body scripts
-      tagPosition: "bodyClose",
-      tagPriority: "high"
-    });
-  }
-  if (!routeOptions.noScripts) {
-    const tagPosition = "head";
-    ssrContext.head.push({
-      script: Object.values(scripts).map((resource) => ({
-        type: resource.module ? "module" : null,
-        src: renderer.rendererContext.buildAssetsURL(resource.file),
-        defer: resource.module ? null : true,
-        // if we are rendering script tag payloads that import an async payload
-        // we need to ensure this resolves before executing the Nuxt entry
-        tagPosition,
-        crossorigin: ""
-      }))
-    }, headEntryOptions);
-  }
-  const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await renderSSRHead(ssrContext.head, renderSSRHeadOptions);
-  const htmlContext = {
-    htmlAttrs: htmlAttrs ? [htmlAttrs] : [],
-    head: normalizeChunks([headTags]),
-    bodyAttrs: bodyAttrs ? [bodyAttrs] : [],
-    bodyPrepend: normalizeChunks([bodyTagsOpen, ssrContext.teleports?.body]),
-    body: [
-      replaceIslandTeleports(ssrContext, _rendered.html) ,
-      APP_TELEPORT_OPEN_TAG + (HAS_APP_TELEPORTS ? joinTags([ssrContext.teleports?.[`#${appTeleportAttrs.id}`]]) : "") + APP_TELEPORT_CLOSE_TAG
-    ],
-    bodyAppend: [bodyTags]
-  };
-  await nitroApp.hooks.callHook("render:html", htmlContext, { event });
-  return {
-    body: renderHTMLDocument(htmlContext),
-    statusCode: getResponseStatus(event),
-    statusMessage: getResponseStatusText(event),
-    headers: {
-      "content-type": "text/html;charset=utf-8",
-      "x-powered-by": "Nuxt"
-    }
-  };
-});
-function normalizeChunks(chunks) {
-  const result = [];
-  for (const _chunk of chunks) {
-    const chunk = _chunk?.trim();
-    if (chunk) {
-      result.push(chunk);
+    const matchSlot = key.match(SSR_SLOT_TELEPORT_MARKER);
+    if (matchSlot) {
+      const [, uid, slot] = matchSlot;
+      if (!uid || !slot) {
+        continue;
+      }
+      html = html.replace(new RegExp(` data-island-uid="${uid}" data-island-slot="${slot}"[^>]*>`), (full) => {
+        return full + teleports[key];
+      });
     }
   }
-  return result;
-}
-function joinTags(tags) {
-  return tags.join("");
-}
-function joinAttrs(chunks) {
-  if (chunks.length === 0) {
-    return "";
-  }
-  return " " + chunks.join(" ");
-}
-function renderHTMLDocument(html) {
-  return `<!DOCTYPE html><html${joinAttrs(html.htmlAttrs)}><head>${joinTags(html.head)}</head><body${joinAttrs(html.bodyAttrs)}>${joinTags(html.bodyPrepend)}${joinTags(html.body)}${joinTags(html.bodyAppend)}</body></html>`;
+  return html;
 }
 
-const renderer$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const renderer$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   default: renderer
-}, Symbol.toStringTag, { value: 'Module' }));
+});
+
+const styles = {};
+
+const styles$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: styles
+});
+
+const template = "";
+
+const _virtual__spaTemplate = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  template: template
+});
 //# sourceMappingURL=index.mjs.map
