@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Loading Intro -->
+    <!-- Loading Intro — only on first visit per session -->
     <LoadingIntro v-if="loading" @finished="onLoadingFinished" />
 
     <!-- Main Content -->
@@ -23,31 +23,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useLenis } from '~/composables/useLenis'
 
 const { initLenis, destroy } = useLenis()
 
-const loading = ref(true)
+const LOADER_KEY = 'portfolio_intro_shown'
+
+const loading = ref(false)
 const contentVisible = ref(false)
 const navVisible = ref(false)
 const heroRevealed = ref(false)
 
-const onLoadingFinished = () => {
+const skipLoader = () => {
   loading.value = false
   contentVisible.value = true
-
   nextTick(() => {
     initLenis()
+    setTimeout(() => { navVisible.value = true }, 50)
+    setTimeout(() => { heroRevealed.value = true }, 100)
+  })
+}
 
-    // Nav and hero reveal almost immediately — content animations handle the visual entrance
-    setTimeout(() => {
-      navVisible.value = true
-    }, 50)
+onMounted(() => {
+  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(LOADER_KEY)) {
+    // Already seen this session — skip loader
+    skipLoader()
+  } else {
+    // First visit — show loader
+    loading.value = true
+  }
+})
 
-    setTimeout(() => {
-      heroRevealed.value = true
-    }, 100)
+const onLoadingFinished = () => {
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.setItem(LOADER_KEY, '1')
+  }
+  loading.value = false
+  contentVisible.value = true
+  nextTick(() => {
+    initLenis()
+    setTimeout(() => { navVisible.value = true }, 50)
+    setTimeout(() => { heroRevealed.value = true }, 100)
   })
 }
 
