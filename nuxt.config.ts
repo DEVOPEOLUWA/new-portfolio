@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "Opeoluwa Ayodeji — Frontend Engineer",
+      title: "Opeoluwa Ayodeji — rachycodes | Frontend Engineer",
       htmlAttrs: { lang: "en" },
       meta: [
         { charset: "utf-8" },

@@ -20,6 +20,8 @@
         >
           "Have a project in mind, or just want to talk engineering?"
         </p>
+        <!-- rachycodes handle -->
+        <p style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--txt-primary);opacity:0.4;margin-top:12px;">@rachycodes</p>
 
         <!-- Large typographic word -->
         <div class="contact-word-wrap">
@@ -65,7 +67,7 @@
     <div class="footer-bar">
       <div class="footer-rule" />
       <div class="footer-inner">
-        <span class="footer-text">© 2025 Opeoluwa Ayodeji</span>
+        <span class="footer-text">© 2025 Opeoluwa Ayodeji · rachycodes</span>
         <span class="footer-text hidden md:block">Design &amp; Engineering by O.A</span>
         <button class="footer-text footer-top-btn" @click="scrollToTop">BACK TO TOP ↑</button>
       </div>

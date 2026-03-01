@@ -323,7 +323,7 @@ onUnmounted(() => {
 .mc-visible .mc-img  { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0% 0); }
 
 /* Child typography */
-.mc-num  { font-family:'Kalnia',serif; font-size:64px; font-weight:200; color:var(--txt-primary); line-height:1; margin-bottom:-24px; }
+.mc-num  { font-family:'Kalnia',serif; font-size:64px; font-weight:200; color:var(--txt-primary); line-height:1; margin-bottom:-8px; }
 .mc-name { font-family:'Kalnia',serif; font-size:clamp(28px,7vw,40px); font-weight:500; color:var(--txt-primary); line-height:1.1; }
 .mc-desc { font-family:'Manrope',sans-serif; font-weight:300; font-size:15px; color:var(--txt-secondary); line-height:1.65; }
 .mc-cta  { font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:var(--txt-primary); text-decoration:none; }

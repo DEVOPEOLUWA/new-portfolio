@@ -30,6 +30,11 @@
         <div ref="tagRef" class="overflow-hidden">
           <span ref="roleTextRef" class="mono-tag block translate-y-full">{ <span ref="roleInnerRef">FRONTEND ENGINEER</span> }</span>
         </div>
+        <!-- rachycodes handle -->
+        <p
+          ref="handleRef"
+          style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--txt-primary);opacity:0;margin-top:-4px;"
+        >@rachycodes</p>
 
         <!-- Main Heading -->
         <h1 class="font-display text-[clamp(2.5rem,8vw,8rem)] leading-[0.9] tracking-tight">
@@ -139,6 +144,7 @@ const metricsRef = ref<HTMLElement | null>(null)
 // ── Role tag refs ──
 const roleTextRef = ref<HTMLElement | null>(null)
 const roleInnerRef = ref<HTMLElement | null>(null)
+const handleRef = ref<HTMLElement | null>(null)
 
 // ── State ──
 const sceneReady = ref(false)
@@ -270,6 +276,9 @@ const runReveal = () => {
 
   // Subtitle
   tl.to(subtitleRef.value, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.75)
+
+  // Handle (@rachycodes)
+  tl.to(handleRef.value, { opacity: 0.45, duration: 0.5, ease: 'power2.out' }, 0.55)
 
   // CTA
   tl.to(ctaRef.value, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.9)
