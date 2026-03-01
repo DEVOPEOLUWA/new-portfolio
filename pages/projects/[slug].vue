@@ -56,31 +56,44 @@
             letter-spacing: -0.02em;
           "
         >{{ project.name }}</h1>
+
+        <!-- Team / role strip -->
+        <div class="flex items-center flex-wrap mt-6" style="gap: 0;">
+          <span
+            v-for="(item, idx) in project.strip"
+            :key="idx"
+            class="flex items-center"
+          >
+            <span
+              style="
+                font-family: 'Space Mono', monospace;
+                font-size: 11px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: rgba(255,255,255,0.5);
+                white-space: nowrap;
+              "
+            >{{ item }}</span>
+            <span
+              v-if="idx < project.strip.length - 1"
+              style="
+                display: inline-block;
+                width: 1px;
+                height: 12px;
+                background: rgba(255,255,255,0.25);
+                margin: 0 16px;
+                flex-shrink: 0;
+              "
+            />
+          </span>
+        </div>
       </div>
 
-      <!-- Tags (right-aligned, below title) -->
-      <div ref="heroTagsRef" class="flex flex-wrap gap-2 mt-8 pb-12" style="opacity: 0;">
-        <span
-          v-for="tag in project.tags"
-          :key="tag"
-          style="
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.55);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 4px;
-            padding: 4px 12px;
-          "
-        >{{ tag }}</span>
-      </div>
-
-      <!-- Mockup image — in-flow, full width, sits at bottom of hero zone -->
+      <!-- Mockup image — in-flow, full width -->
       <div
         ref="heroImgRef"
         class="flex justify-center"
-        style="opacity: 0; transform: translateY(-40px);"
+        style="opacity: 0; transform: translateY(-40px); margin-top: 40px;"
       >
         <img
           :src="project.image"
@@ -100,21 +113,21 @@
     </section>
 
     <!-- ═══ ZONE 2 — Stats bar ═══ -->
-    <section style="background: #141414; width: 100%;">
+    <section style="background: var(--bg-surface); width: 100%;">
       <div class="grid grid-cols-2 md:grid-cols-4">
         <div
           v-for="(stat, i) in project.stats"
           :key="i"
           :ref="(el: any) => { if (el) statRefs[i] = el as HTMLElement }"
           class="flex flex-col justify-center px-10 py-14 border-r last:border-r-0"
-          style="border-color: rgba(255,255,255,0.05); opacity: 0; transform: translateY(20px);"
+          style="border-color: var(--line); opacity: 0; transform: translateY(20px);"
         >
           <span
             style="
               font-family: 'Kalnia', Georgia, serif;
               font-size: clamp(36px, 5vw, 64px);
               font-weight: 600;
-              color: #f0ede8;
+              color: var(--txt-primary);
               line-height: 1;
               display: block;
             "
@@ -125,7 +138,7 @@
               font-size: 10px;
               letter-spacing: 0.2em;
               text-transform: uppercase;
-              color: rgba(255,255,255,0.3);
+              color: var(--txt-secondary);
               margin-top: 8px;
               display: block;
             "
@@ -138,49 +151,29 @@
     <section
       ref="zone3Ref"
       class="w-full grid grid-cols-1 md:grid-cols-2"
-      :style="{ background: isDark ? '#111111' : '#ffffff', transition: 'background-color 0.4s ease' }"
-      style="opacity: 0;"
+      style="opacity: 0; background: var(--bg-base); transition: background-color 0.4s ease;"
     >
       <div
         class="px-12 md:px-20 py-20 md:py-28 border-r"
-        :style="{ borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }"
+        style="border-color: var(--line);"
       >
         <p
-          style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 32px;"
-          :style="{ color: isDark ? 'rgba(240,237,232,0.35)' : 'rgba(26,25,24,0.35)' }"
+          style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 32px; color: var(--txt-secondary);"
         >The Challenge</p>
         <p
-          style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(18px, 1.8vw, 24px); line-height: 1.6;"
-          :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
+          style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(18px, 1.8vw, 24px); line-height: 1.6; color: var(--txt-primary);"
         >{{ project.challenge }}</p>
       </div>
       <div class="px-12 md:px-20 py-20 md:py-28">
         <p
-          style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 32px;"
-          :style="{ color: isDark ? 'rgba(240,237,232,0.35)' : 'rgba(26,25,24,0.35)' }"
+          style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 32px; color: var(--txt-secondary);"
         >My Role</p>
         <p
-          style="font-family: 'Manrope', sans-serif; font-size: clamp(15px, 1.4vw, 18px); font-weight: 300; line-height: 1.7;"
-          :style="{ color: isDark ? 'rgba(240,237,232,0.75)' : 'rgba(26,25,24,0.7)' }"
+          style="font-family: 'Manrope', sans-serif; font-size: clamp(15px, 1.4vw, 18px); font-weight: 300; line-height: 1.7; color: var(--txt-secondary);"
         >{{ project.role }}</p>
       </div>
     </section>
 
-    <!-- ═══ ZONE 4 — Full mockup showcase ═══ -->
-    <section class="w-full px-8 md:px-20 py-24 md:py-32 flex flex-col items-center" style="background: #141414;">
-      <div class="w-full max-w-5xl">
-        <img
-          :src="project.image"
-          :alt="project.name"
-          class="w-full rounded-xl"
-          style="box-shadow: 0 40px 100px rgba(0,0,0,0.5); display: block;"
-        />
-        <p
-          class="mt-6 text-center"
-          style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25);"
-        >{{ project.name }} — Application Interface</p>
-      </div>
-    </section>
 
     <!-- ═══ ZONE 5 — Project navigation footer ═══ -->
     <footer
@@ -265,7 +258,6 @@ const router = useRouter()
 const overlayTopRef = ref<HTMLElement | null>(null)
 const overlayBotRef = ref<HTMLElement | null>(null)
 const heroTextRef = ref<HTMLElement | null>(null)
-const heroTagsRef = ref<HTMLElement | null>(null)
 const heroImgRef = ref<HTMLElement | null>(null)
 const zone3Ref = ref<HTMLElement | null>(null)
 const statRefs = ref<HTMLElement[]>([])
@@ -279,14 +271,15 @@ const allProjects = [
     image: '/images/ndic.png',
     tags: ['Angular 18', 'Enterprise', 'WebSockets'],
     brandColor: '#1a1f6e',
+    strip: ['Team of 7–10', 'Frontend Developer', 'Collaborative Build'],
     stats: [
       { value: '20M+', label: 'Depositor Records', animValue: ref('20M+') },
       { value: '6', label: 'Core Modules Built', animValue: ref('6') },
       { value: '60%', label: 'Coordination Time Reduced', animValue: ref('60%') },
       { value: '99.9%', label: 'Upload Success Rate', animValue: ref('99.9%') },
     ],
-    challenge: 'NDIC needed to replace entirely paper-based bank liquidation workflows with a digital system capable of managing depositor records at scale across multiple closed banks and branches simultaneously.',
-    role: 'I led frontend delivery across 6 major modules in Angular 18, built the real-time WebSockets collaboration layer, implemented resumable 2GB+ multipart uploads to AWS S3, and conducted the frontend security audit.',
+    challenge: "NDIC needed to move entirely away from semi-electronic, Excel-based data capture for its Claims Resolution department. The system had to support field data collection on mobile devices, real-time upload to a central server, and seamless integration with downstream reporting systems — all while maintaining strict data integrity across 20M+ depositor records.",
+    role: "As part of a cross-functional team of engineers and backend developers, I owned the frontend architecture for the system's most complex modules. I built the real-time background task tracking system using SSE with an HTTP polling fallback — handling inconsistent server event implementations across browsers. I engineered the dynamic filter system with JSON-path querying into embedded database columns, built runtime schema-aware table and header generation from live data shapes, and implemented the core set-off matching logic that nets depositor credit balances against risk assets. I also built the cross-cutting permission guard system with feature-level and action-level access control.",
   },
   {
     slug: 'nsia',
@@ -295,14 +288,15 @@ const allProjects = [
     image: '/images/nsia.png',
     tags: ['Vue.js', 'Government', 'Frontend Lead'],
     brandColor: '#1a4a2e',
+    strip: ['Team of 4–6', 'Sole Frontend Engineer', 'Collaborative Build'],
     stats: [
       { value: '100+', label: 'Staff Users', animValue: ref('100+') },
       { value: 'Full', label: 'Procurement Lifecycle', animValue: ref('Full') },
       { value: '2', label: 'User Role Types', animValue: ref('2') },
       { value: '7+', label: 'Regulatory Systems', animValue: ref('7+') },
     ],
-    challenge: 'NSIA required a vendor management platform to handle the full government procurement lifecycle — from planning through bid evaluation, contract award, and performance tracking — across multiple departments.',
-    role: 'I delivered the frontend procurement and vendor-facing interfaces, implemented server-side pagination that improved data processing speed by 40%, and set up CI/CD pipelines that cut deployment time by 70%.',
+    challenge: "NSIA needed a single platform to manage the full procurement lifecycle — from annual planning and vendor registration through bid evaluation, contract award, and performance tracking — across multiple internal departments with distinct workflows and approval chains.",
+    role: "As the sole frontend engineer on a 4–6 person team, I was responsible for the entire client-side delivery of the platform. I built the CI/CD pipeline infrastructure that reduced deployment time by 70%, implemented server-side pagination and optimized API integration that improved data processing speed by 40%, and delivered the real-time notification system across both the admin and vendor-facing portals. I also contributed to the records migration module that brought legacy vendor data into the new system.",
   },
   {
     slug: 'ncc',
@@ -311,14 +305,15 @@ const allProjects = [
     image: '/images/licensing.png',
     tags: ['Angular', 'Regulatory', 'UX Engineering'],
     brandColor: '#2d2d8f',
+    strip: ['Team of 2–3', 'Frontend Developer', 'Collaborative Build'],
     stats: [
       { value: '6', label: 'Step Licensing Flow', animValue: ref('6') },
       { value: '3+', label: 'Licence Categories', animValue: ref('3+') },
       { value: '1000', label: 'Active Users', animValue: ref('1000') },
       { value: '40%', label: 'Data Processing Improvement', animValue: ref('40%') },
     ],
-    challenge: 'NCC needed a digital licensing platform to replace manual processes for telecom operators applying for, renewing, and surrendering licences — with complex multi-step form flows and document verification.',
-    role: 'I built the multi-step licensing application flows, implemented the document upload and verification interfaces, and delivered the contractor-facing dashboard used by licensed operators across Nigeria.',
+    challenge: "NCC required a platform serving two completely separate user personas — licensees applying for telecoms licences and internal NCC evaluators — from a single Angular build. The core complexity was orchestrating heavily stateful, multi-step regulated licensing processes with dynamic form and workflow configuration driven by admin-managed data, while maintaining session resilience through external payment redirects.",
+    role: "Working in a small team of 2–3 engineers, I handled all frontend complexity on both the applicant and evaluator portals. I architected the dual-portal authentication and role-based routing system separating applicant and evaluator experiences within a shared codebase. I built the dynamic questionnaire and form builder engine — a runtime-configurable system allowing NCC administrators to create and version application structures without code changes. I also implemented the document management system with conditional validation per licence type, and the session persistence layer that survives external payment redirects and restores full application state on return.",
   },
 ]
 
@@ -329,7 +324,7 @@ const prevProject = computed(() => allProjects[(currentIndex.value - 1 + allProj
 const nextProject = computed(() => allProjects[(currentIndex.value + 1) % allProjects.length])
 
 function goBack() {
-  router.push('/')
+  router.push('/#featured-works')
 }
 
 // SEO
@@ -359,13 +354,6 @@ onMounted(() => {
     duration: 0.7,
     ease: 'power3.out',
   }, '-=0.3')
-
-  // — Tags fade in —
-  tl.to(heroTagsRef.value, {
-    opacity: 1,
-    duration: 0.5,
-    ease: 'power2.out',
-  }, '-=0.4')
 
   // — Mockup image drops in —
   tl.to(heroImgRef.value, {

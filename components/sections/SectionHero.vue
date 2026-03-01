@@ -46,23 +46,28 @@
         <div ref="dividerRef" class="h-px bg-accent origin-left scale-x-0 w-24 md:w-32" />
 
         <!-- Subtitle -->
-        <p ref="subtitleRef" class="font-sans text-base md:text-lg lg:text-xl text-txt-secondary max-w-xl leading-relaxed opacity-0 translate-y-6">
-          From wireframe to deployment, I build scalable web applications with attention to every detail, combining creative problem-solving with engineering excellence.
+        <p ref="subtitleRef" class="font-sans text-base md:text-lg lg:text-xl max-w-xl leading-relaxed opacity-0 translate-y-6" style="color: var(--txt-primary); opacity: 0.75;">
+          I build enterprise-grade systems that handle real complexity — then make them feel effortless to use.
         </p>
 
         <!-- CTA -->
         <div ref="ctaRef" class="flex items-center gap-6 pt-4 opacity-0 translate-y-6">
           <a
-            href="#projects"
-            class="px-8 py-3.5 bg-txt-primary text-bg-base rounded-full font-sans text-sm font-medium tracking-wide transition-smooth hover:opacity-80"
+            href="#featured-works"
+            class="font-sans text-sm font-medium hover:text-accent transition-smooth flex items-center gap-2"
+            style="color: var(--txt-primary);"
             @click.prevent="scrollToProjects"
           >
             View Projects
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7"/>
+              <polyline points="7 7 17 7 17 17"/>
+            </svg>
           </a>
           <a
-            href="#contact"
-            class="font-sans text-sm font-medium text-txt-secondary hover:text-accent transition-smooth flex items-center gap-2"
-            @click.prevent="scrollToContact"
+            href="mailto:ayodejiope13@gmail.com"
+            class="font-sans text-sm font-medium hover:text-accent transition-smooth flex items-center gap-2"
+            style="color: var(--txt-primary); opacity: 0.75;"
           >
             Get in touch
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

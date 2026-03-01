@@ -173,7 +173,7 @@ export function useHero3D() {
     const baseColor = new THREE.Color(0x5C4E42)
 
     sceneGroup = new THREE.Group()
-    sceneGroup.position.set(0, -1.8, 0)
+    sceneGroup.position.set(1.5, -2.3, 0)
     scene.add(sceneGroup)
 
     // ── Wireframe Grid Terrain — covers full hero ──
@@ -287,6 +287,9 @@ export function useHero3D() {
     gridUniforms.uMouse3D.value.copy(mouseWorld)
     gridUniforms.uHover.value = hoverStrength
     gridUniforms.uReveal.value = revealProgress
+
+    // Slow continuous Y drift — barely perceptible, breaks static feel
+    sceneGroup.rotation.y += 0.0003
 
     // Smooth scene rotation from mouse
     sceneGroup.rotation.y += (targetRotY - sceneGroup.rotation.y) * 0.03

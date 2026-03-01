@@ -1,9 +1,9 @@
 {
-  "_hash": "MDIA9VCKPxZOihtVB_QAtkHe4C2mlEqU3FbPRjGmxXg",
+  "_hash": "puozWFBKkUtMuusxWBRN0zIbdESQozpKnxwVp2rIuHY",
   "project": {
     "rootDir": "/Users/mac/Documents/new-portfolio"
   },
   "versions": {
-    "nuxt": "3.13.0"
+    "nuxt": "3.20.2"
   }
 }

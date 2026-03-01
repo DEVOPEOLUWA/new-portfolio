@@ -1,152 +1,344 @@
 <template>
-  <section id="contact" class="relative w-full px-6 md:px-24 py-24 md:py-40">
-    <div class="max-w-site mx-auto">
-      <!-- Section Header -->
-      <div ref="headerRef">
-        <SectionHeader tag="03 CONTACT" alignment="center">
-          Let's work<br />
-          <span class="italic">together.</span>
-        </SectionHeader>
-      </div>
+  <section
+    id="contact"
+    ref="sectionRef"
+    class="contact-section"
+  >
+    <!-- ══════════════════════════════════════════
+         MAIN BODY — two column (desktop) / stack (mobile)
+    ══════════════════════════════════════════ -->
+    <div class="contact-body">
 
-      <!-- Content -->
-      <div ref="contentRef" class="mt-12 md:mt-20 text-center max-w-2xl mx-auto">
-        <p class="font-sans text-base md:text-lg text-txt-secondary leading-relaxed">
-          I'm always open to discussing new projects, creative ideas,
-          or opportunities to be part of something great. Let's connect
-          and build something meaningful.
+      <!-- LEFT — typographic word + opener -->
+      <div class="contact-left">
+
+        <!-- Italic opener -->
+        <p
+          ref="openerRef"
+          class="contact-opener"
+          style="opacity: 0; transform: translateY(16px);"
+        >
+          "Have a project in mind, or just want to talk engineering?"
         </p>
 
-        <!-- Email CTA -->
-        <div class="mt-10">
-          <a
-            href="mailto:your.email@example.com"
-            class="inline-flex items-center gap-3 px-10 py-4 bg-txt-primary text-bg-base rounded-full font-sans text-sm md:text-base font-medium tracking-wide transition-smooth hover:opacity-80"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
-            </svg>
-            Say Hello
-          </a>
+        <!-- Large typographic word -->
+        <div class="contact-word-wrap">
+          <span
+            ref="wordRef"
+            class="contact-word"
+            style="opacity: 0; transform: translateY(40px);"
+          >Contact</span>
         </div>
 
-        <!-- Social Links -->
-        <div ref="socialsRef" class="mt-12 flex items-center justify-center gap-6 md:gap-8">
-          <a
-            v-for="social in socials"
-            :key="social.label"
-            :href="social.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group flex items-center gap-2 font-sans text-sm text-txt-secondary transition-smooth hover:text-accent"
-          >
-            <span class="w-8 h-8 rounded-full border border-line flex items-center justify-center transition-smooth group-hover:border-accent group-hover:bg-accent-dim">
-              <component :is="social.icon" />
-            </span>
-            <span class="hidden md:inline font-medium">{{ social.label }}</span>
-          </a>
-        </div>
       </div>
 
-      <!-- Footer -->
-      <div class="mt-24 md:mt-32 pt-8 border-t border-line flex flex-col md:flex-row items-center justify-between gap-4 text-txt-muted">
-        <span class="font-mono text-[10px] tracking-widest">
-          © {{ new Date().getFullYear() }} OPEOLUWA AYODEJI
-        </span>
-        <span class="font-mono text-[10px] tracking-widest">
-          BUILT WITH NUXT & VUE
-        </span>
+      <!-- RIGHT — contact rows -->
+      <div class="contact-right">
+        <div
+          v-for="(row, i) in rows"
+          :key="i"
+          :ref="(el: any) => { if (el) rowRefs[i] = el as HTMLElement }"
+          class="contact-row"
+          style="opacity: 0; transform: translateX(20px);"
+        >
+          <div class="row-divider" />
+          <div class="row-inner">
+            <span class="row-label">{{ row.label }}</span>
+            <component
+              :is="row.href ? 'a' : 'span'"
+              :href="row.href || undefined"
+              :target="row.external ? '_blank' : undefined"
+              :rel="row.external ? 'noopener noreferrer' : undefined"
+              class="row-value"
+            >{{ row.value }}</component>
+          </div>
+        </div>
+        <!-- Bottom divider -->
+        <div class="row-divider" style="opacity: 0;" ref="lastDivRef" />
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         FOOTER BAR
+    ══════════════════════════════════════════ -->
+    <div class="footer-bar">
+      <div class="footer-rule" />
+      <div class="footer-inner">
+        <span class="footer-text">© 2025 Opeoluwa Ayodeji</span>
+        <span class="footer-text hidden md:block">Design &amp; Engineering by O.A</span>
+        <button class="footer-text footer-top-btn" @click="scrollToTop">BACK TO TOP ↑</button>
       </div>
     </div>
+
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLenis } from '~/composables/useLenis'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-const headerRef = ref<HTMLElement | null>(null)
-const contentRef = ref<HTMLElement | null>(null)
-const socialsRef = ref<HTMLElement | null>(null)
+const { scrollTo } = useLenis()
 
-// SVG icon components
-const GitHubIcon = {
-  render: () => h('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    width: '14', height: '14',
-    viewBox: '0 0 24 24',
-    fill: 'none', stroke: 'currentColor',
-    'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
-  }, [
-    h('path', { d: 'M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22' })
-  ])
-}
+const sectionRef = ref<HTMLElement | null>(null)
+const openerRef  = ref<HTMLElement | null>(null)
+const wordRef    = ref<HTMLElement | null>(null)
+const rowRefs    = ref<HTMLElement[]>([])
+const lastDivRef = ref<HTMLElement | null>(null)
 
-const LinkedInIcon = {
-  render: () => h('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    width: '14', height: '14',
-    viewBox: '0 0 24 24',
-    fill: 'none', stroke: 'currentColor',
-    'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
-  }, [
-    h('path', { d: 'M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z' }),
-    h('rect', { x: '2', y: '9', width: '4', height: '12' }),
-    h('circle', { cx: '4', cy: '4', r: '2' }),
-  ])
-}
+const triggers: ScrollTrigger[] = []
 
-const TwitterIcon = {
-  render: () => h('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    width: '14', height: '14',
-    viewBox: '0 0 24 24',
-    fill: 'none', stroke: 'currentColor',
-    'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
-  }, [
-    h('path', { d: 'M4 4l11.733 16h4.267l-11.733 -16h-4.267z' }),
-    h('path', { d: 'M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772' }),
-  ])
-}
-
-const socials = [
-  { label: 'GitHub', url: 'https://github.com/', icon: GitHubIcon },
-  { label: 'LinkedIn', url: 'https://linkedin.com/', icon: LinkedInIcon },
-  { label: 'Twitter / X', url: 'https://x.com/', icon: TwitterIcon },
+const rows = [
+  {
+    label: 'Email',
+    value: 'Reach out to me ↗',
+    href: 'mailto:ayodejiope13@gmail.com',
+    external: false,
+  },
+  {
+    label: 'LinkedIn',
+    value: 'Connect with me ↗',
+    href: 'https://www.linkedin.com/in/ayodeji-opeoluwa/',
+    external: true,
+  },
+  {
+    label: 'GitHub',
+    value: 'Check out my work ↗',
+    href: 'https://github.com/DEVOPEOLUWA/',
+    external: true,
+  },
 ]
+
+function scrollToTop() {
+  scrollTo(0, { duration: 1.5 })
+}
 
 onMounted(() => {
   setTimeout(() => {
     ScrollTrigger.refresh()
 
-    const els = [
-      { el: headerRef.value, delay: 0 },
-      { el: contentRef.value, delay: 0.15 },
-      { el: socialsRef.value, delay: 0.3 },
-    ]
+    if (!sectionRef.value) return
 
-    els.forEach(({ el, delay }) => {
-      if (!el) return
-      gsap.set(el, { opacity: 0, y: 50 })
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        delay,
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      })
+    const st = ScrollTrigger.create({
+      trigger: sectionRef.value,
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        // Large word
+        gsap.to(wordRef.value, {
+          opacity: 1, y: 0,
+          duration: 1, ease: 'power3.out',
+        })
+        // Opener
+        gsap.to(openerRef.value, {
+          opacity: 1, y: 0,
+          duration: 0.7, ease: 'power3.out',
+          delay: 0.2,
+        })
+        // Rows staggered
+        rowRefs.value.forEach((row, i) => {
+          gsap.to(row, {
+            opacity: 1, x: 0,
+            duration: 0.55, ease: 'power3.out',
+            delay: 0.15 + i * 0.1,
+          })
+        })
+        if (lastDivRef.value) {
+          gsap.to(lastDivRef.value, { opacity: 1, duration: 0.4, delay: 0.6 })
+        }
+      },
     })
-  }, 500)
+    triggers.push(st)
+  }, 400)
+})
+
+onUnmounted(() => {
+  triggers.forEach((t) => t.kill())
 })
 </script>
+
+<style scoped>
+.contact-section {
+  background: var(--bg-base);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: background-color 0.4s ease;
+}
+
+/* ── Body ── */
+.contact-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 80px 96px 0;
+  gap: 80px;
+}
+
+@media (max-width: 768px) {
+  .contact-body {
+    flex-direction: column;
+    padding: 64px 24px 0;
+    gap: 48px;
+  }
+}
+
+/* ── Left ── */
+.contact-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 420px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .contact-left {
+    min-height: auto;
+  }
+}
+
+.contact-opener {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 36px);
+  color: var(--txt-primary);
+  max-width: 400px;
+  line-height: 1.4;
+  margin-bottom: auto;
+}
+
+.contact-word-wrap {
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding-top: 40px;
+}
+
+.contact-word {
+  font-family: 'Kalnia', Georgia, serif;
+  font-size: clamp(80px, 14vw, 180px);
+  font-weight: 700;
+  color: var(--txt-primary);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  display: block;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .contact-word {
+    font-size: clamp(60px, 20vw, 100px);
+  }
+}
+
+/* ── Right ── */
+.contact-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-divider {
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+
+.row-inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 28px 0;
+  gap: 16px;
+}
+
+.row-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--txt-primary);
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.row-value {
+  font-family: 'Kalnia', Georgia, serif;
+  font-size: clamp(18px, 2.5vw, 32px);
+  font-weight: 400;
+  color: var(--txt-primary);
+  text-align: right;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  word-break: break-all;
+}
+
+.row-value:hover {
+  color: var(--accent);
+}
+
+/* ── Footer bar ── */
+.footer-bar {
+  width: 100%;
+  padding: 0 96px;
+  margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+  .footer-bar {
+    padding: 0 24px;
+  }
+}
+
+.footer-rule {
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.footer-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--txt-primary);
+  opacity: 0.4;
+}
+
+.footer-top-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.footer-top-btn:hover {
+  opacity: 0.8;
+}
+</style>

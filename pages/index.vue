@@ -17,6 +17,7 @@
         <SectionProjects />
         <SectionAbout />
         <SectionContact />
+        <SectionGuestbook />
       </main>
     </div>
   </div>
@@ -35,6 +36,16 @@ const contentVisible = ref(false)
 const navVisible = ref(false)
 const heroRevealed = ref(false)
 
+const scrollToHash = () => {
+  if (typeof window === 'undefined') return
+  const hash = window.location.hash
+  if (!hash) return
+  setTimeout(() => {
+    const el = document.querySelector(hash)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, 300)
+}
+
 const skipLoader = () => {
   loading.value = false
   contentVisible.value = true
@@ -42,6 +53,7 @@ const skipLoader = () => {
     initLenis()
     setTimeout(() => { navVisible.value = true }, 50)
     setTimeout(() => { heroRevealed.value = true }, 100)
+    setTimeout(scrollToHash, 400)
   })
 }
 

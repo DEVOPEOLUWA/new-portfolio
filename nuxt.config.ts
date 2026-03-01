@@ -71,6 +71,25 @@ export default defineNuxtConfig({
           type: 'text/javascript',
           tagPosition: 'head',
         },
+        // Google Analytics 4
+        // Replace GA_MEASUREMENT_ID with your actual Google Analytics 4 Measurement ID from analytics.google.com
+        ...((process as any).env.NODE_ENV === 'production' ? [
+          {
+            src: 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID',
+            async: true,
+            tagPosition: 'head' as const,
+          },
+          {
+            innerHTML: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'GA_MEASUREMENT_ID');
+            `,
+            type: 'text/javascript',
+            tagPosition: 'head' as const,
+          },
+        ] : []),
       ],
     },
     pageTransition: { name: "page", mode: "out-in" },
@@ -84,4 +103,10 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL ?? '',
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY ?? '',
+    },
+  },
 });

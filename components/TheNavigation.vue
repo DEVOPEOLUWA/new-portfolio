@@ -71,6 +71,7 @@
       <!-- Mobile Hamburger -->
       <button
         class="md:hidden flex flex-col gap-1.5 p-2"
+        style="background: none; border: none; outline: none; cursor: pointer;"
         @click="mobileOpen = !mobileOpen"
         aria-label="Toggle menu"
       >
@@ -136,12 +137,18 @@ const logoCursor = ref<HTMLElement | null>(null)
 let logoPlayed = false
 
 const navLinks = reactive([
-  { number: '01', label: 'Projects', hoverLabel: 'Works', id: 'projects', hovered: false },
+  { number: '01', label: 'Projects', hoverLabel: 'Works', id: 'featured-works', hovered: false },
   { number: '02', label: 'About', hoverLabel: 'Story', id: 'about', hovered: false },
   { number: '03', label: 'Contact', hoverLabel: 'Say Hi', id: 'contact', hovered: false },
 ])
 
 const scrollToSection = (id: string) => {
+  // If not on home page, navigate there first then scroll
+  const isHome = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '')
+  if (!isHome) {
+    window.location.href = `/#${id}`
+    return
+  }
   scrollTo(`#${id}`, { offset: -80, duration: 1.5 })
 }
 

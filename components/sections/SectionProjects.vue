@@ -1,302 +1,349 @@
 <template>
-  <section
-    id="projects"
-    ref="sectionRef"
-    class="relative w-full px-8 md:px-16 lg:px-24 py-24 md:py-32"
-    :style="{ background: isDark ? '#0a0a0a' : '#f5f5f0', transition: 'background-color 0.4s ease' }"
-    @mousemove="onMouseMove"
-    @mouseleave="onSectionLeave"
-  >
-    <!-- ─── Right-side preview panel ─── -->
-    <div
-      ref="previewPanelRef"
-      class="fixed top-0 right-0 z-[100] pointer-events-none flex items-center justify-center"
-      style="
-        width: 400px;
-        height: 100vh;
-        transform: translateX(100%);
-        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        padding: 40px 32px;
-      "
-      :style="{ background: isDark ? '#0a0a0a' : '#f5f5f0' }"
-    >
-      <img
-        ref="previewImgRef"
-        src=""
-        alt=""
-        style="
-          width: 100%;
-          max-height: 80vh;
-          object-fit: cover;
-          border-radius: 12px;
-          box-shadow: 0 24px 48px rgba(0,0,0,0.2);
-          display: block;
-        "
-      />
-    </div>
+  <div id="featured-works">
 
-    <!-- ─── Section header row ─── -->
+    <!-- Left-edge indicator (desktop only) -->
     <div
-      ref="headerRowRef"
-      class="flex items-center justify-between"
-      style="opacity: 0;"
+      ref="sectionIndicatorRef"
+      class="fixed z-30 pointer-events-none hidden md:block"
+      style="left:24px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:center;opacity:0;transition:opacity 0.6s ease;"
     >
-      <span
-        class="font-mono uppercase"
-        style="font-size: 11px; letter-spacing: 0.3em; opacity: 0.4;"
-        :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
+      <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;white-space:nowrap;"
+        :style="{ color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)' }"
       >Featured Works</span>
-      <span
-        class="font-mono"
-        style="font-size: 11px; letter-spacing: 0.3em; opacity: 0.4;"
-        :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
-      >03</span>
     </div>
 
-    <!-- ─── Top divider ─── -->
-    <div
-      ref="topDividerRef"
-      class="w-full mt-6"
-      style="height: 1px; transform: scaleX(0); transform-origin: left;"
-      :style="{ background: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)' }"
-    />
+    <!-- Vertical progress bar (desktop) -->
+    <div class="fixed right-0 top-0 z-30 pointer-events-none hidden md:block progress-track" style="width:2px;height:100vh;">
+      <div ref="progressBarRef" class="progress-fill" style="width:100%;transform:scaleY(0);transform-origin:top;will-change:transform;" />
+    </div>
 
-    <!-- ─── Project rows ─── -->
-    <div>
-      <template v-for="(project, i) in projects" :key="i">
-        <div
-          :ref="(el: any) => { if (el) rowRefs[i] = el as HTMLElement }"
-          class="project-row relative flex items-center w-full gap-6"
-          style="
-            opacity: 0;
-            cursor: pointer;
-            height: clamp(72px, 10vh, 110px);
-            transition: background-color 0.3s ease;
-          "
-          @mouseenter="onRowEnter(i, project)"
-          @mouseleave="onRowLeave(i)"
-        >
-          <!-- Index number -->
-          <span
-            class="font-mono flex-shrink-0"
-            style="width: 48px; font-size: 12px; opacity: 0.35; font-weight: 300;"
-            :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
-          >{{ String(i + 1).padStart(2, '0') }}</span>
+    <!-- Blink overlay (desktop) -->
+    <div ref="blinkRef" class="fixed inset-0 z-[55] pointer-events-none blink-overlay hidden md:block" style="opacity:0;" />
 
-          <!-- Project name -->
-          <h2
-            :ref="(el: any) => { if (el) nameRefs[i] = el as HTMLElement }"
-            class="flex-1 font-display"
-            style="
-              font-size: clamp(28px, 4.5vw, 64px);
-              font-weight: 400;
-              line-height: 1;
-              transform-origin: left center;
-              will-change: transform;
-            "
-            :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
-          >{{ project.name }}</h2>
+    <!-- ══ MOBILE LAYOUT (≤768px) ══ -->
+    <div class="block md:hidden" style="background:var(--bg-base);">
 
-          <!-- CTA button — only visible on hover -->
-          <NuxtLink
-            :ref="(el: any) => { if (el) ctaRefs[i] = (el as any).$el || el }"
-            :to="`/projects/${project.slug}`"
-            class="flex-shrink-0 font-mono hidden md:flex items-center"
-            style="
-              font-size: 11px;
-              letter-spacing: 0.15em;
-              text-transform: uppercase;
-              text-decoration: none;
-              padding: 6px 16px;
-              border-radius: 4px;
-              opacity: 0;
-              border: 1px solid;
-              white-space: nowrap;
-              transition: opacity 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-            "
-            :style="{
-              color: isDark ? '#f0ede8' : '#1a1918',
-              borderColor: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)',
-            }"
-            @click.stop
-          >View Case Study&nbsp;→</NuxtLink>
+      <!-- Section header -->
+      <div
+        ref="mobileHeaderRef"
+        class="mc-header"
+      >
+        <span class="mc-header-label">Featured Works</span>
+        <span class="mc-header-label">03</span>
+      </div>
 
-          <!-- Role/tech descriptor -->
-          <span
-            class="font-mono text-right flex-shrink-0 hidden lg:block"
-            style="font-size: 12px; letter-spacing: 0.15em; opacity: 0.5; text-transform: uppercase; min-width: 180px;"
-            :style="{ color: isDark ? '#f0ede8' : '#1a1918' }"
-          >{{ project.descriptor }}</span>
-        </div>
+      <!-- Cards -->
+      <div
+        v-for="(project, i) in projects"
+        :key="`m-${i}`"
+        :ref="(el: any) => { if (el) mobileCardRefs[i] = el as HTMLElement }"
+        class="mobile-card"
+      >
+        <!-- Number watermark -->
+        <div class="mc-num">{{ String(i+1).padStart(2,'0') }}</div>
+        <!-- Name -->
+        <h2 class="mc-name">{{ project.name }}</h2>
+        <!-- Rule -->
+        <div class="mc-rule" />
+        <!-- Descriptor -->
+        <p class="mc-desc">{{ project.descriptor }}</p>
+        <!-- CTA -->
+        <NuxtLink :to="`/projects/${project.slug}`" class="mc-cta">View Case Study ↗</NuxtLink>
+        <!-- Image -->
+        <img :src="project.image" :alt="project.name" class="mc-img" />
+      </div>
 
-        <!-- Divider below this row -->
-        <div
-          class="w-full"
-          style="height: 1px;"
-          :style="{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }"
-        />
+      <!-- Dividers between mobile cards -->
+      <template v-for="(_, i) in projects" :key="`mdiv-${i}`">
+        <div v-if="i < projects.length-1" style="height:1px;background:var(--line);margin:0 24px;" />
       </template>
+
     </div>
-  </section>
+
+    <!-- ══ DESKTOP LAYOUT (>768px) ══ -->
+    <div ref="sectionFadeRef" class="hidden md:block section-bg" style="opacity:0;">
+      <div
+        v-for="(project, i) in projects"
+        :key="i"
+        :ref="(el: any) => { if (el) sceneRefs[i] = el as HTMLElement }"
+        class="scene-bg relative w-full flex overflow-hidden"
+        style="height:100vh;"
+      >
+        <!-- LEFT -->
+        <div class="flex flex-col justify-center px-16 md:px-24 lg:px-32" style="width:50%;height:100%;flex-shrink:0;">
+          <div :ref="(el: any) => { if (el) leftColRefs[i] = el as HTMLElement }" style="opacity:0;transform:translateY(40px);">
+            <span class="number-watermark block" style="font-family:'Kalnia',serif;font-size:clamp(100px,12vw,160px);font-weight:200;line-height:1;">{{ String(i+1).padStart(2,'0') }}</span>
+            <div class="rule my-6" style="width:40%;height:1px;" />
+            <h2 class="project-name" style="font-family:'Kalnia',serif;font-size:clamp(28px,3.5vw,48px);font-weight:500;line-height:1.1;letter-spacing:-0.02em;">{{ project.name }}</h2>
+            <p class="descriptor mt-8" style="font-family:'Manrope',sans-serif;font-size:clamp(14px,1.3vw,17px);font-weight:300;opacity:0.65;line-height:1.6;max-width:400px;color:var(--txt-secondary);">{{ project.descriptor }}</p>
+            <NuxtLink
+              :to="`/projects/${project.slug}`"
+              style="display:inline-block;margin-top:32px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.08em;color:var(--txt-primary);text-decoration:none;opacity:1;transition:opacity 0.2s ease;"
+              @mouseenter="(e: MouseEvent) => (e.currentTarget as HTMLElement).style.opacity='0.6'"
+              @mouseleave="(e: MouseEvent) => (e.currentTarget as HTMLElement).style.opacity='1'"
+            >View Case Study ↗</NuxtLink>
+          </div>
+        </div>
+        <!-- RIGHT -->
+        <div class="panel-bg relative flex items-center justify-center flex-shrink-0" style="width:50%;height:100%;">
+          <img
+            :ref="(el: any) => { if (el) rightImgRefs[i] = el as HTMLElement }"
+            :src="project.image" :alt="project.name"
+            style="width:80%;max-height:75%;object-fit:cover;object-position:top;border-radius:12px;box-shadow:0 32px 72px rgba(0,0,0,0.3);display:block;transform:translateX(80px) rotate(3deg);opacity:0;transition:transform 0.6s cubic-bezier(0.23,1,0.32,1);"
+            @mouseenter="(e: MouseEvent) => (e.currentTarget as HTMLElement).style.transform='rotate(0deg) scale(1.03)'"
+            @mouseleave="(e: MouseEvent) => (e.currentTarget as HTMLElement).style.transform='rotate(3deg) scale(1)'"
+          />
+        </div>
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '~/composables/useTheme'
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
 const { isDark } = useTheme()
-
-// ── Refs ──
-const sectionRef = ref<HTMLElement | null>(null)
-const headerRowRef = ref<HTMLElement | null>(null)
-const topDividerRef = ref<HTMLElement | null>(null)
-const rowRefs = ref<HTMLElement[]>([])
-const nameRefs = ref<HTMLElement[]>([])
-const ctaRefs = ref<HTMLElement[]>([])
-const previewPanelRef = ref<HTMLElement | null>(null)
-const previewImgRef = ref<HTMLImageElement | null>(null)
-
+const sectionFadeRef    = ref<HTMLElement | null>(null)
+const sectionIndicatorRef = ref<HTMLElement | null>(null)
+const progressBarRef    = ref<HTMLElement | null>(null)
+const blinkRef          = ref<HTMLElement | null>(null)
+const sceneRefs         = ref<HTMLElement[]>([])
+const leftColRefs       = ref<HTMLElement[]>([])
+const rightImgRefs      = ref<HTMLElement[]>([])
+const mobileCardRefs    = ref<HTMLElement[]>([])
+const mobileHeaderRef   = ref<HTMLElement | null>(null)
 const triggers: ScrollTrigger[] = []
+const mobileObservers: IntersectionObserver[] = []
 
-// ── Projects ──
 const projects = [
-  {
-    slug: 'ndic',
-    name: 'NDIC Bank Liquidation System',
-    image: '/images/ndic.png',
-    descriptor: 'Angular · Enterprise',
-  },
-  {
-    slug: 'nsia',
-    name: 'NSIA Vendor Management',
-    image: '/images/nsia.png',
-    descriptor: 'Vue.js · Government',
-  },
-  {
-    slug: 'ncc',
-    name: 'NCC Licensing Platform',
-    image: '/images/licensing.png',
-    descriptor: 'Angular · Regulatory',
-  },
+  { slug:'ndic',      name:'NDIC Bank Liquidation System',   image:'/images/ndic.png',      descriptor:"Transitioning NDIC's claims resolution from Excel-based workflows to a fully electronic data capture and verification system." },
+  { slug:'nsia',      name:'NSIA Vendor Management',          image:'/images/nsia.png',      descriptor:"Streamlining vendor onboarding, procurement planning, and contract lifecycle management for Nigeria's sovereign wealth authority." },
+  { slug:'ncc',       name:'NCC Licensing Platform',          image:'/images/licensing.png', descriptor:"Automating licence application, evaluation, payment, and issuance for Nigeria's national telecommunications regulator across two separate user portals." },
 ]
 
-// ── Row hover ──
-let activeRow = -1
-
-function onRowEnter(i: number, project: (typeof projects)[0]) {
-  if (activeRow === i) return
-  activeRow = i
-
-  // Row background
-  if (rowRefs.value[i]) {
-    rowRefs.value[i].style.backgroundColor = isDark.value
-      ? 'rgba(255,255,255,0.03)'
-      : 'rgba(0,0,0,0.03)'
-  }
-
-  // Name nudge
-  if (nameRefs.value[i]) {
-    gsap.to(nameRefs.value[i], { x: 16, scale: 1.02, duration: 0.5, ease: 'power3.out' })
-  }
-
-  // Show CTA button
-  if (ctaRefs.value[i]) {
-    gsap.to(ctaRefs.value[i], { opacity: 1, duration: 0.3, ease: 'power2.out' })
-  }
-
-  // Update and slide in preview panel
-  if (previewImgRef.value && previewPanelRef.value) {
-    previewImgRef.value.src = project.image
-    previewImgRef.value.alt = project.name
-    previewPanelRef.value.style.transform = 'translateX(0)'
-  }
+function triggerBlink() {
+  if (!blinkRef.value) return
+  gsap.timeline()
+    .to(blinkRef.value, { opacity:0.3, duration:0.15, ease:'power2.out' })
+    .to(blinkRef.value, { opacity:0,   duration:0.25, ease:'power2.in'  })
 }
 
-function onRowLeave(i: number) {
-  activeRow = -1
+watch(isDark, () => {
+  requestAnimationFrame(() => {
+    const y = window.scrollY
+    ScrollTrigger.refresh()
+    requestAnimationFrame(() => window.scrollTo({ top:y, behavior:'instant' }))
+  })
+})
 
-  // Reset row background
-  if (rowRefs.value[i]) {
-    rowRefs.value[i].style.backgroundColor = 'transparent'
+function buildScrollTriggers() {
+  triggers.forEach((t) => t.kill()); triggers.length = 0
+  if (typeof window === 'undefined' || window.innerWidth <= 768) return
+
+  if (sectionFadeRef.value) {
+    triggers.push(ScrollTrigger.create({
+      trigger: sectionFadeRef.value, start:'top 85%', once:true,
+      onEnter: () => gsap.to(sectionFadeRef.value, { opacity:1, duration:0.8, ease:'power2.out' }),
+    }))
   }
 
-  // Reset name
-  if (nameRefs.value[i]) {
-    gsap.to(nameRefs.value[i], { x: 0, scale: 1, duration: 0.5, ease: 'power3.out' })
-  }
-
-  // Hide CTA
-  if (ctaRefs.value[i]) {
-    gsap.to(ctaRefs.value[i], { opacity: 0, duration: 0.2 })
-  }
+  sceneRefs.value.forEach((scene, i) => {
+    const left  = leftColRefs.value[i]
+    const right = rightImgRefs.value[i]
+    if (!scene || !left || !right) return
+    gsap.set(right, { x:80, opacity:0, willChange:'transform' })
+    gsap.set(left,  { y:40, opacity:0 })
+    triggers.push(ScrollTrigger.create({
+      trigger:scene, start:'top top', end:'+=100%', pin:true, pinSpacing:true, anticipatePin:1,
+      onEnter: () => {
+        gsap.to(right, { x:0, opacity:1, duration:1.1, ease:'power4.out', onComplete: () => { (right as HTMLElement).style.willChange='auto' } })
+        gsap.to(left,  { opacity:1, y:0, duration:0.9, ease:'power3.out', delay:0.2 })
+        if (progressBarRef.value) gsap.to(progressBarRef.value, { scaleY:(i+1)/projects.length, duration:0.6, ease:'power2.out' })
+        if (i > 0) triggerBlink()
+      },
+      onLeaveBack: () => {
+        gsap.to(left,  { opacity:0, y:40, duration:0.5, ease:'power2.in' })
+        gsap.to(right, { opacity:0, x:80, duration:0.5, ease:'power2.in' })
+        if (progressBarRef.value) gsap.to(progressBarRef.value, { scaleY:i/projects.length, duration:0.4 })
+      },
+    }))
+  })
 }
 
-function onMouseMove() {
-  // Nothing needed — panel is fixed, no cursor tracking
+function initMobileAnimations() {
+  if (typeof window === 'undefined' || window.innerWidth > 768) return
+
+  // ── Section header fade ──
+  const header = mobileHeaderRef.value
+  if (header) {
+    const hObs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        header.classList.add('mc-header-visible')
+        hObs.disconnect()
+      }
+    }, { threshold: 0.1 })
+    hObs.observe(header)
+    mobileObservers.push(hObs)
+  }
+
+  // ── Card entry animations (one-shot at threshold 0.15) ──
+  mobileCardRefs.value.forEach((card) => {
+    if (!card) return
+    // Set will-change before animation
+    card.style.willChange = 'transform, opacity'
+
+    const entryObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          card.classList.add('mc-visible')
+          // Remove will-change after transition completes
+          setTimeout(() => { card.style.willChange = 'auto' }, 800)
+          entryObs.unobserve(card)
+        }
+      })
+    }, { threshold: 0.15 })
+    entryObs.observe(card)
+    mobileObservers.push(entryObs)
+  })
+
+  // ── Active-block dimming (multi-threshold to track visibility) ──
+  mobileCardRefs.value.forEach((card) => {
+    if (!card) return
+    const dimObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        // Only dim after the card has already animated in
+        if (!card.classList.contains('mc-visible')) return
+        if (e.intersectionRatio >= 0.5) {
+          card.style.opacity = '1'
+        } else if (e.intersectionRatio > 0 && e.intersectionRatio < 0.5) {
+          card.style.opacity = '0.4'
+        }
+      })
+    }, { threshold: [0, 0.5, 1] })
+    dimObs.observe(card)
+    mobileObservers.push(dimObs)
+  })
 }
 
-function onSectionLeave() {
-  // Slide panel back out when leaving section
-  if (previewPanelRef.value) {
-    previewPanelRef.value.style.transform = 'translateX(100%)'
-  }
-  // Reset any active row
-  if (activeRow !== -1) {
-    onRowLeave(activeRow)
-    activeRow = -1
-  }
-}
-
-// ── Scroll entry animation ──
 onMounted(() => {
   setTimeout(() => {
     ScrollTrigger.refresh()
-    if (!sectionRef.value) return
+    buildScrollTriggers()
+    initMobileAnimations()
+  }, 600)
 
-    // Set initial state
-    rowRefs.value.forEach((row) => gsap.set(row, { y: 30 }))
-
-    const st = ScrollTrigger.create({
-      trigger: sectionRef.value,
-      start: 'top 75%',
-      once: true,
-      onEnter: () => {
-        const tl = gsap.timeline()
-
-        tl.to(headerRowRef.value, { opacity: 1, duration: 0.6, ease: 'power2.out' })
-
-        tl.to(topDividerRef.value, { scaleX: 1, duration: 0.7, ease: 'power3.out' }, '-=0.2')
-
-        rowRefs.value.forEach((row, i) => {
-          tl.to(row, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-          }, i === 0 ? '-=0.3' : '-=0.48')
-        })
-      },
-    })
-    triggers.push(st)
-  }, 400)
+  const wrapper = document.getElementById('featured-works')
+  if (wrapper && typeof IntersectionObserver !== 'undefined') {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (sectionIndicatorRef.value) sectionIndicatorRef.value.style.opacity = e.isIntersecting ? '0.4' : '0'
+      })
+    }, { threshold:0.05 })
+    obs.observe(wrapper)
+    onUnmounted(() => obs.disconnect())
+  }
 })
 
 onUnmounted(() => {
   triggers.forEach((t) => t.kill())
+  mobileObservers.forEach((o) => o.disconnect())
 })
 </script>
 
 <style scoped>
-.font-display {
-  font-family: 'Kalnia', Georgia, serif;
+.section-bg  { background:var(--bg-base);    transition:background-color 0.4s ease; }
+.scene-bg    { background:var(--bg-base);    transition:background-color 0.4s ease; }
+.panel-bg    { background:var(--bg-surface); transition:background-color 0.4s ease; }
+.number-watermark { color:var(--txt-primary); opacity:0.06; }
+.rule        { background:var(--line); }
+.project-name { color:var(--txt-primary); }
+.progress-track { background:var(--line); opacity:0.5; }
+.progress-fill  { background:var(--txt-primary); }
+.blink-overlay  { background:var(--bg-base); }
+
+/* ── Mobile card: starts hidden, .mc-visible triggers reveal ── */
+.mobile-card {
+  padding: 48px 24px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.font-mono {
+.mobile-card.mc-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Active-block dimming transition */
+.mobile-card { transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
+
+/* ── Child elements: base state (hidden) ── */
+.mc-num, .mc-name, .mc-rule, .mc-desc, .mc-cta, .mc-img {
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Stagger delays — applied before .mc-visible parent triggers */
+.mc-num  { transition-delay: 0s;    transform: translateY(0); }
+.mc-name { transition-delay: 0.1s;  transform: translateY(0); }
+.mc-rule {
+  transition-delay: 0.15s;
+  transform: scaleX(0);
+  transform-origin: left;
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+.mc-desc { transition-delay: 0.2s;  transform: translateY(0); }
+.mc-cta  { transition-delay: 0.25s; transform: translateY(0); display: inline-block; margin-top: 18px; }
+.mc-img  {
+  transition-delay: 0.35s;
+  transform: translateY(20px);
+  clip-path: inset(0 0 100% 0);
+  transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+              clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: 0.35s;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 28px;
+  display: block;
+}
+
+/* When parent card is visible, reveal all children */
+.mc-visible .mc-num,
+.mc-visible .mc-name,
+.mc-visible .mc-desc,
+.mc-visible .mc-cta  { opacity: 1; }
+.mc-visible .mc-rule { opacity: 1; transform: scaleX(1); }
+.mc-visible .mc-img  { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0% 0); }
+
+/* Child typography */
+.mc-num  { font-family:'Kalnia',serif; font-size:64px; font-weight:200; color:var(--txt-primary); line-height:1; margin-bottom:-24px; }
+.mc-name { font-family:'Kalnia',serif; font-size:clamp(28px,7vw,40px); font-weight:500; color:var(--txt-primary); line-height:1.1; }
+.mc-desc { font-family:'Manrope',sans-serif; font-weight:300; font-size:15px; color:var(--txt-secondary); line-height:1.65; }
+.mc-cta  { font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; color:var(--txt-primary); text-decoration:none; }
+
+/* ── Section header ── */
+.mc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 24px 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.mc-header.mc-header-visible { opacity: 1; }
+.mc-header-label {
   font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--txt-primary);
+  opacity: 0.4;
 }
 </style>

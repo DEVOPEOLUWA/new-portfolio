@@ -1,1 +1,1 @@
-export { default } from "file:///Users/mac/Documents/new-portfolio/node_modules/.pnpm/@nuxt+vite-builder@3.13.0_magicast@0.5.1_rollup@4.53.3_terser@5.44.1_vue@3.5.25/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
+export { default } from "file:///Users/mac/Documents/new-portfolio/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
