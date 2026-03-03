@@ -58,10 +58,9 @@
         <!-- CTA -->
         <div ref="ctaRef" class="flex items-center gap-6 pt-4 opacity-0 translate-y-6">
           <a
-            href="#featured-works"
+            href="/projects/ndic"
             class="font-sans text-sm font-medium hover:text-accent transition-smooth flex items-center gap-2"
             style="color: var(--txt-primary);"
-            @click.prevent="scrollToProjects"
           >
             View Projects
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

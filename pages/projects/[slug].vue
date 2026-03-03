@@ -288,7 +288,7 @@ const allProjects = [
     image: '/images/nsia.png',
     tags: ['Vue.js', 'Government', 'Frontend Lead'],
     brandColor: '#1a4a2e',
-    strip: ['Team of 4–6', 'Sole Frontend Engineer', 'Collaborative Build'],
+    strip: ['Team of 4–6', 'Frontend Engineer', 'Collaborative Build'],
     stats: [
       { value: '100+', label: 'Staff Users', animValue: ref('100+') },
       { value: 'Full', label: 'Procurement Lifecycle', animValue: ref('Full') },
@@ -296,7 +296,7 @@ const allProjects = [
       { value: '7+', label: 'Regulatory Systems', animValue: ref('7+') },
     ],
     challenge: "NSIA needed a single platform to manage the full procurement lifecycle — from annual planning and vendor registration through bid evaluation, contract award, and performance tracking — across multiple internal departments with distinct workflows and approval chains.",
-    role: "As the sole frontend engineer on a 4–6 person team, I was responsible for the entire client-side delivery of the platform. I built the CI/CD pipeline infrastructure that reduced deployment time by 70%, implemented server-side pagination and optimized API integration that improved data processing speed by 40%, and delivered the real-time notification system across both the admin and vendor-facing portals. I also contributed to the records migration module that brought legacy vendor data into the new system.",
+    role: "As on of the major frontend engineers on a 4–6 person team, I was responsible for the entire client-side delivery of the platform. I built the CI/CD pipeline infrastructure that reduced deployment time by 70%, implemented server-side pagination and optimized API integration that improved data processing speed by 40%, and delivered the real-time notification system across both the admin and vendor-facing portals. I also contributed to the records migration module that brought legacy vendor data into the new system.",
   },
   {
     slug: 'ncc',

@@ -60,16 +60,36 @@
       </form>
 
       <!-- Entries feed -->
-      <div class="gb-entries" style="margin-top:56px;">
+      <div class="gb-feed">
 
-        <p v-if="entries.length === 0" class="gb-empty">No notes yet. Be the first.</p>
-
-        <div v-for="entry in entries" :key="entry.id" class="gb-entry">
-          <p class="gb-entry-name">{{ entry.name }}</p>
-          <p class="gb-entry-msg">{{ entry.message }}</p>
-          <p class="gb-entry-ts">{{ formatDate(entry.created_at) }}</p>
-          <div class="gb-entry-divider" />
+        <!-- Empty state -->
+        <div v-if="entries.length === 0" class="gb-empty-card">
+          <p class="gb-empty-text">No notes yet. Be the first.</p>
         </div>
+
+        <!-- Cards -->
+        <TransitionGroup name="card-list" tag="div" class="gb-cards">
+          <div
+            v-for="(entry, i) in entries"
+            :key="entry.id"
+            class="gb-card"
+            :class="{ 'gb-card--drop': newEntryIds.has(entry.id), 'gb-card--fade': !newEntryIds.has(entry.id) }"
+            :style="!newEntryIds.has(entry.id) ? { animationDelay: `${i * 0.08}s` } : {}"
+          >
+            <div class="gb-card-inner">
+              <!-- Accent dot + name -->
+              <div class="gb-card-header">
+                <span class="gb-card-dot" />
+                <span class="gb-card-name">{{ entry.name }}</span>
+              </div>
+              <p class="gb-card-msg">{{ entry.message }}</p>
+              <p class="gb-card-ts">{{ formatDate(entry.created_at) }}</p>
+            </div>
+          </div>
+        </TransitionGroup>
+
+        <!-- More than 10 label -->
+        <p v-if="hasMore" class="gb-more">Showing 10 most recent notes</p>
 
       </div>
 
@@ -90,6 +110,9 @@ const entries    = ref<GuestEntry[]>([])
 const submitting = ref(false)
 const showConfirm = ref(false)
 const rateLimited = ref(false)
+const hasMore     = ref(false)
+// Track which IDs are brand-new (drop animation) vs loaded (stagger fade)
+const newEntryIds = ref(new Set<string>())
 
 const form = reactive({ name: '', message: '' })
 const errors = reactive({ name: '', message: '' })
@@ -110,18 +133,17 @@ function checkRateLimit() {
 // ── Fetch entries ──────────────────────────────────────
 async function fetchEntries() {
   const sb = useSupabaseClient()
-  if (!sb) {
-    // Static mode — no entries
-    return
-  }
+  if (!sb) return
   try {
     const { data, error } = await sb
       .from('guestbook')
       .select('id, name, message, created_at')
       .order('created_at', { ascending: false })
-      .limit(10)
+      .limit(11)
     if (error) throw error
-    entries.value = data ?? []
+    const rows = (data ?? []) as GuestEntry[]
+    hasMore.value = rows.length > 10
+    entries.value = rows.slice(0, 10)
   } catch (err) {
     console.warn('Guestbook fetch failed:', err)
   }
@@ -135,7 +157,12 @@ function subscribeToEntries() {
   channel = sb
     .channel('guestbook-channel')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'guestbook' }, (payload: any) => {
-      entries.value = [payload.new as GuestEntry, ...entries.value].slice(0, 10)
+      const newEntry = payload.new as GuestEntry
+      newEntryIds.value.add(newEntry.id)
+      const updated = [newEntry, ...entries.value]
+      if (updated.length > 10) updated.splice(10)
+      entries.value = updated
+      hasMore.value = entries.value.length >= 10
     })
     .subscribe()
 }
@@ -159,17 +186,24 @@ async function submitNote() {
   const sb = useSupabaseClient()
   if (sb) {
     try {
-      const { error } = await sb.from('guestbook').insert([{ name: form.name.trim(), message: form.message.trim() }])
+      const { error } = await sb.from('guestbook').insert([{ name: form.name.trim(), message: form.message.trim() }] as any)
       if (error) throw error
     } catch (err) {
       console.warn('Guestbook submit failed:', err)
     }
   } else {
-    // Static mode: show optimistic entry
-    entries.value = [
-      { id: crypto.randomUUID(), name: form.name.trim(), message: form.message.trim(), created_at: new Date().toISOString() },
-      ...entries.value,
-    ].slice(0, 10)
+    // Static mode: optimistic entry with drop animation
+    const optimisticEntry: GuestEntry = {
+      id: crypto.randomUUID(),
+      name: form.name.trim(),
+      message: form.message.trim(),
+      created_at: new Date().toISOString(),
+    }
+    newEntryIds.value.add(optimisticEntry.id)
+    const updated = [optimisticEntry, ...entries.value]
+    if (updated.length > 10) updated.splice(10)
+    entries.value = updated
+    hasMore.value = updated.length >= 10
   }
 
   // Rate limit
@@ -301,19 +335,136 @@ onUnmounted(() => {
   line-height: 1.6;
 }
 
-/* Entries */
-.gb-empty {
-  font-family: 'Manrope', sans-serif;
-  font-size: 13px;
-  color: var(--txt-primary);
-  opacity: 0.4;
-  font-style: italic;
+/* Entries feed */
+.gb-feed { margin-top: 56px; }
+
+.gb-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 540px;
 }
-.gb-entry        { padding: 20px 0; }
-.gb-entry-name   { font-family:'Manrope',sans-serif; font-weight:500; font-size:14px; color:var(--txt-primary); }
-.gb-entry-msg    { font-family:'Manrope',sans-serif; font-weight:300; font-size:14px; color:var(--txt-primary); opacity:0.75; margin-top:4px; }
-.gb-entry-ts     { font-family:'Space Mono',monospace; font-size:10px; color:var(--txt-primary); opacity:0.35; margin-top:6px; }
-.gb-entry-divider{ height:1px; background:var(--line); margin-top:20px; }
+@media (max-width: 768px) {
+  .gb-cards { gap: 8px; }
+}
+
+/* ── Card ── */
+.gb-card {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-surface);
+  cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.gb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+/* Light mode card */
+:root:not(.dark) .gb-card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.gb-card-inner {
+  padding: 20px 24px;
+}
+@media (max-width: 768px) {
+  .gb-card-inner { padding: 16px 20px; }
+}
+
+.gb-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gb-card-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.gb-card-name {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--txt-primary);
+}
+.gb-card-msg {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--txt-primary);
+  opacity: 0.8;
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.gb-card-ts {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--txt-primary);
+  opacity: 0.35;
+  margin-top: 10px;
+}
+
+/* ── Drop animation (new / realtime cards) ── */
+@keyframes cardDrop {
+  0%   { opacity: 0; transform: translateY(-40px) scale(0.95); }
+  60%  {             transform: translateY(6px)   scale(1.01); }
+  80%  {             transform: translateY(-3px)  scale(0.99); }
+  100% { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+.gb-card--drop {
+  animation: cardDrop 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* ── Stagger fade (on-load cards) ── */
+@keyframes cardFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.gb-card--fade {
+  animation: cardFade 0.4s ease forwards;
+}
+
+/* ── TransitionGroup for realtime pushes ── */
+.card-list-enter-active { animation: cardDrop 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+.card-list-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+.card-list-leave-to    { opacity: 0; transform: translateY(10px); }
+
+/* ── Empty state ── */
+.gb-empty-card {
+  max-width: 480px;
+  width: 100%;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 20px 24px;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gb-empty-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--txt-primary);
+  opacity: 0.5;
+  text-align: center;
+}
+
+/* ── More label ── */
+.gb-more {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--txt-primary);
+  opacity: 0.35;
+  margin-top: 8px;
+}
 
 /* Transitions */
 .confirm-enter-active { transition: opacity 0.4s ease; }

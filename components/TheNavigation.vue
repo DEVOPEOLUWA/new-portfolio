@@ -90,7 +90,7 @@
     <Transition name="drawer">
       <div
         v-if="mobileOpen"
-        class="md:hidden absolute top-20 left-0 right-0 border-b border-line nav-blur"
+        class="md:hidden absolute top-20 left-0 right-0 border-b border-line mobile-drawer"
       >
         <nav class="flex flex-col px-6 py-8 gap-6">
           <a
@@ -311,5 +311,14 @@ onUnmounted(() => {
 
 .logo-cursor {
   will-change: opacity;
+}
+
+/* Mobile nav dropdown — fully opaque, always above canvas/grain */
+.mobile-drawer {
+  background: var(--bg-base);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  opacity: 1;
+  z-index: 9999;
 }
 </style>

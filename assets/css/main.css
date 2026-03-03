@@ -137,7 +137,83 @@
   .dark .nav-blur {
     background: rgba(10, 10, 10, 0.8);
   }
+
+  /* Mobile nav: fully opaque — no bleed-through from canvas/grain */
+  @media (max-width: 768px) {
+    .nav-blur {
+      background: var(--bg-base) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      opacity: 1 !important;
+      z-index: 9999;
+    }
+  }
 }
+
+/* ─── Mobile type-scale overrides ─── */
+@media (max-width: 768px) {
+
+  :root,
+  .dark {
+    --fs-display: clamp(72px, 20vw, 110px);
+    --fs-heading: clamp(32px, 8vw, 48px);
+    --fs-body: clamp(17px, 4.5vw, 20px);
+    --fs-small: 15px;
+    --fs-label: 12px;
+  }
+
+  /* Global minimum — nothing renders below 15px for body / 12px for labels */
+  p,
+  li,
+  a {
+    font-size: max(15px, 1em);
+  }
+
+  /* About — bio paragraphs */
+  .bio-para {
+    font-size: 17px !important;
+  }
+
+  /* About — pull quote */
+  .quote-text {
+    font-size: 19px !important;
+  }
+
+  /* About — timeline role */
+  .entry-role {
+    font-size: 20px !important;
+  }
+
+  /* Featured works mobile — descriptor */
+  .mc-desc {
+    font-size: 16px !important;
+  }
+
+  /* Featured works mobile — CTA link */
+  .mc-cta {
+    font-size: 15px !important;
+  }
+
+  /* Space Mono labels — never below 12px */
+  .zone-label,
+  .mc-header-label,
+  .footer-text,
+  .mono-tag,
+  .row-label {
+    font-size: 12px !important;
+  }
+
+  /* Contact row values on mobile */
+  .row-value {
+    font-size: clamp(20px, 5vw, 28px) !important;
+  }
+
+  /* Footer bottom bar */
+  .footer-text {
+    font-size: 12px !important;
+  }
+}
+
 
 /* ── Utility Animations ── */
 @layer utilities {

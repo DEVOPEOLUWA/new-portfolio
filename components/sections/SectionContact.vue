@@ -67,7 +67,7 @@
     <div class="footer-bar">
       <div class="footer-rule" />
       <div class="footer-inner">
-        <span class="footer-text">© 2025 Opeoluwa Ayodeji · rachycodes</span>
+        <span class="footer-text">© 2026 Opeoluwa Ayodeji · rachycodes</span>
         <span class="footer-text hidden md:block">Design &amp; Engineering by O.A</span>
         <button class="footer-text footer-top-btn" @click="scrollToTop">BACK TO TOP ↑</button>
       </div>
