@@ -21,19 +21,17 @@ export default defineNuxtConfig({
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        {
-          name: "description",
-          content:
-            "Frontend Engineer crafting intuitive digital experiences with Vue, Nuxt, and modern web technologies.",
-        },
+        { name: "description", content: "Frontend Engineer building enterprise systems that handle real complexity — then make them feel effortless to use." },
         { name: "theme-color", content: "#F5F5F0" },
-        { property: "og:title", content: "Opeoluwa Ayodeji — Frontend Engineer" },
-        {
-          property: "og:description",
-          content:
-            "Frontend Engineer crafting intuitive digital experiences with Vue, Nuxt, and modern web technologies.",
-        },
+        { property: "og:title", content: "Opeoluwa Ayodeji — rachycodes" },
+        { property: "og:description", content: "Frontend Engineer building enterprise systems that handle real complexity — then make them feel effortless to use." },
+        { property: "og:image", content: "https://rachycodes.tech/og-image.png" },
+        { property: "og:url", content: "https://rachycodes.tech" },
         { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Opeoluwa Ayodeji — rachycodes" },
+        { name: "twitter:description", content: "Frontend Engineer building enterprise systems that handle real complexity — then make them feel effortless to use." },
+        { name: "twitter:image", content: "https://rachycodes.tech/og-image.png" },
       ],
       link: [
         {
