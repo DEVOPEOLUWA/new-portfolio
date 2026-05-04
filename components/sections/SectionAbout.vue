@@ -55,7 +55,7 @@
           </div>
 
           <!-- Resume button -->
-          <a href="/resume.pdf" download class="resume-btn" style="margin-top:36px;display:inline-block;">
+          <a href="/Opeoluwa_Ayodeji_Frontend_Engineer_Resume.pdf" download class="resume-btn" style="margin-top:36px;display:inline-block;">
             Download Resume ↗
           </a>
 
