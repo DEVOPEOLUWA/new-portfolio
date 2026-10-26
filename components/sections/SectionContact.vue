@@ -1,346 +1,181 @@
 <template>
-  <section
-    id="contact"
-    ref="sectionRef"
-    class="contact-section"
-  >
-    <!-- ══════════════════════════════════════════
-         MAIN BODY — two column (desktop) / stack (mobile)
-    ══════════════════════════════════════════ -->
-    <div class="contact-body">
+  <section id="contact" ref="sectionRef" class="ct">
+    <div class="ct__inner wrap" data-fit>
+      <p class="ct__kicker t-mono">Have a project in mind, or just want to talk engineering?</p>
+      <h2 class="ct__title t-display" aria-label="Let's talk">
+        <span class="ct__row"><span v-for="(c, i) in 'LET’S'" :key="`a${i}`" class="ct__ch">{{ c }}</span></span>
+        <span class="ct__row ct__row--2">
+          <span v-for="(c, i) in 'TALK'" :key="`b${i}`" class="ct__ch">{{ c }}</span>
+          <span class="ct__smile" aria-hidden="true">☺</span>
+        </span>
+      </h2>
 
-      <!-- LEFT — typographic word + opener -->
-      <div class="contact-left">
-
-        <!-- Italic opener -->
-        <p
-          ref="openerRef"
-          class="contact-opener"
-          style="opacity: 0; transform: translateY(16px);"
+      <div class="ct__actions">
+        <button
+          ref="magnetRef"
+          class="ct__email"
+          data-cursor="copy"
+          @pointermove="magnet"
+          @pointerleave="release"
+          @click="copy"
         >
-          "Have a project in mind, or just want to talk engineering?"
-        </p>
-        <!-- rachycodes handle -->
-        <p style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--txt-primary);opacity:0.4;margin-top:12px;">@rachycodes</p>
+          <span class="ct__email-label t-mono">{{ copied ? 'Copied to clipboard ✓' : 'Click to copy' }}</span>
+          <span class="ct__email-addr">{{ EMAIL }}</span>
+        </button>
 
-        <!-- Large typographic word -->
-        <div class="contact-word-wrap">
-          <span
-            ref="wordRef"
-            class="contact-word"
-            style="opacity: 0; transform: translateY(40px);"
-          >Contact</span>
-        </div>
-
-      </div>
-
-      <!-- RIGHT — contact rows -->
-      <div class="contact-right">
-        <div
-          v-for="(row, i) in rows"
-          :key="i"
-          :ref="(el: any) => { if (el) rowRefs[i] = el as HTMLElement }"
-          class="contact-row"
-          style="opacity: 0; transform: translateX(20px);"
-        >
-          <div class="row-divider" />
-          <div class="row-inner">
-            <span class="row-label">{{ row.label }}</span>
-            <component
-              :is="row.href ? 'a' : 'span'"
-              :href="row.href || undefined"
-              :target="row.external ? '_blank' : undefined"
-              :rel="row.external ? 'noopener noreferrer' : undefined"
-              class="row-value"
-            >{{ row.value }}</component>
-          </div>
-        </div>
-        <!-- Bottom divider -->
-        <div class="row-divider" style="opacity: 0;" ref="lastDivRef" />
-      </div>
-
-    </div>
-
-    <!-- ══════════════════════════════════════════
-         FOOTER BAR
-    ══════════════════════════════════════════ -->
-    <div class="footer-bar">
-      <div class="footer-rule" />
-      <div class="footer-inner">
-        <span class="footer-text">© 2026 Opeoluwa Ayodeji · rachycodes</span>
-        <span class="footer-text hidden md:block">Design &amp; Engineering by O.A</span>
-        <button class="footer-text footer-top-btn" @click="scrollToTop">BACK TO TOP ↑</button>
+        <ul class="ct__links">
+          <li v-for="l in links" :key="l.label">
+            <a :href="l.href" target="_blank" rel="noopener" class="ct__link" :data-cursor="l.cursor" @click="track('Contact link', { to: l.label })">
+              <span class="t-display">{{ l.label }}</span>
+              <span class="ct__arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
+    <footer class="foot">
+      <span class="t-mono">© {{ year }} Opeoluwa Ayodeji · rachycodes</span>
+      <span class="t-mono">Lagos · {{ time }} WAT</span>
+      <span class="foot__right">
+        <button class="foot__btn t-mono" @click="emit('replay')">↺ Replay intro</button>
+        <button class="foot__btn t-mono" @click="scrollTo(0, { duration: 2 })">Back to top ↑</button>
+      </span>
+    </footer>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { track } from '@vercel/analytics'
 import { useLenis } from '~/composables/useLenis'
+import { onVisible } from '~/composables/useReveal'
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
-
+const emit = defineEmits<{ replay: [] }>()
 const { scrollTo } = useLenis()
+const { blip } = useSound()
 
-const sectionRef = ref<HTMLElement | null>(null)
-const openerRef  = ref<HTMLElement | null>(null)
-const wordRef    = ref<HTMLElement | null>(null)
-const rowRefs    = ref<HTMLElement[]>([])
-const lastDivRef = ref<HTMLElement | null>(null)
-
-const triggers: ScrollTrigger[] = []
-
-const rows = [
-  {
-    label: 'Email',
-    value: 'Reach out to me ↗',
-    href: 'mailto:ayodejiope13@gmail.com',
-    external: false,
-  },
-  {
-    label: 'LinkedIn',
-    value: 'Connect with me ↗',
-    href: 'https://www.linkedin.com/in/ayodeji-opeoluwa/',
-    external: true,
-  },
-  {
-    label: 'GitHub',
-    value: 'Check out my work ↗',
-    href: 'https://github.com/DEVOPEOLUWA/',
-    external: true,
-  },
+const EMAIL = 'ayodejiope13@gmail.com'
+const links = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ayodeji-opeoluwa/', cursor: 'connect' },
+  { label: 'GitHub', href: 'https://github.com/DEVOPEOLUWA/', cursor: 'code' },
+  { label: 'Résumé', href: '/Opeoluwa_Ayodeji_Frontend_Engineer_Resume.pdf', cursor: 'cv' },
 ]
 
-function scrollToTop() {
-  scrollTo(0, { duration: 1.5 })
+const sectionRef = ref<HTMLElement | null>(null)
+const magnetRef = ref<HTMLElement | null>(null)
+const copied = ref(false)
+const time = ref('')
+const year = new Date().getFullYear()
+let clock: ReturnType<typeof setInterval> | null = null
+let stopReveal: (() => void) | null = null
+
+function magnet(e: PointerEvent) {
+  if (e.pointerType !== 'mouse') return
+  const r = magnetRef.value!.getBoundingClientRect()
+  gsap.to(magnetRef.value, { x: (e.clientX - r.left - r.width / 2) * 0.25, y: (e.clientY - r.top - r.height / 2) * 0.35, rotate: (e.clientX - r.left - r.width / 2) * 0.02, duration: 0.5, ease: 'power3.out' })
+}
+function release() {
+  gsap.to(magnetRef.value, { x: 0, y: 0, rotate: 0, duration: 0.9, ease: 'elastic.out(1, 0.4)' })
+}
+
+async function copy() {
+  try {
+    await navigator.clipboard.writeText(EMAIL)
+    copied.value = true
+    blip(990, 0.1, 'sine', 0.05)
+    track('Email copied')
+    setTimeout(() => (copied.value = false), 2200)
+  } catch {
+    window.location.href = `mailto:${EMAIL}`
+  }
+}
+
+function tick() {
+  time.value = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', second: '2-digit' })
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    ScrollTrigger.refresh()
-
-    if (!sectionRef.value) return
-
-    const st = ScrollTrigger.create({
-      trigger: sectionRef.value,
-      start: 'top 80%',
-      once: true,
-      onEnter: () => {
-        // Large word
-        gsap.to(wordRef.value, {
-          opacity: 1, y: 0,
-          duration: 1, ease: 'power3.out',
-        })
-        // Opener
-        gsap.to(openerRef.value, {
-          opacity: 1, y: 0,
-          duration: 0.7, ease: 'power3.out',
-          delay: 0.2,
-        })
-        // Rows staggered
-        rowRefs.value.forEach((row, i) => {
-          gsap.to(row, {
-            opacity: 1, x: 0,
-            duration: 0.55, ease: 'power3.out',
-            delay: 0.15 + i * 0.1,
-          })
-        })
-        if (lastDivRef.value) {
-          gsap.to(lastDivRef.value, { opacity: 1, duration: 0.4, delay: 0.6 })
-        }
-      },
-    })
-    triggers.push(st)
-  }, 400)
+  gsap.registerPlugin(ScrollTrigger)
+  tick()
+  clock = setInterval(tick, 1000)
+  stopReveal = onVisible(sectionRef.value?.querySelector('.ct__title'), () => {
+    gsap.fromTo('.ct__ch', { yPercent: 120, rotate: () => gsap.utils.random(-25, 25) }, { yPercent: 0, rotate: 0, duration: 1, ease: 'back.out(1.6)', stagger: 0.05 })
+    gsap.fromTo('.ct__smile', { scale: 0, rotate: -180 }, { scale: 1, rotate: 0, duration: 1, ease: 'elastic.out(1, 0.5)', delay: 0.5 })
+  }, 0.3)
 })
 
 onUnmounted(() => {
-  triggers.forEach((t) => t.kill())
+  if (clock) clearInterval(clock)
+  stopReveal?.()
 })
 </script>
 
 <style scoped>
-.contact-section {
-  background: var(--bg-base);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  transition: background-color 0.4s ease;
-}
-
-/* ── Body ── */
-.contact-body {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  max-width: 1600px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 80px 96px 0;
-  gap: 80px;
-}
-
-@media (max-width: 768px) {
-  .contact-body {
-    flex-direction: column;
-    padding: 64px 24px 0;
-    gap: 48px;
-  }
-}
-
-/* ── Left ── */
-.contact-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 420px;
+.ct {
   position: relative;
+  background: var(--pop2);
+  color: var(--ink);
+  border-top: 3px solid var(--ink);
+  padding: clamp(90px, 12vw, 160px) clamp(20px, 5vw, 72px) 0;
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+}
+.ct__inner { flex: 1; width: 100%; }
+.ct__kicker { font-size: 12px; font-weight: 800; }
+.ct__title { font-size: clamp(110px, 24vw, 420px); line-height: 0.8; margin-top: 18px; }
+.ct__row { display: flex; overflow: hidden; padding-top: 0.04em; }
+.ct__row--2 { align-items: center; gap: 0.06em; }
+.ct__ch { display: inline-block; }
+.ct__smile { display: inline-grid; place-items: center; width: 0.7em; height: 0.7em; border-radius: 50%; background: var(--pop); border: 0.03em solid var(--ink); font-size: 0.55em; line-height: 1; margin-left: 0.1em; }
+
+.ct__actions { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: end; margin-top: clamp(40px, 6vw, 72px); }
+.ct__email {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  padding: clamp(22px, 3vw, 34px) clamp(24px, 3vw, 40px);
+  background: var(--ink); color: var(--paper);
+  border: 3px solid var(--ink); border-radius: 999px;
+  box-shadow: 8px 8px 0 var(--pop);
+  text-align: left;
+  max-width: 100%;
+}
+.ct__email-label { font-size: 10px; color: var(--pop2); }
+.ct__email-addr { font-weight: 800; font-size: clamp(20px, 2.6vw, 40px); letter-spacing: -0.02em; word-break: break-all; }
+
+.ct__links { list-style: none; padding: 0; margin: 0; border-top: 3px solid var(--ink); }
+.ct__link { display: flex; justify-content: space-between; align-items: center; padding: 14px 4px; border-bottom: 3px solid var(--ink); color: var(--ink); text-decoration: none; transition: padding 0.35s var(--ease-out), background-color 0.35s; }
+.ct__link .t-display { font-size: clamp(36px, 4vw, 60px); }
+.ct__arrow { font-size: 34px; font-weight: 800; transition: transform 0.35s var(--ease-out); }
+.ct__link:hover { padding-left: 18px; background: var(--paper); }
+.ct__link:hover .ct__arrow { transform: rotate(45deg); }
+
+.foot {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  margin: clamp(56px, 8vw, 100px) calc(-1 * clamp(20px, 5vw, 72px)) 0;
+  padding: 22px clamp(20px, 5vw, 72px) calc(22px + var(--frame) + 40px);
+  border-top: 3px solid var(--ink);
+  font-size: 11px;
+}
+.foot .t-mono { font-size: 11px; font-weight: 800; }
+.foot__right { display: flex; gap: 10px; }
+.foot__btn { background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 8px 14px; color: var(--ink); }
+.foot__btn:hover { background: var(--ink); color: var(--paper); }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .ct { width: 100vw; padding-top: calc(var(--nav-h) + 30px); }
+  /* Title on the left, ways to reach me on the right */
+  .ct__inner { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; column-gap: 5vw; align-items: end; }
+  .ct__kicker { grid-column: 1 / -1; }
+  .ct__title { font-size: min(17vw, 33vh); margin-top: 1vh; }
+  .ct__actions { grid-template-columns: 1fr; gap: 3vh; margin-top: 0; padding-bottom: 2vh; }
+  .ct__link .t-display { font-size: min(4vw, 6vh); }
+  .ct__link { padding: 1vh 4px; }
+  .foot { margin-top: 2vh; padding-top: 16px; padding-bottom: 80px; }
 }
 
-@media (max-width: 768px) {
-  .contact-left {
-    min-height: auto;
-  }
-}
-
-.contact-opener {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-style: italic;
-  font-size: clamp(22px, 3vw, 36px);
-  color: var(--txt-primary);
-  max-width: 400px;
-  line-height: 1.4;
-  margin-bottom: auto;
-}
-
-.contact-word-wrap {
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  padding-top: 40px;
-}
-
-.contact-word {
-  font-family: 'Kalnia', Georgia, serif;
-  font-size: clamp(80px, 14vw, 180px);
-  font-weight: 700;
-  color: var(--txt-primary);
-  line-height: 0.85;
-  letter-spacing: -0.03em;
-  display: block;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .contact-word {
-    font-size: clamp(60px, 20vw, 100px);
-  }
-}
-
-/* ── Right ── */
-.contact-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.contact-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.row-divider {
-  height: 1px;
-  background: var(--line);
-  width: 100%;
-}
-
-.row-inner {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 28px 0;
-  gap: 16px;
-}
-
-.row-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--txt-primary);
-  opacity: 0.4;
-  flex-shrink: 0;
-}
-
-.row-value {
-  font-family: 'Kalnia', Georgia, serif;
-  font-size: clamp(18px, 2.5vw, 32px);
-  font-weight: 400;
-  color: var(--txt-primary);
-  text-align: right;
-  text-decoration: none;
-  transition: color 0.2s ease;
-  word-break: break-all;
-}
-
-.row-value:hover {
-  color: var(--accent);
-}
-
-/* ── Footer bar ── */
-.footer-bar {
-  width: 100%;
-  padding: 0 96px;
-  margin-top: 40px;
-}
-
-@media (max-width: 768px) {
-  .footer-bar {
-    padding: 0 24px;
-  }
-}
-
-.footer-rule {
-  height: 1px;
-  background: var(--line);
-  width: 100%;
-}
-
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-}
-
-.footer-text {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--txt-primary);
-  opacity: 0.4;
-}
-
-.footer-top-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: opacity 0.2s ease;
-}
-
-.footer-top-btn:hover {
-  opacity: 0.8;
+@media (max-width: 900px) {
+  .ct__actions { grid-template-columns: 1fr; }
+  .ct__email { border-radius: 28px; width: 100%; }
 }
 </style>

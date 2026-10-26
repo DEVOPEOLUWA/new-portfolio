@@ -35,3 +35,7 @@ Thumbs.db
 # Misc
 .cache
 .parcel-cache
+# Nuxt build output
+.nuxt/
+.output/
+.data/
