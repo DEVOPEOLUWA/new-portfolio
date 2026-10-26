@@ -1,6 +1,6 @@
 <template>
   <section id="contact" ref="sectionRef" class="ct">
-    <div class="ct__inner wrap">
+    <div class="ct__inner wrap" data-fit>
       <p class="ct__kicker t-mono">Have a project in mind, or just want to talk engineering?</p>
       <h2 class="ct__title t-display" aria-label="Let's talk">
         <span class="ct__row"><span v-for="(c, i) in 'LET’S'" :key="`a${i}`" class="ct__ch">{{ c }}</span></span>
@@ -50,6 +50,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { track } from '@vercel/analytics'
 import { useLenis } from '~/composables/useLenis'
+import { onVisible } from '~/composables/useReveal'
 
 const emit = defineEmits<{ replay: [] }>()
 const { scrollTo } = useLenis()
@@ -68,7 +69,7 @@ const copied = ref(false)
 const time = ref('')
 const year = new Date().getFullYear()
 let clock: ReturnType<typeof setInterval> | null = null
-let st: ScrollTrigger | null = null
+let stopReveal: (() => void) | null = null
 
 function magnet(e: PointerEvent) {
   if (e.pointerType !== 'mouse') return
@@ -99,20 +100,15 @@ onMounted(() => {
   gsap.registerPlugin(ScrollTrigger)
   tick()
   clock = setInterval(tick, 1000)
-  st = ScrollTrigger.create({
-    trigger: sectionRef.value,
-    start: 'top 65%',
-    once: true,
-    onEnter: () => {
-      gsap.fromTo('.ct__ch', { yPercent: 120, rotate: () => gsap.utils.random(-25, 25) }, { yPercent: 0, rotate: 0, duration: 1, ease: 'back.out(1.6)', stagger: 0.05 })
-      gsap.fromTo('.ct__smile', { scale: 0, rotate: -180 }, { scale: 1, rotate: 0, duration: 1, ease: 'elastic.out(1, 0.5)', delay: 0.5 })
-    },
-  })
+  stopReveal = onVisible(sectionRef.value?.querySelector('.ct__title'), () => {
+    gsap.fromTo('.ct__ch', { yPercent: 120, rotate: () => gsap.utils.random(-25, 25) }, { yPercent: 0, rotate: 0, duration: 1, ease: 'back.out(1.6)', stagger: 0.05 })
+    gsap.fromTo('.ct__smile', { scale: 0, rotate: -180 }, { scale: 1, rotate: 0, duration: 1, ease: 'elastic.out(1, 0.5)', delay: 0.5 })
+  }, 0.3)
 })
 
 onUnmounted(() => {
   if (clock) clearInterval(clock)
-  st?.kill()
+  stopReveal?.()
 })
 </script>
 
@@ -165,6 +161,18 @@ onUnmounted(() => {
 .foot__right { display: flex; gap: 10px; }
 .foot__btn { background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 8px 14px; color: var(--ink); }
 .foot__btn:hover { background: var(--ink); color: var(--paper); }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .ct { width: 100vw; padding-top: calc(var(--nav-h) + 30px); }
+  /* Title on the left, ways to reach me on the right */
+  .ct__inner { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; column-gap: 5vw; align-items: end; }
+  .ct__kicker { grid-column: 1 / -1; }
+  .ct__title { font-size: min(17vw, 33vh); margin-top: 1vh; }
+  .ct__actions { grid-template-columns: 1fr; gap: 3vh; margin-top: 0; padding-bottom: 2vh; }
+  .ct__link .t-display { font-size: min(4vw, 6vh); }
+  .ct__link { padding: 1vh 4px; }
+  .foot { margin-top: 2vh; padding-top: 16px; padding-bottom: 80px; }
+}
 
 @media (max-width: 900px) {
   .ct__actions { grid-template-columns: 1fr; }

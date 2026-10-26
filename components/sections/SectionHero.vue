@@ -1,12 +1,11 @@
 <template>
   <section id="top" ref="heroRef" class="hero dot-grid" @pointermove="onTilt" @pointerleave="resetTilt">
-    <div class="hero__grid wrap">
+    <div class="hero__grid wrap" data-fit>
       <!-- Copy -->
       <div class="hero__copy">
         <div class="hero__status reveal-pop">
           <span class="chip"><span class="live-dot" /> Open to interesting work</span>
           <span class="chip chip--ghost">Lagos, NG · {{ time }}</span>
-          <span class="chip chip--pink">🧬 Learning bioinformatics</span>
         </div>
 
         <h1 class="hero__title t-display" aria-label="I make complex feel easy.">
@@ -20,15 +19,12 @@
         <p class="hero__lede reveal-up">
           Hi, I'm <strong>Opeoluwa</strong> — I make the web feel like a dream. Hand me a complex design and I'll
           build it from scratch, pixel for pixel, into enterprise platforms that solve real problems and feel
-          effortless to use. Frontend at heart, lately getting comfortable on the backend too.
+          effortless to use. Frontend at heart, full stack in practice.
         </p>
 
         <div class="hero__ctas reveal-up">
           <a href="#work" class="btn" data-cursor="go" @click.prevent="scrollTo('#work', { offset: -70 })">
-            See the work <span aria-hidden="true">↓</span>
-          </a>
-          <a href="#side-quest" class="btn btn--paper" data-cursor="sus?" @click.prevent="scrollTo('#side-quest', { offset: -70 })">
-            Solve a murder <span aria-hidden="true">🔍</span>
+            Explore my work <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
@@ -45,7 +41,7 @@
             <path id="badge-circle" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0" />
           </defs>
           <circle cx="100" cy="100" r="98" fill="var(--pop2)" stroke="var(--ink)" stroke-width="4" />
-          <text font-family="JetBrains Mono" font-size="15" font-weight="800" letter-spacing="2" fill="var(--ink)">
+          <text font-family="Unbounded" font-size="12" font-weight="700" letter-spacing="1" fill="var(--ink)">
             <textPath href="#badge-circle">FRONTEND-FIRST ✦ FULL-STACK ✦ RACHYCODES ✦</textPath>
           </text>
           <text x="100" y="117" text-anchor="middle" font-size="48" fill="var(--ink)">✦</text>
@@ -84,6 +80,7 @@ import { Draggable } from 'gsap/Draggable'
 import { InertiaPlugin } from 'gsap/InertiaPlugin'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from '~/composables/useLenis'
+import { H_QUERY } from '~/composables/useHorizontal'
 
 const props = defineProps<{ revealed: boolean }>()
 const { scrollTo } = useLenis()
@@ -97,7 +94,7 @@ const keycaps = [
   { label: '{ }', x: '55%', y: '46%', r: 14, color: '#8f7bff', cls: 'hide-sm' },
   { label: '♥', x: '66%', y: '82%', r: -16, color: 'var(--pop)', cls: '' },
 ]
-const ticker = ['Angular', 'Vue', 'React', 'TypeScript', 'Pixel-perfect builds', 'Enterprise UX', 'Realtime UIs', 'Motion', 'Bioinformatics', 'Real problems']
+const ticker = ['Angular', 'Vue', 'React', 'TypeScript', 'Pixel-perfect builds', 'Enterprise UX', 'Realtime UIs', 'Motion', 'Full stack', 'Real problems']
 
 const heroRef = ref<HTMLElement | null>(null)
 const stickerRef = ref<HTMLElement | null>(null)
@@ -168,7 +165,8 @@ onMounted(() => {
     onDragStart() { gsap.to('.hero .hint', { opacity: 0, duration: 0.3 }) },
   })
 
-  st = ScrollTrigger.create({
+  // Vertical parallax only makes sense when the page scrolls vertically (phones)
+  if (!window.matchMedia(H_QUERY).matches) st = ScrollTrigger.create({
     trigger: heroRef.value,
     start: 'top top',
     end: 'bottom top',
@@ -271,10 +269,10 @@ onUnmounted(() => {
   display: grid; place-items: center;
   border-radius: 14%;
   background: var(--c); color: var(--ink);
-  font-family: 'JetBrains Mono', monospace; font-weight: 800;
+  font-family: 'Unbounded', monospace; font-weight: 800;
   font-size: calc(var(--s) * 0.26);
 }
-.hint { position: absolute; left: 36%; top: 9%; z-index: 4; color: var(--on-bg); font-size: 24px; display: flex; align-items: flex-start; gap: 2px; transform: rotate(-4deg); pointer-events: none; }
+.hint { position: absolute; left: 36%; top: max(9%, calc(var(--nav-h) + 20px)); z-index: 4; color: var(--on-bg); font-size: 24px; display: flex; align-items: flex-start; gap: 2px; transform: rotate(-4deg); pointer-events: none; }
 
 .hero__marquee {
   position: absolute; left: 0; right: 0; bottom: 0;
@@ -284,6 +282,19 @@ onUnmounted(() => {
 }
 .tick { font-size: clamp(22px, 2.4vw, 34px); padding-right: 28px; }
 .tick i { font-style: normal; color: var(--pop2); margin-left: 24px; }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .hero { width: 100vw; padding-top: calc(var(--nav-h) + 20px); padding-bottom: 82px; }
+  .hero__title { font-size: min(12vw, 13vh); }
+  .hero__lede { margin-top: 2.6vh; font-size: min(1.5vw, 2.3vh, 21px); }
+  .hero__ctas { margin-top: 2.6vh; }
+  .hero__status { margin-bottom: 2.4vh; }
+  .hero__portrait { width: min(100%, 420px, 45vh); }
+  /* Lift the ticker clear of the travel road at the bottom of the screen */
+  .hero { padding-bottom: 140px; }
+  .hero__status { gap: 6px; }
+  .hero__marquee { bottom: 74px; padding-bottom: 14px; border-bottom: 3px solid var(--ink); }
+}
 
 @media (max-width: 900px) {
   .hero { padding-top: calc(var(--nav-h) + var(--frame) + 28px); padding-bottom: 110px; align-items: flex-start; }

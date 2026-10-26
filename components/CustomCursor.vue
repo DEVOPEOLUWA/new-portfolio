@@ -74,7 +74,7 @@ onUnmounted(() => {
 }
 .cursor__ring.is-down { scale: 0.8; }
 .cursor__label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Unbounded', monospace;
   font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink);
 }

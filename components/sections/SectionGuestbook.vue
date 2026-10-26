@@ -2,7 +2,7 @@
   <!-- Supabase tables + policies live in supabase/schema.sql -->
   <section id="notes" ref="sectionRef" class="gb section-pad">
     <div class="wrap gb__wrap">
-      <div class="gb__left">
+      <div class="gb__left" data-fit>
         <span class="chip">Guestbook</span>
         <h2 class="gb__title t-display">Leave a<br /><em class="t-serif">note.</em></h2>
         <p class="gb__sub">Say hi, roast my CSS, tell me who the killer was. It goes straight on the wall.</p>
@@ -240,6 +240,15 @@ onUnmounted(() => {
 .sticky__tape { position: absolute; top: -12px; left: 50%; width: 70px; height: 24px; margin-left: -35px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(0, 0, 0, 0.08); rotate: -4deg; }
 .sticky__msg { font-size: 23px; line-height: 1.05; word-break: break-word; }
 .sticky__by { font-size: 9px; opacity: 0.6; margin-top: 12px; text-transform: none; }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .gb { width: 145vw; }
+  .gb__wrap { height: 100%; grid-template-columns: 36vw 1fr; align-items: center; }
+  .gb__title { font-size: min(9vw, 14vh); margin-top: 2vh; }
+  .gb__sub { margin: 2vh 0 3vh; }
+  .pad__msg { min-height: 12vh; }
+  .wall { height: calc(100vh - var(--nav-h) - 150px); min-height: 0; overflow: hidden; }
+}
 
 @media (max-width: 900px) {
   .gb__wrap { grid-template-columns: 1fr; }

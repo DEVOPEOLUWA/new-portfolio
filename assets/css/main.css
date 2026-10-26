@@ -110,7 +110,8 @@
     letter-spacing: -0.02em;
   }
   .t-serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -0.01em; }
-  .t-mono { font-family: "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+  .t-mono { font-family: "Unbounded", system-ui, sans-serif; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+  .t-code { font-family: "Martian Mono", ui-monospace, monospace; font-stretch: 87%; text-transform: none; }
   .t-hand { font-family: Caveat, cursive; font-weight: 600; }
 
   .chip {
@@ -120,8 +121,8 @@
     border-radius: 999px;
     background: var(--paper);
     color: var(--ink);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    font-family: "Unbounded", monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase;
     white-space: nowrap;
   }
 
@@ -133,8 +134,8 @@
     border-radius: 999px;
     background: var(--pop2);
     color: var(--ink);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    font-family: "Unbounded", monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
     box-shadow: 5px 5px 0 var(--ink);
     transition: transform 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out), background-color 0.3s;
     text-decoration: none;
@@ -173,4 +174,32 @@
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* ─────────────────────────────────────────────────────────
+   HORIZONTAL TRACK (desktop). Must match H_QUERY in
+   composables/useHorizontal.ts. Phones keep the vertical stack.
+   ───────────────────────────────────────────────────────── */
+@media (min-width: 900px) and (min-height: 560px) {
+  .hwrap { height: 100vh; overflow: hidden; }
+  .htrack {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    height: 100vh;
+    will-change: transform;
+  }
+  .htrack > section {
+    position: relative;
+    flex-shrink: 0;
+    height: 100vh;
+    min-height: 0 !important;
+    overflow: hidden;
+    border-top: none !important;
+    border-left: 3px solid var(--ink);
+  }
+  .htrack > section:first-child { border-left: none; }
+  .htrack .wrap { max-width: none; }
+  .htrack .section-pad { padding: calc(var(--nav-h) + 40px) 5vw 96px; }
 }

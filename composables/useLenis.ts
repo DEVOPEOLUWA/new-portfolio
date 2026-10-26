@@ -1,6 +1,7 @@
 import Lenis from 'lenis'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useHorizontal } from './useHorizontal'
 
 let lenisInstance: Lenis | null = null
 let tickerFn: ((time: number) => void) | null = null
@@ -14,6 +15,8 @@ export function useLenis() {
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      // Sideways trackpad swipes move the horizontal track too
+      gestureOrientation: 'both',
     })
     lenisInstance.on('scroll', ScrollTrigger.update)
 
@@ -34,6 +37,12 @@ export function useLenis() {
     if (y === null) {
       const el = document.querySelector(target as string)
       if (!el) return
+      // On the horizontal track a panel lands flush left, so the vertical offset doesn't apply
+      const hy = useHorizontal().scrollFor(el)
+      if (hy !== null) {
+        lenisInstance.scrollTo(hy, { duration: options?.duration ?? 1.5, force: true })
+        return
+      }
       y = el.getBoundingClientRect().top + window.scrollY
     }
     lenisInstance.scrollTo(Math.max(0, y + (options?.offset ?? 0)), { duration: options?.duration ?? 1.5, force: true })

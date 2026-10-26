@@ -1,7 +1,7 @@
 <template>
   <section id="about" class="about section-pad">
     <div class="wrap">
-      <div class="about__top">
+      <div class="about__top" data-fit>
         <h2 class="about__title t-display">The person<br />behind the <em class="t-serif">pixels.</em></h2>
         <a href="/Opeoluwa_Ayodeji_Frontend_Engineer_Resume.pdf" target="_blank" rel="noopener" class="btn btn--pink" data-cursor="cv" @click="track('Resume downloaded')">
           Grab my résumé <span aria-hidden="true">↓</span>
@@ -9,7 +9,7 @@
       </div>
 
       <div class="about__grid">
-        <div class="about__bio">
+        <div class="about__bio" data-fit>
           <p v-for="(p, i) in bio" :key="i" class="about__p">{{ p }}</p>
 
           <blockquote class="quote card">
@@ -22,7 +22,7 @@
           </blockquote>
         </div>
 
-        <div class="about__side">
+        <div class="about__side" data-fit>
           <h3 class="about__h t-mono">Experience</h3>
           <div v-for="job in timeline" :key="job.date" class="ticket">
             <div class="ticket__main">
@@ -63,14 +63,13 @@ const { blip } = useSound()
 const bio = [
   "I got into engineering because I love building things — taking what exists, pushing it further, and watching complexity fold into something that just works. There's a satisfaction in that I haven't found anywhere else.",
   "The problems I'm drawn to are the genuinely hard ones: real scale, real users, real consequences if you get it wrong. I've built systems thousands of people depend on daily. That weight keeps me honest. Every problem is solvable — the question is which solution fits the people who actually have to live with it.",
-  "Frontend is home — it's where I've spent most of my career, sweating the details that make a screen feel calm instead of chaotic. My speciality is enterprise platforms: the big, permission-heavy, workflow-shaped systems most people find scary. Recently I've started crossing over to the backend too, because the best interfaces come from understanding the whole system.",
+  "Frontend is home — it's where I've spent most of my career, sweating the details that make a screen feel calm instead of chaotic. My speciality is enterprise platforms: the big, permission-heavy, workflow-shaped systems most people find scary. These days I work across the full stack too — understanding the whole system is what makes the interfaces I build hold up under real-world pressure.",
   "Lately I've been taking bioinformatics courses. Genetic code fascinates me — four letters, billions of lines, not a single comment — and the place where biology meets software is exactly where I'd love to build next.",
 ]
 
 const timeline = [
   { role: 'Software Developer', company: 'Encentral Solutions · frontend → full-stack', date: 'Nov 2022 — Now', badge: 'Current' },
   { role: 'Frontend Engineer Intern', company: 'Encentral Solutions', date: 'Apr 2022 — Nov 2022', badge: 'Level 1' },
-  { role: 'Hello, World', company: 'Self-taught — tutorials, side projects and a lot of Googling', date: '2021 — 2022', badge: 'Level 0' },
 ]
 
 const facts = [
@@ -132,6 +131,27 @@ function flip(i: number) {
 .fact__back { background: var(--ink); color: var(--paper); transform: rotateY(180deg); font-size: 13px; line-height: 1.4; justify-content: center; }
 .fact.is-flipped .fact__front { transform: rotateY(-180deg); }
 .fact.is-flipped .fact__back { transform: rotateY(0); }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .about { width: max-content; }
+  .about .wrap { height: 100%; display: flex; align-items: center; gap: 5vw; }
+  .about__top { width: 26vw; flex-shrink: 0; flex-direction: column; align-items: flex-start; gap: 4vh; }
+  .about__title { font-size: min(7.5vw, 13vh); }
+  .about__grid { display: flex; align-items: center; gap: 4vw; margin-top: 0; }
+  .about__bio { width: 82vw; flex-shrink: 0; column-count: 3; column-gap: 3vw; }
+  .about__p { font-size: min(16px, 2.15vh); margin-bottom: 1.8vh; break-inside: avoid; }
+  .quote { margin-top: 0; break-inside: avoid; padding: 2.4vh 22px; }
+  .quote .t-serif { font-size: min(1.9vw, 3.2vh); }
+  .about__side { width: 30vw; flex-shrink: 0; }
+  .ticket { margin-bottom: 1.2vh; }
+  .ticket__main { padding: 1vh 16px; gap: 0.3vh; }
+  .ticket__role { font-size: min(2vw, 3.3vh); }
+  .ticket__co { font-size: min(13px, 1.9vh); }
+  .about__h[style] { margin-top: 2.4vh !important; }
+  .about__h { margin-bottom: 1vh; }
+  .about { padding-bottom: 110px; }
+  .facts { grid-template-columns: repeat(3, minmax(0, 12.5vh)); }
+}
 
 @media (max-width: 900px) {
   .about__grid { grid-template-columns: 1fr; }

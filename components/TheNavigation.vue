@@ -11,7 +11,6 @@
             <span :key="current.id" class="pill__label"><span class="pill__emoji">{{ current.emoji }}</span>{{ current.label }}</span>
           </Transition>
         </span>
-        <span class="pill__bar"><span ref="barRef" class="pill__fill" /></span>
       </div>
 
       <button class="pill__theme" :style="{ background: currentSwatch }" data-cursor="theme" :aria-label="`Theme: ${currentLabel}. Switch theme`" @click="cycleFlavour">
@@ -101,9 +100,6 @@ const time = ref('')
 const rootRef = ref<HTMLElement | null>(null)
 const pillRef = ref<HTMLElement | null>(null)
 const logoRef = ref<HTMLElement | null>(null)
-const barRef = ref<HTMLElement | null>(null)
-let triggers: ScrollTrigger[] = []
-let progressTrigger: ScrollTrigger | null = null
 let clock: ReturnType<typeof setInterval> | null = null
 
 function toggle() {
@@ -155,19 +151,18 @@ function tick() {
   time.value = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit' })
 }
 
+// Whichever section covers the middle of the screen is "current" — works for
+// both the vertical (phone) and horizontal (desktop) layouts
+let sectionObserver: IntersectionObserver | null = null
 function watchSections() {
-  triggers.forEach((t) => t.kill())
-  triggers = []
+  sectionObserver?.disconnect()
   if (route.path !== '/') return
+  sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) currentId.value = e.target.id })
+  }, { rootMargin: '-49% -49% -49% -49%' })
   sections.forEach((s) => {
     const el = document.getElementById(s.id)
-    if (!el) return
-    triggers.push(ScrollTrigger.create({
-      trigger: el,
-      start: 'top 45%',
-      end: 'bottom 45%',
-      onToggle: (self) => { if (self.isActive) currentId.value = s.id },
-    }))
+    if (el) sectionObserver!.observe(el)
   })
 }
 
@@ -177,19 +172,13 @@ onMounted(() => {
   clock = setInterval(tick, 15_000)
   gsap.from(pillRef.value, { y: -90, scale: 0.6, duration: 1, ease: 'elastic.out(1, 0.6)', delay: 0.2 })
   // Page scroll progress drives the little bar inside the pill
-  progressTrigger = ScrollTrigger.create({
-    start: 0,
-    end: 'max',
-    onUpdate: (self) => gsap.set(barRef.value, { scaleX: self.progress }),
-  })
   nextTick(watchSections)
   window.addEventListener('keydown', onKey)
   window.addEventListener('pointerdown', onOutside)
 })
 
 onUnmounted(() => {
-  triggers.forEach((t) => t.kill())
-  progressTrigger?.kill()
+  sectionObserver?.disconnect()
   if (clock) clearInterval(clock)
   window.removeEventListener('keydown', onKey)
   window.removeEventListener('pointerdown', onOutside)
@@ -227,8 +216,6 @@ onUnmounted(() => {
 .pill__roll { display: block; height: 20px; overflow: hidden; }
 .pill__label { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 16px; line-height: 20px; white-space: nowrap; }
 .pill__emoji { font-size: 15px; }
-.pill__bar { display: block; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 12%, transparent); overflow: hidden; }
-.pill__fill { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; }
 .roll-enter-active, .roll-leave-active { transition: transform 0.35s var(--ease-out), opacity 0.35s; }
 .roll-enter-from { transform: translateY(100%); opacity: 0; }
 .roll-leave-to { transform: translateY(-100%); opacity: 0; }

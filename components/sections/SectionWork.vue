@@ -1,6 +1,6 @@
 <template>
   <section id="work" class="work">
-    <header class="work__head section-pad wrap">
+    <header class="work__head section-pad wrap" data-fit>
       <span class="chip">Selected work · 0{{ projects.length }}</span>
       <h2 class="work__title t-display">
         Big systems,<br />
@@ -12,7 +12,7 @@
       </p>
     </header>
 
-    <div class="stack">
+    <div ref="stackRef" class="stack">
       <article
         v-for="(p, i) in projects"
         :key="p.slug"
@@ -55,14 +55,50 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { track } from '@vercel/analytics'
 import { projects } from '~/data/projects'
+import { H_QUERY } from '~/composables/useHorizontal'
+import { onVisible } from '~/composables/useReveal'
 
 const cardRefs = ref<HTMLElement[]>([])
+const stackRef = ref<HTMLElement | null>(null)
+let mm: gsap.MatchMedia | null = null
 let triggers: ScrollTrigger[] = []
+const cleanups: (() => void)[] = []
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger)
-  // As the next card slides over, the one underneath shrinks and dims a touch
-  cardRefs.value.forEach((card, i) => {
+  mm = gsap.matchMedia()
+  mm.add(H_QUERY, () => {
+    // Desktop: horizontal "position: sticky". Each card parks near the left edge,
+    // the next one slides over it, and once the last arrives the stack leaves together.
+    const cards = cardRefs.value
+    const inners = cards.map((c) => c.querySelector('.pcard__inner') as HTMLElement)
+    const STEP = 26
+    const update = () => {
+      const deck = stackRef.value
+      if (!deck) return
+      const deckLeft = deck.getBoundingClientRect().left
+      const base = window.innerWidth * 0.05
+      const n = cards.length
+      const natural = cards.map((c) => deckLeft + c.offsetLeft)
+      const lastNatural = natural[n - 1]
+      const xs = natural.map((nat, i) => Math.min(Math.max(nat, base + i * STEP), lastNatural - (n - 1 - i) * STEP))
+      const span = cards[0].offsetWidth + (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft - cards[0].offsetWidth : 0)
+      cards.forEach((card, i) => {
+        gsap.set(card, { x: xs[i] - natural[i] })
+        const nextX = xs[i + 1]
+        const covered = nextX === undefined ? 0 : gsap.utils.clamp(0, 1, 1 - (nextX - xs[i] - STEP) / (span - STEP))
+        gsap.set(inners[i], { scale: 1 - covered * 0.08, rotate: (i % 2 ? 1.5 : -1.5) * covered, filter: `brightness(${1 - covered * 0.3})` })
+      })
+    }
+    gsap.ticker.add(update)
+    return () => {
+      gsap.ticker.remove(update)
+      gsap.set([...cards, ...inners], { clearProps: 'transform,filter' })
+    }
+  })
+
+  // Phones: as the next card slides up over it, the one underneath shrinks and dims a touch
+  if (!window.matchMedia(H_QUERY).matches) cardRefs.value.forEach((card, i) => {
     const next = cardRefs.value[i + 1]
     if (!next) return
     triggers.push(ScrollTrigger.create({
@@ -74,16 +110,15 @@ onMounted(() => {
     }))
   })
   cardRefs.value.forEach((card) => {
-    triggers.push(ScrollTrigger.create({
-      trigger: card,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => gsap.fromTo(card.querySelector('.browser'), { y: 120, rotate: 8 }, { y: 0, rotate: 3, duration: 1.2, ease: 'expo.out' }),
-    }))
+    cleanups.push(onVisible(card, () => gsap.fromTo(card.querySelector('.browser'), { y: 120, rotate: 8 }, { y: 0, rotate: 3, duration: 1.2, ease: 'expo.out' }), 0.15))
   })
 })
 
-onUnmounted(() => triggers.forEach((t) => t.kill()))
+onUnmounted(() => {
+  mm?.revert()
+  triggers.forEach((t) => t.kill())
+  cleanups.forEach((c) => c())
+})
 </script>
 
 <style scoped>
@@ -138,6 +173,21 @@ onUnmounted(() => triggers.forEach((t) => t.kill()))
 .browser__bar i:nth-child(3) { background: var(--pop2); }
 .browser__bar span { margin-left: 10px; font-size: 10px; opacity: 0.6; text-transform: none; }
 .browser img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .work { display: flex; align-items: center; width: max-content; padding-bottom: 0; }
+  .work__head { width: 40vw; flex-shrink: 0; padding: calc(var(--nav-h) + 30px) 4vw 96px 5vw; margin: 0; }
+  .work__title { font-size: min(8vw, 14vh); }
+  .work__sub { font-size: min(1.3vw, 2.4vh, 19px); }
+  .stack { position: relative; flex-direction: row; align-items: center; gap: 4vw; padding: calc(var(--nav-h) + 24px) 8vw 96px 0; }
+  .pcard { position: relative; top: auto !important; width: 76vw; flex-shrink: 0; }
+  .pcard__inner { height: calc(100vh - var(--nav-h) - 136px); min-height: 0; transform-origin: center center; }
+  .pcard__info { gap: 1.6vh; }
+  .pcard__num { font-size: min(6vw, 9vh); }
+  .pcard__name { font-size: min(4.4vw, 7.5vh); }
+  .pcard__desc { font-size: min(1.2vw, 2.1vh, 18px); }
+  .pcard__stat .t-display { font-size: min(5vw, 9vh); }
+}
 
 @media (max-width: 900px) {
   .pcard__inner { grid-template-columns: 1fr; min-height: 0; }

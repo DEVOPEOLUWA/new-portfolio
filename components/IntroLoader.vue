@@ -159,7 +159,7 @@ onUnmounted(() => {
 .key.is-lit { background: color-mix(in srgb, var(--cap) 70%, #000); }
 .key.is-lit .key__top { background: var(--cap); color: #0b0818; }
 
-.intro__typed { font-size: clamp(12px, 1.4vw, 16px); min-height: 1.4em; text-transform: none; letter-spacing: 0.02em; }
+.intro__typed { font-family: 'Martian Mono', monospace; font-stretch: 87%; font-size: clamp(12px, 1.4vw, 16px); min-height: 1.4em; text-transform: none; letter-spacing: 0.02em; }
 .intro__caret { display: inline-block; width: 0.6em; height: 1.05em; margin-left: 3px; vertical-align: -2px; background: #d6ff3d; animation: blink 0.9s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 

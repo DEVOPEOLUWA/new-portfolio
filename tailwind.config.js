@@ -13,7 +13,7 @@ module.exports = {
       fontFamily: {
         display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        mono: ['"Unbounded"', 'ui-monospace', 'monospace'],
         hand: ['Caveat', 'cursive'],
       },
     },

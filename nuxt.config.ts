@@ -38,7 +38,7 @@ export default defineNuxtConfig({
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600;800&family=Caveat:wght@600&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400..800&family=Martian+Mono:wdth,wght@75..112,400..800&family=Caveat:wght@600&display=swap",
         },
         { rel: "preload", as: "image", href: "/images/profile.jpg" },
       ],

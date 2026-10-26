@@ -1,6 +1,7 @@
 <template>
   <section id="hello" ref="sectionRef" class="welcome section-pad">
     <div class="wrap">
+      <div class="welcome__hello" data-fit>
       <p class="welcome__kicker t-mono">
         I don't know where in the world you're reading this from, so I'm covering my bases:
       </p>
@@ -34,15 +35,14 @@
         </button>
       </div>
       <p class="welcome__detect t-mono">{{ detectNote }} · greetings attempted: {{ attempts }}</p>
+      </div>
 
-      <div class="welcome__body">
+      <div class="welcome__body" data-fit>
         <p class="welcome__lede">
           Anyway — you've found my corner of the internet. I'm <strong>Opeoluwa Ayodeji</strong>,
           <em class="t-serif">rachycodes</em> online, a software developer in Lagos who cares a lot about how software
           <em class="t-serif">feels</em>. I take messy, high-stakes enterprise problems and turn them into interfaces
-          people actually enjoy using. Frontend is home; the backend is the new neighbourhood I've been
-          exploring. And on the side, I'm studying <strong>bioinformatics</strong> — turns out DNA is just code
-          with worse documentation.
+          people actually enjoy using. Frontend is home, and these days I work across the full stack too.
           Also — almost everything on this page does something when you poke it.
         </p>
 
@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { onVisible, watchVisible } from '~/composables/useReveal'
 
 const { blip } = useSound()
 
@@ -87,7 +87,7 @@ const greetings: Greeting[] = [
 const stats = [
   { value: '5+', label: 'Years shipping' },
   { value: '20M+', label: 'Records handled' },
-  { value: '3', label: 'National platforms' },
+  { value: '3+', label: 'National platforms' },
   { value: '1', label: 'Murder mystery shipped' },
 ]
 
@@ -105,7 +105,7 @@ let timer: ReturnType<typeof setInterval> | null = null
 let visible = false
 let paused = false
 let busy = false
-let triggers: ScrollTrigger[] = []
+const cleanups: (() => void)[] = []
 
 async function show(next: number) {
   if (busy || next === index.value) return
@@ -145,30 +145,19 @@ function detect() {
 }
 
 onMounted(() => {
-  gsap.registerPlugin(ScrollTrigger)
   detect()
   timer = setInterval(() => {
     if (visible && !paused) show((index.value + 1) % greetings.length)
   }, 2600)
-  triggers.push(ScrollTrigger.create({
-    trigger: sectionRef.value,
-    start: 'top bottom',
-    end: 'bottom top',
-    onToggle: (self) => (visible = self.isActive),
-  }))
+  cleanups.push(watchVisible(wordRef.value, (v) => (visible = v)))
   gsap.utils.toArray<HTMLElement>('.welcome .stat').forEach((el, i) => {
-    triggers.push(ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => gsap.fromTo(el, { y: 60, rotate: i % 2 ? 6 : -6, opacity: 0 }, { y: 0, rotate: i % 2 ? 1.5 : -1.5, opacity: 1, duration: 0.9, delay: i * 0.08, ease: 'back.out(1.6)' }),
-    }))
+    cleanups.push(onVisible(el, () => gsap.fromTo(el, { y: 60, rotate: i % 2 ? 6 : -6, opacity: 0 }, { y: 0, rotate: i % 2 ? 1.5 : -1.5, opacity: 1, duration: 0.9, delay: i * 0.08, ease: 'back.out(1.6)' })))
   })
 })
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
-  triggers.forEach((t) => t.kill())
+  cleanups.forEach((c) => c())
 })
 </script>
 
@@ -218,6 +207,16 @@ onUnmounted(() => {
 .stat:nth-child(3) { background: var(--pop); }
 .stat__value { font-size: clamp(54px, 6vw, 88px); }
 .stat__label { font-size: 11px; font-weight: 800; }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .welcome .wrap { height: 100%; display: flex; align-items: center; gap: 6vw; }
+  .welcome__hello { width: 92vw; flex-shrink: 0; }
+  .greet__word { font-size: min(16vw, 24vh); }
+  .passport { margin-top: 3vh; }
+  .welcome__body { width: 78vw; flex-shrink: 0; margin-top: 0; align-items: center; }
+  .welcome__lede { font-size: min(1.8vw, 3vh); }
+  .stat__value { font-size: min(6vw, 10vh); }
+}
 
 @media (max-width: 900px) {
   .welcome__body { grid-template-columns: 1fr; }

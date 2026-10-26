@@ -1,11 +1,11 @@
 <template>
   <section id="toolkit" ref="sectionRef" class="tk section-pad">
-    <div class="wrap tk__wrap">
+    <div class="wrap tk__wrap" data-fit>
       <header class="tk__head">
         <span class="chip">The toolkit</span>
         <h2 class="tk__title t-display">Press<br />any <em class="t-serif">key.</em></h2>
         <p class="tk__sub">
-          Everything I reach for, as a keyboard. Frontend is home; the backend keys are new and still a little shiny. Click them — or use your real keyboard, I'm listening.
+          Everything I reach for, front to back, as a keyboard. Click the keys — or use your real keyboard, I'm listening.
         </p>
       </header>
 
@@ -28,7 +28,6 @@
           >
             <span class="k__top">
               <span class="k__label">{{ k.label }}</span>
-              <span v-if="k.learning" class="k__learning t-mono">learning</span>
               <span class="k__hint t-mono">{{ k.hotkey }}</span>
             </span>
           </button>
@@ -45,7 +44,7 @@ import { useLenis } from '~/composables/useLenis'
 const { thock } = useSound()
 const { scrollTo } = useLenis()
 
-interface Key { label: string; hotkey: string; blurb: string; color: string; size?: string; learning?: boolean; action?: () => void }
+interface Key { label: string; hotkey: string; blurb: string; color: string; size?: string; action?: () => void }
 
 const keys: Key[] = [
   { label: 'Angular', hotkey: 'A', color: 'var(--pop)', blurb: 'My daily driver. NDIC and NCC are both Angular — guards, resolvers, dynamic forms, the works.' },
@@ -56,10 +55,10 @@ const keys: Key[] = [
   { label: 'Realtime', hotkey: 'W', color: 'var(--pop)', size: 'w2', blurb: 'WebSockets and SSE — live notifications and task tracking, with polling fallbacks for the browsers that misbehave.' },
   { label: 'Auth', hotkey: 'O', color: 'var(--paper)', blurb: 'Role-based routing and action-level permission guards — so every user sees exactly what they should.' },
   { label: 'CI/CD', hotkey: 'C', color: 'var(--pop2)', blurb: 'Built the pipeline that cut NSIA deployment time by 70%.' },
-  { label: 'APIs', hotkey: 'I', color: 'var(--pop3)', blurb: 'REST and GraphQL from the consuming side for years — now learning to build them too.' },
-  { label: 'Node.js', hotkey: 'N', color: 'var(--paper)', learning: true, blurb: 'Currently learning. Small services, lots of console.log, growing confidence.' },
-  { label: 'Java', hotkey: 'J', color: '#8f7bff', learning: true, blurb: 'Currently learning. Strongly typed, slightly dramatic — we are getting along.' },
-  { label: 'Spring Boot', hotkey: 'B', color: 'var(--pop)', size: 'w2', learning: true, blurb: 'Currently learning. Understanding the other side of the API makes me a better frontend engineer.' },
+  { label: 'APIs', hotkey: 'I', color: 'var(--pop3)', blurb: 'Designing and consuming REST and GraphQL APIs — so frontend and backend actually agree.' },
+  { label: 'Node.js', hotkey: 'N', color: 'var(--paper)', blurb: 'Services and APIs in JavaScript — same language, other side of the request.' },
+  { label: 'Java', hotkey: 'J', color: '#8f7bff', blurb: 'Strongly typed, slightly dramatic, very dependable.' },
+  { label: 'Spring Boot', hotkey: 'B', color: 'var(--pop)', size: 'w2', blurb: 'Building services and endpoints — knowing the backend makes everything I build on the frontend sturdier.' },
   { label: 'Hire me', hotkey: 'space', color: 'var(--pop2)', size: 'space', blurb: "Good choice. Taking you to my inbox…", action: () => setTimeout(() => scrollTo('#contact', { offset: -70 }), 900) },
 ]
 
@@ -91,7 +90,7 @@ function onKeydown(e: KeyboardEvent) {
   if (e.metaKey || e.ctrlKey || e.altKey || target.closest('input, textarea, [contenteditable]')) return
   // Only react while the keyboard is on screen
   const r = sectionRef.value?.getBoundingClientRect()
-  if (!r || r.bottom < 0 || r.top > window.innerHeight) return
+  if (!r || r.bottom < 0 || r.top > window.innerHeight || r.right < window.innerWidth * 0.3 || r.left > window.innerWidth * 0.7) return
   const key = e.key === ' ' ? 'space' : e.key.toUpperCase()
   const i = keys.findIndex((k) => k.hotkey.toUpperCase() === key.toUpperCase())
   if (i === -1) return
@@ -131,7 +130,7 @@ onUnmounted(() => { window.removeEventListener('keydown', onKeydown); typer?.kil
   box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.25);
 }
 .kb__screen-label { font-size: 10px; font-weight: 800; opacity: 0.6; }
-.kb__screen-text { font-family: 'JetBrains Mono', monospace; font-size: clamp(13px, 1.15vw, 16px); line-height: 1.5; margin-top: 6px; }
+.kb__screen-text { font-family: 'Martian Mono', monospace; font-stretch: 87%; font-size: clamp(13px, 1.15vw, 16px); line-height: 1.5; margin-top: 6px; }
 .kb__caret { display: inline-block; width: 0.55em; height: 1em; margin-left: 2px; vertical-align: -2px; background: #1c2a12; animation: blink 0.9s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
@@ -160,8 +159,16 @@ onUnmounted(() => { window.removeEventListener('keydown', onKeydown); typer?.kil
 .k.is-on .k__top { outline: 3px solid #fff; outline-offset: -6px; }
 .k__label { font-weight: 800; font-size: clamp(13px, 1.15vw, 17px); line-height: 1; }
 .k__hint { font-size: 9px; opacity: 0.55; align-self: flex-end; }
-.k__learning { position: absolute; top: -12px; right: -6px; padding: 2px 6px; border-radius: 6px; background: var(--ink); color: var(--pop2); font-size: 8px; font-weight: 800; transform: rotate(6deg); }
 .k.space .k__top { flex-direction: row; align-items: center; justify-content: center; gap: 12px; }
+
+@media (min-width: 900px) and (min-height: 560px) {
+  .tk { width: 100vw; display: flex; align-items: center; }
+  .tk__wrap { width: 100%; }
+  .tk__title { font-size: min(9vw, 15vh); }
+  .kb__screen { min-height: min(108px, 13vh); margin-bottom: 1.6vh; }
+  .k { height: min(6.4vw, 9vh); }
+  .k.space { height: min(58px, 7vh); }
+}
 
 @media (max-width: 900px) {
   .tk__wrap { grid-template-columns: 1fr; }
