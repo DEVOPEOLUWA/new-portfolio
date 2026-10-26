@@ -242,12 +242,21 @@ onUnmounted(() => {
 .sticky__by { font-size: 9px; opacity: 0.6; margin-top: 12px; text-transform: none; }
 
 @media (min-width: 900px) and (min-height: 560px) {
-  .gb { width: 145vw; }
-  .gb__wrap { height: 100%; grid-template-columns: 36vw 1fr; align-items: center; }
+  .gb { width: max-content; }
+  .gb__wrap { height: 100%; grid-template-columns: 36vw max-content; align-items: center; }
   .gb__title { font-size: min(9vw, 14vh); margin-top: 2vh; }
   .gb__sub { margin: 2vh 0 3vh; }
   .pad__msg { min-height: 12vh; }
-  .wall { height: calc(100vh - var(--nav-h) - 150px); min-height: 0; overflow: hidden; }
+  /* Two rows of notes that grow sideways as more people sign the wall */
+  .wall {
+    height: calc(100vh - var(--nav-h) - 150px); min-height: 0; overflow: hidden;
+    display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, minmax(0, 1fr)); grid-auto-columns: 290px;
+    gap: 22px 20px; padding: 26px; align-content: stretch;
+  }
+  .sticky { width: auto; min-width: 0; min-height: 0; padding: 22px 16px 12px; }
+  .sticky__msg { font-size: min(19px, 2.7vh); line-height: 1.08; overflow: hidden; }
+  .sticky--solo { margin: 0; grid-row: span 2; align-self: center; height: 60%; }
+  .wall__empty { grid-row: span 2; padding: 0 40px; align-self: center; }
 }
 
 @media (max-width: 900px) {

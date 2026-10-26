@@ -8,7 +8,7 @@
       <div class="pill__now" aria-live="polite">
         <span class="pill__roll">
           <Transition name="roll" mode="out-in">
-            <span :key="current.id" class="pill__label"><span class="pill__emoji">{{ current.emoji }}</span>{{ current.label }}</span>
+            <span :key="current.id" class="pill__label">{{ current.label }}</span>
           </Transition>
         </span>
       </div>
@@ -215,7 +215,6 @@ onUnmounted(() => {
 .pill__now { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 150px; padding: 0 10px 0 6px; }
 .pill__roll { display: block; height: 20px; overflow: hidden; }
 .pill__label { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 16px; line-height: 20px; white-space: nowrap; }
-.pill__emoji { font-size: 15px; }
 .roll-enter-active, .roll-leave-active { transition: transform 0.35s var(--ease-out), opacity 0.35s; }
 .roll-enter-from { transform: translateY(100%); opacity: 0; }
 .roll-leave-to { transform: translateY(-100%); opacity: 0; }

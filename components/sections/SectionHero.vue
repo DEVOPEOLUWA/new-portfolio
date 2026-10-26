@@ -290,10 +290,11 @@ onUnmounted(() => {
   .hero__ctas { margin-top: 2.6vh; }
   .hero__status { margin-bottom: 2.4vh; }
   .hero__portrait { width: min(100%, 420px, 45vh); }
-  /* Lift the ticker clear of the travel road at the bottom of the screen */
-  .hero { padding-bottom: 140px; }
+  /* Ticker runs along the very bottom; the travel road sits on top of it and its
+     "scroll to travel" hint floats just above */
+  .hero { padding-bottom: 104px; }
   .hero__status { gap: 6px; }
-  .hero__marquee { bottom: 74px; padding-bottom: 14px; border-bottom: 3px solid var(--ink); }
+  .hero__marquee { bottom: 0; padding: 12px 0; }
 }
 
 @media (max-width: 900px) {

@@ -91,7 +91,7 @@ onUnmounted(() => window.removeEventListener('resize', refresh))
   pointer-events: none;
 }
 .road__hint {
-  position: absolute; bottom: calc(100% + 8px); left: 50%;
+  position: absolute; bottom: calc(100% + 18px); left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   font-size: 24px;

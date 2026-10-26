@@ -126,7 +126,7 @@ function flip(i: number) {
   text-align: left;
 }
 .fact__front { background: var(--c); box-shadow: 4px 4px 0 var(--ink); }
-.fact__front .t-display { font-size: clamp(22px, 2vw, 30px); }
+.fact__front .t-display { font-size: clamp(16px, 1.6vw, 26px); line-height: 0.9; overflow-wrap: anywhere; }
 .fact__emoji { font-size: 34px; }
 .fact__back { background: var(--ink); color: var(--paper); transform: rotateY(180deg); font-size: 13px; line-height: 1.4; justify-content: center; }
 .fact.is-flipped .fact__front { transform: rotateY(-180deg); }
@@ -150,7 +150,12 @@ function flip(i: number) {
   .about__h[style] { margin-top: 2.4vh !important; }
   .about__h { margin-bottom: 1vh; }
   .about { padding-bottom: 110px; }
-  .facts { grid-template-columns: repeat(3, minmax(0, 12.5vh)); }
+  .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .fact { aspect-ratio: 1 / 1.05; }
+  .fact__face { padding: 1.4vh 12px; }
+  .fact__emoji { font-size: min(30px, 4vh); }
+  .fact__front .t-display { font-size: min(1.5vw, 2.7vh); }
+  .fact__back { font-size: min(12px, 1.8vh); line-height: 1.3; }
 }
 
 @media (max-width: 900px) {

@@ -10,7 +10,7 @@ export const FLAVOURS: { id: Flavour; label: string; swatch: string; theme: stri
 const KEY = 'rachy:flavour'
 
 export function useFlavour() {
-  const flavour = useState<Flavour>('flavour', () => 'midnight')
+  const flavour = useState<Flavour>('flavour', () => 'daydream')
 
   function sync() {
     const attr = document.documentElement.getAttribute('data-flavour') as Flavour | null

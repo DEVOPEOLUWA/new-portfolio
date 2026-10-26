@@ -11,6 +11,18 @@
    --pop/2/3 accents
    ───────────────────────────────────────────────────────── */
 :root,
+[data-flavour="daydream"] {
+  --hi: #6a3df5;
+  --bg: #e4dcff;
+  --bg-deep: #d6cbff;
+  --ink: #1b1035;
+  --paper: #fffaf3;
+  --on-bg: #1b1035;
+  --pop: #ff9ecf;
+  --pop2: #a8f0d4;
+  --pop3: #ffe08a;
+  --grid: rgba(27, 16, 53, 0.08);
+}
 [data-flavour="midnight"] {
   --hi: #d6ff3d;
   --bg: #120d26;
@@ -46,18 +58,6 @@
   --pop2: #d6ff3d;
   --pop3: #ffd23f;
   --grid: rgba(22, 10, 29, 0.08);
-}
-[data-flavour="daydream"] {
-  --hi: #6a3df5;
-  --bg: #e4dcff;
-  --bg-deep: #d6cbff;
-  --ink: #1b1035;
-  --paper: #fffaf3;
-  --on-bg: #1b1035;
-  --pop: #ff9ecf;
-  --pop2: #a8f0d4;
-  --pop3: #ffe08a;
-  --grid: rgba(27, 16, 53, 0.08);
 }
 
 :root {

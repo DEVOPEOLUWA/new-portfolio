@@ -17,12 +17,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Opeoluwa Ayodeji — rachycodes | Frontend-first Full-Stack Engineer",
-      htmlAttrs: { lang: "en", "data-flavour": "midnight" },
+      htmlAttrs: { lang: "en", "data-flavour": "daydream" },
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "description", content: description },
-        { name: "theme-color", content: "#120d26" },
+        { name: "theme-color", content: "#e4dcff" },
         { property: "og:title", content: "Opeoluwa Ayodeji — rachycodes" },
         { property: "og:description", content: description },
         { property: "og:image", content: "https://rachycodes.tech/og-image.png" },
