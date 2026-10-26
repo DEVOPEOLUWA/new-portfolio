@@ -1,5 +1,5 @@
 <template>
-  <div class="grain-overlay">
+  <div class="app">
     <ClientOnly>
       <CustomCursor />
     </ClientOnly>
@@ -8,10 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
-onMounted(() => {
-  // Mark body as ready to prevent FOUC
-  document.body.classList.add('app-ready')
-})
+const { sync } = useFlavour()
+onMounted(sync)
 </script>

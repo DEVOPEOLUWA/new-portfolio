@@ -1,86 +1,62 @@
 <template>
   <div>
-    <!-- Loading Intro — only on first visit per session -->
-    <LoadingIntro v-if="loading" @finished="onLoadingFinished" />
-
-    <!-- Main Content -->
-    <div
-      :class="[
-        'transition-opacity duration-200',
-        contentVisible ? 'opacity-100' : 'opacity-0',
-      ]"
-    >
-      <TheNavigation v-if="navVisible" />
-
-      <main>
-        <SectionHero :revealed="heroRevealed" />
-        <SectionProjects />
-        <SectionAbout />
-        <SectionContact />
-        <SectionGuestbook />
-      </main>
-    </div>
+    <IntroLoader v-if="intro" @finished="onIntroDone" />
+    <TheNavigation />
+    <main>
+      <SectionHero :revealed="revealed" />
+      <SectionWelcome />
+      <SectionWork />
+      <SectionNobodyLeaves />
+      <SectionToolkit />
+      <SectionAbout />
+      <SectionGuestbook />
+      <SectionContact @replay="replay" />
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from '~/composables/useLenis'
 
-const { initLenis, destroy } = useLenis()
+const { initLenis, destroy, stop, start, scrollTo } = useLenis()
+const SEEN_KEY = 'rachy:intro-seen'
 
-const LOADER_KEY = 'portfolio_intro_shown'
+const intro = ref(false)
+const revealed = ref(false)
 
-const loading = ref(false)
-const contentVisible = ref(false)
-const navVisible = ref(false)
-const heroRevealed = ref(false)
-
-const scrollToHash = () => {
-  if (typeof window === 'undefined') return
-  const hash = window.location.hash
-  if (!hash) return
-  setTimeout(() => {
-    const el = document.querySelector(hash)
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, 300)
+function onIntroDone() {
+  intro.value = false
+  try { sessionStorage.setItem(SEEN_KEY, '1') } catch { /* private mode */ }
+  start()
+  revealed.value = true
 }
 
-const skipLoader = () => {
-  loading.value = false
-  contentVisible.value = true
-  nextTick(() => {
-    initLenis()
-    setTimeout(() => { navVisible.value = true }, 50)
-    setTimeout(() => { heroRevealed.value = true }, 100)
-    setTimeout(scrollToHash, 400)
-  })
+function replay() {
+  revealed.value = false
+  scrollTo(0, { duration: 0.01 })
+  stop()
+  intro.value = true
 }
 
 onMounted(() => {
-  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(LOADER_KEY)) {
-    // Already seen this session — skip loader
-    skipLoader()
+  history.scrollRestoration = 'manual'
+  initLenis()
+  let seen = false
+  try { seen = !!sessionStorage.getItem(SEEN_KEY) } catch { /* private mode */ }
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const hash = window.location.hash
+  if (seen || reduced || hash) {
+    revealed.value = true
   } else {
-    // First visit — show loader
-    loading.value = true
+    stop()
+    intro.value = true
   }
+
+  if (hash) setTimeout(() => scrollTo(hash, { offset: -70 }), 500)
+  // Fonts/images shift layout after load — let ScrollTrigger re-measure
+  window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true })
 })
 
-const onLoadingFinished = () => {
-  if (typeof sessionStorage !== 'undefined') {
-    sessionStorage.setItem(LOADER_KEY, '1')
-  }
-  loading.value = false
-  contentVisible.value = true
-  nextTick(() => {
-    initLenis()
-    setTimeout(() => { navVisible.value = true }, 50)
-    setTimeout(() => { heroRevealed.value = true }, 100)
-  })
-}
-
-onUnmounted(() => {
-  destroy()
-})
+onUnmounted(destroy)
 </script>

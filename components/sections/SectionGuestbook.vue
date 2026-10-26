@@ -1,473 +1,250 @@
 <template>
-  <!--
-   ═══════════════════════════════════════════════════════════
-   SUPABASE SETUP — guestbook table — run in SQL Editor:
+  <!-- Supabase tables + policies live in supabase/schema.sql -->
+  <section id="notes" ref="sectionRef" class="gb section-pad">
+    <div class="wrap gb__wrap">
+      <div class="gb__left">
+        <span class="chip">Guestbook</span>
+        <h2 class="gb__title t-display">Leave a<br /><em class="t-serif">note.</em></h2>
+        <p class="gb__sub">Say hi, roast my CSS, tell me who the killer was. It goes straight on the wall.</p>
 
-   CREATE TABLE guestbook (
-     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     name TEXT NOT NULL,
-     message TEXT NOT NULL,
-     created_at TIMESTAMPTZ DEFAULT now()
-   );
-
-   Then enable Realtime for the `guestbook` table in
-   Database → Replication.
-   ═══════════════════════════════════════════════════════════
-  -->
-  <section id="guestbook" class="guestbook-section">
-    <div class="guestbook-inner">
-
-      <!-- Label -->
-      <span class="gb-label">Guestbook</span>
-      <p class="gb-sub">Leave a note. Say anything.</p>
-
-      <!-- Rate limit notice -->
-      <p v-if="rateLimited" class="gb-rate-notice">You just left a note — come back in a moment.</p>
-
-      <!-- Form -->
-      <form v-else class="gb-form" @submit.prevent="submitNote">
-        <div class="gb-field-wrap">
-          <input
-            v-model="form.name"
-            type="text"
-            placeholder="Your name"
-            class="gb-input"
-            maxlength="80"
-            :disabled="submitting"
-          />
-          <p v-if="errors.name" class="gb-error">{{ errors.name }}</p>
+        <div v-if="status === 'offline'" class="gb__offline card">
+          <strong>The wall is taking a nap 😴</strong>
+          <p>Notes can't be saved right now. Try again a little later — or just <a href="mailto:ayodejiope13@gmail.com">email me</a>.</p>
         </div>
 
-        <div class="gb-field-wrap" style="margin-top:16px;">
-          <textarea
-            v-model="form.message"
-            placeholder="What's on your mind?"
-            class="gb-input gb-textarea"
-            maxlength="280"
-            :disabled="submitting"
-          />
-          <p v-if="errors.message" class="gb-error">{{ errors.message }}</p>
-        </div>
-
-        <button type="submit" class="gb-submit" :disabled="submitting">
-          {{ submitting ? 'Sending…' : 'Leave a note ↗' }}
-        </button>
-
-        <!-- Success confirmation -->
-        <Transition name="confirm">
-          <p v-if="showConfirm" class="gb-confirm">Note left. Thanks.</p>
-        </Transition>
-      </form>
-
-      <!-- Entries feed -->
-      <div class="gb-feed">
-
-        <!-- Empty state -->
-        <div v-if="entries.length === 0" class="gb-empty-card">
-          <p class="gb-empty-text">No notes yet. Be the first.</p>
-        </div>
-
-        <!-- Cards -->
-        <TransitionGroup name="card-list" tag="div" class="gb-cards">
-          <div
-            v-for="(entry, i) in entries"
-            :key="entry.id"
-            class="gb-card"
-            :class="{ 'gb-card--drop': newEntryIds.has(entry.id), 'gb-card--fade': !newEntryIds.has(entry.id) }"
-            :style="!newEntryIds.has(entry.id) ? { animationDelay: `${i * 0.08}s` } : {}"
-          >
-            <div class="gb-card-inner">
-              <!-- Accent dot + name -->
-              <div class="gb-card-header">
-                <span class="gb-card-dot" />
-                <span class="gb-card-name">{{ entry.name }}</span>
-              </div>
-              <p class="gb-card-msg">{{ entry.message }}</p>
-              <p class="gb-card-ts">{{ formatDate(entry.created_at) }}</p>
-            </div>
+        <form v-else class="pad" @submit.prevent="submit">
+          <div class="pad__spiral" aria-hidden="true"><i v-for="n in 9" :key="n" /></div>
+          <label class="sr-only" for="gb-name">Your name</label>
+          <input id="gb-name" v-model="form.name" class="pad__name t-hand" placeholder="your name" maxlength="80" :disabled="busy || rateLimited" />
+          <label class="sr-only" for="gb-msg">Your note</label>
+          <textarea id="gb-msg" v-model="form.message" class="pad__msg t-hand" placeholder="write something nice (or honest)…" maxlength="280" :disabled="busy || rateLimited" />
+          <div class="pad__foot">
+            <span class="t-mono pad__count">{{ form.message.length }}/280</span>
+            <button type="submit" class="btn" :disabled="busy || rateLimited" data-cursor="stick">
+              {{ busy ? 'Sticking…' : rateLimited ? 'Thanks! ✓' : 'Stick it' }}
+            </button>
           </div>
-        </TransitionGroup>
-
-        <!-- More than 10 label -->
-        <p v-if="hasMore" class="gb-more">Showing 10 most recent notes</p>
-
+          <p v-if="error" class="pad__err" role="alert">{{ error }}</p>
+        </form>
       </div>
 
+      <div ref="wallRef" class="wall">
+        <div v-if="status === 'offline'" class="sticky sticky--solo" style="--c: #ffd23f; --r: -4deg">
+          <span class="sticky__tape" />
+          <p class="sticky__msg t-hand">The wall is resting. Notes will be back up here soon ✿</p>
+          <p class="sticky__by t-mono">— Ope</p>
+        </div>
+        <p v-else-if="status === 'loading'" class="wall__empty t-hand">fetching notes…</p>
+        <p v-else-if="!entries.length && status === 'ready'" class="wall__empty t-hand">No notes yet. Be the first!</p>
+        <div
+          v-for="(e, i) in entries"
+          :key="e.id"
+          :ref="(el) => registerNote(el as HTMLElement, e.id)"
+          class="sticky"
+          :style="{ '--c': noteColors[i % noteColors.length], '--r': `${rotation(e.id)}deg` }"
+          data-cursor="drag"
+        >
+          <span class="sticky__tape" />
+          <p class="sticky__msg t-hand">{{ e.message }}</p>
+          <p class="sticky__by t-mono">— {{ e.name }} · {{ formatDate(e.created_at) }}</p>
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { gsap } from 'gsap'
+import { Draggable } from 'gsap/Draggable'
+import { InertiaPlugin } from 'gsap/InertiaPlugin'
+import { track } from '@vercel/analytics'
 import { useSupabaseClient } from '~/composables/useSupabase'
 
+interface Entry { id: string; name: string; message: string; created_at: string }
+
 const RATE_KEY = 'guestbook:lastSubmit'
-const RATE_MS  = 60_000
+const RATE_MS = 60_000
+const noteColors = ['#ffd23f', '#ff8fcb', '#d6ff3d', '#a8e6ff', '#fff6ea', '#c9b8ff']
 
-interface GuestEntry { id: string; name: string; message: string; created_at: string }
-
-const entries    = ref<GuestEntry[]>([])
-const submitting = ref(false)
-const showConfirm = ref(false)
+const sectionRef = ref<HTMLElement | null>(null)
+const wallRef = ref<HTMLElement | null>(null)
+const entries = ref<Entry[]>([])
+const status = ref<'loading' | 'ready' | 'offline'>('loading')
+const busy = ref(false)
+const error = ref('')
 const rateLimited = ref(false)
-const hasMore     = ref(false)
-// Track which IDs are brand-new (drop animation) vs loaded (stagger fade)
-const newEntryIds = ref(new Set<string>())
-
 const form = reactive({ name: '', message: '' })
-const errors = reactive({ name: '', message: '' })
+const { thock } = useSound()
 
-// ── Rate limit check on mount ──────────────────────────
-function checkRateLimit() {
-  try {
-    const last = localStorage.getItem(RATE_KEY)
-    if (last && Date.now() - parseInt(last, 10) < RATE_MS) {
-      rateLimited.value = true
-      // Clear flag after remaining time
-      const remaining = RATE_MS - (Date.now() - parseInt(last, 10))
-      setTimeout(() => { rateLimited.value = false }, remaining)
-    }
-  } catch { /* silent */ }
-}
-
-// ── Fetch entries ──────────────────────────────────────
-async function fetchEntries() {
-  const sb = useSupabaseClient()
-  if (!sb) return
-  try {
-    const { data, error } = await sb
-      .from('guestbook')
-      .select('id, name, message, created_at')
-      .order('created_at', { ascending: false })
-      .limit(11)
-    if (error) throw error
-    const rows = (data ?? []) as GuestEntry[]
-    hasMore.value = rows.length > 10
-    entries.value = rows.slice(0, 10)
-  } catch (err) {
-    console.warn('Guestbook fetch failed:', err)
-  }
-}
-
-// ── Realtime subscription ──────────────────────────────
 let channel: any = null
-function subscribeToEntries() {
+const draggables = new Map<string, Draggable>()
+
+// Stable "random" tilt per note so it doesn't jump around on re-render
+function rotation(id: string) {
+  let h = 0
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0
+  return (Math.abs(h) % 11) - 5
+}
+
+function registerNote(el: HTMLElement | null, id: string) {
+  if (!el || draggables.has(id) || !wallRef.value) return
+  const [d] = Draggable.create(el, { type: 'x,y', bounds: wallRef.value, inertia: true, zIndexBoost: true, onPress: () => thock(1.1) })
+  draggables.set(id, d)
+}
+
+function formatDate(iso: string) {
+  try { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) } catch { return '' }
+}
+
+async function load() {
   const sb = useSupabaseClient()
-  if (!sb) return
+  if (!sb) { status.value = 'offline'; return }
+  const { data, error: err } = await sb
+    .from('guestbook')
+    .select('id, name, message, created_at')
+    .order('created_at', { ascending: false })
+    .limit(12)
+  if (err) {
+    console.warn('Guestbook unavailable:', err.message)
+    status.value = 'offline'
+    return
+  }
+  entries.value = (data ?? []) as Entry[]
+  status.value = 'ready'
+}
+
+function subscribe() {
+  const sb = useSupabaseClient()
+  if (!sb || status.value !== 'ready') return
   channel = sb
     .channel('guestbook-channel')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'guestbook' }, (payload: any) => {
-      const newEntry = payload.new as GuestEntry
-      newEntryIds.value.add(newEntry.id)
-      const updated = [newEntry, ...entries.value]
-      if (updated.length > 10) updated.splice(10)
-      entries.value = updated
-      hasMore.value = entries.value.length >= 10
+      const e = payload.new as Entry
+      if (entries.value.some((x) => x.id === e.id)) return
+      entries.value = [e, ...entries.value].slice(0, 12)
+      nextTick(() => dropIn(e.id))
     })
     .subscribe()
 }
 
-// ── Validate ───────────────────────────────────────────
-function validate(): boolean {
-  errors.name    = ''
-  errors.message = ''
-  let ok = true
-  if (!form.name.trim()) { errors.name = 'Name is required.'; ok = false }
-  if (form.message.trim().length < 3)   { errors.message = 'Message must be at least 3 characters.'; ok = false }
-  if (form.message.trim().length > 280) { errors.message = 'Message must be 280 characters or fewer.'; ok = false }
-  return ok
+function dropIn(id: string) {
+  const el = draggables.get(id)?.target as HTMLElement | undefined
+  if (el) gsap.fromTo(el, { y: -200, scale: 1.3, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: 'bounce.out' })
 }
 
-// ── Submit ─────────────────────────────────────────────
-async function submitNote() {
-  if (!validate() || submitting.value) return
-  submitting.value = true
+async function submit() {
+  error.value = ''
+  const name = form.name.trim()
+  const message = form.message.trim()
+  if (!name) { error.value = 'Who is this? Add your name.'; return }
+  if (message.length < 3) { error.value = 'A little longer — at least 3 characters.'; return }
 
   const sb = useSupabaseClient()
-  if (sb) {
-    try {
-      const { error } = await sb.from('guestbook').insert([{ name: form.name.trim(), message: form.message.trim() }] as any)
-      if (error) throw error
-    } catch (err) {
-      console.warn('Guestbook submit failed:', err)
-    }
-  } else {
-    // Static mode: optimistic entry with drop animation
-    const optimisticEntry: GuestEntry = {
-      id: crypto.randomUUID(),
-      name: form.name.trim(),
-      message: form.message.trim(),
-      created_at: new Date().toISOString(),
-    }
-    newEntryIds.value.add(optimisticEntry.id)
-    const updated = [optimisticEntry, ...entries.value]
-    if (updated.length > 10) updated.splice(10)
-    entries.value = updated
-    hasMore.value = updated.length >= 10
+  if (!sb) { status.value = 'offline'; return }
+  busy.value = true
+  const { data, error: err } = await sb.from('guestbook').insert([{ name, message }] as any).select('id, name, message, created_at').single()
+  busy.value = false
+  if (err) {
+    error.value = "Couldn't stick that one — please try again in a moment."
+    console.warn('Guestbook insert failed:', err.message)
+    return
   }
-
-  // Rate limit
-  try { localStorage.setItem(RATE_KEY, String(Date.now())) } catch { /* silent */ }
-  rateLimited.value = true
-  setTimeout(() => { rateLimited.value = false }, RATE_MS)
-
-  form.name    = ''
+  track('Guestbook note')
+  const e = data as Entry
+  if (!entries.value.some((x) => x.id === e.id)) {
+    entries.value = [e, ...entries.value].slice(0, 12)
+    nextTick(() => dropIn(e.id))
+  }
+  form.name = ''
   form.message = ''
-  submitting.value = false
-
-  // Brief confirmation
-  showConfirm.value = true
-  setTimeout(() => { showConfirm.value = false }, 2000)
-
-  // Refresh entries
-  await fetchEntries()
-}
-
-// ── Format date ────────────────────────────────────────
-function formatDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
-  } catch { return '' }
+  try { localStorage.setItem(RATE_KEY, String(Date.now())) } catch { /* private mode */ }
+  rateLimited.value = true
+  setTimeout(() => (rateLimited.value = false), RATE_MS)
 }
 
 onMounted(async () => {
-  checkRateLimit()
-  await fetchEntries()
-  subscribeToEntries()
+  gsap.registerPlugin(Draggable, InertiaPlugin)
+  try {
+    const last = Number(localStorage.getItem(RATE_KEY))
+    if (last && Date.now() - last < RATE_MS) {
+      rateLimited.value = true
+      setTimeout(() => (rateLimited.value = false), RATE_MS - (Date.now() - last))
+    }
+  } catch { /* private mode */ }
+  try { await load() } catch { status.value = 'offline' }
+  subscribe()
 })
 
 onUnmounted(() => {
-  const sb = useSupabaseClient()
-  if (sb && channel) sb.channel('guestbook-channel').unsubscribe()
+  if (channel) useSupabaseClient()?.removeChannel(channel)
+  draggables.forEach((d) => d.kill())
 })
 </script>
 
 <style scoped>
-.guestbook-section {
-  background: var(--bg-base);
-  border-top: 1px solid var(--line);
-  transition: background-color 0.4s ease;
-}
-.guestbook-inner {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 80px 96px 96px;
-}
-@media (max-width: 768px) {
-  .guestbook-inner { padding: 64px 24px 80px; }
-}
+.gb { background: var(--bg); border-top: 3px solid var(--ink); }
+.gb__wrap { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
+.gb__title { font-size: clamp(64px, 9vw, 150px); color: var(--on-bg); margin-top: 24px; }
+.gb__title em { color: var(--hi); }
+.gb__sub { margin: 20px 0 32px; max-width: 400px; font-size: 18px; line-height: 1.5; color: var(--on-bg); }
 
-.gb-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--txt-primary);
-  opacity: 0.4;
-  display: block;
-  margin-bottom: 12px;
-}
-.gb-sub {
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--txt-primary);
-  opacity: 0.6;
-  margin-bottom: 36px;
-}
+.gb__offline { padding: 22px; transform: rotate(-1deg); }
+.gb__offline strong { font-size: 20px; }
+.gb__offline p { margin-top: 8px; line-height: 1.5; }
+.gb__offline a { text-decoration: underline; font-weight: 700; }
 
-/* Form */
-.gb-form { max-width: 480px; }
-.gb-field-wrap { display: flex; flex-direction: column; }
-.gb-input {
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  padding: 12px 0;
-  border: none;
-  border-bottom: 1px solid var(--line);
-  background: transparent;
-  color: var(--txt-primary);
-  width: 100%;
-  outline: none;
-  transition: border-color 0.2s ease;
+.pad {
+  position: relative;
+  background: #ffd23f;
+  color: #160a1d;
+  border: 3px solid var(--ink);
+  border-radius: 6px 6px 18px 18px;
+  box-shadow: var(--shadow-lg);
+  padding: 34px 22px 20px;
+  transform: rotate(-1.5deg);
+  background-image: repeating-linear-gradient(transparent 0 33px, rgba(22, 10, 29, 0.14) 33px 35px);
+  background-position: 0 56px;
 }
-.gb-input::placeholder { color: var(--txt-muted); opacity: 0.5; }
-.gb-input:focus { border-bottom-color: var(--accent); }
-.gb-input:disabled { opacity: 0.5; cursor: not-allowed; }
-.gb-textarea { min-height: 80px; resize: none; }
+.pad__spiral { position: absolute; top: -14px; left: 18px; right: 18px; display: flex; justify-content: space-between; }
+.pad__spiral i { width: 12px; height: 26px; border: 3px solid var(--ink); border-radius: 8px; background: var(--paper); }
+.pad__name, .pad__msg { display: block; width: 100%; background: transparent; border: none; outline: none; color: inherit; font-size: 26px; line-height: 35px; }
+.pad__name { border-bottom: 3px solid var(--ink); margin-bottom: 8px; }
+.pad__msg { min-height: 140px; resize: none; }
+.pad__name::placeholder, .pad__msg::placeholder { color: rgba(22, 10, 29, 0.45); }
+.pad__foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.pad__count { font-size: 10px; opacity: 0.6; }
+.pad .btn { --ink: #160a1d; background: var(--paper); padding: 12px 20px; }
+.pad .btn:disabled { opacity: 0.6; pointer-events: none; }
+.pad__err { margin-top: 12px; font-weight: 700; font-size: 14px; color: #a1001f; }
 
-.gb-error {
-  font-family: 'Manrope', sans-serif;
-  font-size: 12px;
-  color: #e05;
-  margin-top: 4px;
+.wall {
+  position: relative;
+  min-height: 560px;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 16px;
+  padding: 24px;
+  border: 3px dashed color-mix(in srgb, var(--on-bg) 45%, transparent);
+  border-radius: 24px;
 }
-.gb-submit {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-top: 16px;
-  padding: 0;
-  transition: opacity 0.2s ease;
+.wall__empty { width: 100%; text-align: center; padding-top: 200px; font-size: 30px; color: var(--on-bg); opacity: 0.7; }
+.sticky {
+  position: relative;
+  width: calc(33.33% - 11px); min-width: 160px; min-height: 150px;
+  padding: 26px 16px 14px;
+  background: var(--c); color: #160a1d;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22), inset 0 -18px 30px -24px rgba(0, 0, 0, 0.3);
+  rotate: var(--r);
+  display: flex; flex-direction: column; justify-content: space-between;
+  touch-action: none;
 }
-.gb-submit:hover       { opacity: 0.6; }
-.gb-submit:disabled    { opacity: 0.4; cursor: not-allowed; }
-.gb-confirm {
-  font-family: 'Manrope', sans-serif;
-  font-size: 13px;
-  color: var(--txt-primary);
-  opacity: 0.55;
-  margin-top: 12px;
-  font-style: italic;
-}
-.gb-rate-notice {
-  font-family: 'Manrope', sans-serif;
-  font-size: 13px;
-  color: var(--txt-primary);
-  opacity: 0.5;
-  font-style: italic;
-  max-width: 480px;
-  line-height: 1.6;
-}
+.sticky--solo { margin: 120px auto 0; width: 260px; }
+.sticky__tape { position: absolute; top: -12px; left: 50%; width: 70px; height: 24px; margin-left: -35px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(0, 0, 0, 0.08); rotate: -4deg; }
+.sticky__msg { font-size: 23px; line-height: 1.05; word-break: break-word; }
+.sticky__by { font-size: 9px; opacity: 0.6; margin-top: 12px; text-transform: none; }
 
-/* Entries feed */
-.gb-feed { margin-top: 56px; }
-
-.gb-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 540px;
+@media (max-width: 900px) {
+  .gb__wrap { grid-template-columns: 1fr; }
+  .wall { min-height: 380px; padding: 16px; }
+  .sticky { width: calc(50% - 8px); min-width: 0; }
+  .wall__empty { padding-top: 120px; }
 }
-@media (max-width: 768px) {
-  .gb-cards { gap: 8px; }
-}
-
-/* ── Card ── */
-.gb-card {
-  width: 100%;
-  max-width: 480px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg-surface);
-  cursor: default;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.gb-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-}
-/* Light mode card */
-:root:not(.dark) .gb-card {
-  background: #ffffff;
-  border-color: rgba(0,0,0,0.08);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-}
-
-.gb-card-inner {
-  padding: 20px 24px;
-}
-@media (max-width: 768px) {
-  .gb-card-inner { padding: 16px 20px; }
-}
-
-.gb-card-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.gb-card-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex-shrink: 0;
-}
-.gb-card-name {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--txt-primary);
-}
-.gb-card-msg {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--txt-primary);
-  opacity: 0.8;
-  margin-top: 6px;
-  line-height: 1.6;
-}
-.gb-card-ts {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  color: var(--txt-primary);
-  opacity: 0.35;
-  margin-top: 10px;
-}
-
-/* ── Drop animation (new / realtime cards) ── */
-@keyframes cardDrop {
-  0%   { opacity: 0; transform: translateY(-40px) scale(0.95); }
-  60%  {             transform: translateY(6px)   scale(1.01); }
-  80%  {             transform: translateY(-3px)  scale(0.99); }
-  100% { opacity: 1; transform: translateY(0)     scale(1);    }
-}
-.gb-card--drop {
-  animation: cardDrop 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-/* ── Stagger fade (on-load cards) ── */
-@keyframes cardFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-.gb-card--fade {
-  animation: cardFade 0.4s ease forwards;
-}
-
-/* ── TransitionGroup for realtime pushes ── */
-.card-list-enter-active { animation: cardDrop 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-.card-list-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
-.card-list-leave-to    { opacity: 0; transform: translateY(10px); }
-
-/* ── Empty state ── */
-.gb-empty-card {
-  max-width: 480px;
-  width: 100%;
-  border: 1px dashed var(--line);
-  border-radius: 12px;
-  padding: 20px 24px;
-  opacity: 0.5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.gb-empty-text {
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  font-style: italic;
-  color: var(--txt-primary);
-  opacity: 0.5;
-  text-align: center;
-}
-
-/* ── More label ── */
-.gb-more {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  color: var(--txt-primary);
-  opacity: 0.35;
-  margin-top: 8px;
-}
-
-/* Transitions */
-.confirm-enter-active { transition: opacity 0.4s ease; }
-.confirm-leave-active { transition: opacity 0.4s ease; }
-.confirm-enter-from, .confirm-leave-to { opacity: 0; }
 </style>

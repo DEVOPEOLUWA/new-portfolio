@@ -1,390 +1,142 @@
 <template>
-  <section
-    id="about"
-    ref="sectionRef"
-    style="background:var(--bg-base);overflow-x:hidden;"
-  >
-    <div class="about-outer">
-
-      <!-- ── Large typographic heading ── -->
-      <div style="overflow:hidden;">
-        <h2
-          ref="headingRef"
-          class="about-heading"
-          style="clip-path:inset(0 0 100% 0);"
-        >About</h2>
+  <section id="about" class="about section-pad">
+    <div class="wrap">
+      <div class="about__top">
+        <h2 class="about__title t-display">The person<br />behind the <em class="t-serif">pixels.</em></h2>
+        <a href="/Opeoluwa_Ayodeji_Frontend_Engineer_Resume.pdf" target="_blank" rel="noopener" class="btn btn--pink" data-cursor="cv" @click="track('Resume downloaded')">
+          Grab my résumé <span aria-hidden="true">↓</span>
+        </a>
       </div>
 
-      <!-- ── Hello line ── -->
-      <p
-        ref="helloRef"
-        style="
-          font-family:'Instrument Serif',Georgia,serif;
-          font-style:italic;
-          font-size:clamp(24px,3vw,40px);
-          font-weight:400;
-          color:var(--txt-primary);
-          margin-top:16px;
-          margin-bottom:32px;
-          opacity:0;
-          transform:translateY(12px);
-        "
-      >Hello, I'm Opeoluwa.</p>
+      <div class="about__grid">
+        <div class="about__bio">
+          <p v-for="(p, i) in bio" :key="i" class="about__p">{{ p }}</p>
 
-      <!-- ── Full-width rule ── -->
-      <div
-        ref="ruleRef"
-        style="height:1px;background:var(--line);transform-origin:left;transform:scaleX(0);margin-bottom:48px;"
-      />
-
-      <!-- ── Two-column body ── -->
-      <div class="about-columns">
-
-        <!-- LEFT — Bio + Resume + Quote -->
-        <div class="about-left">
-
-          <!-- Bio paragraphs -->
-          <div class="bio-block">
-            <p
-              v-for="(para, i) in bioParagraphs"
-              :key="i"
-              :ref="(el: any) => { if (el) paraRefs[i] = el as HTMLElement }"
-              class="bio-para"
-              style="opacity:0;transform:translateY(20px);"
-            >{{ para }}</p>
-          </div>
-
-          <!-- Resume button -->
-          <a href="/Opeoluwa_Ayodeji_Frontend_Engineer_Resume.pdf" download class="resume-btn" style="margin-top:36px;display:inline-block;">
-            Download Resume ↗
-          </a>
-
-          <!-- Pull quote -->
-          <div ref="quoteRef" class="quote-block" style="margin-top:48px;opacity:0;transform:translateY(20px);">
-            <p class="quote-text">"There is nothing so useless as doing efficiently that which should not be done at all."</p>
-            <p class="quote-attr">— Peter Drucker</p>
-            <p class="quote-reflection">I don't want to make things that look good for the sake of it. I want to make things that matter — where taking them away would actually be felt.</p>
-          </div>
-
+          <blockquote class="quote card">
+            <p class="t-serif">“There is nothing so useless as doing efficiently that which should not be done at all.”</p>
+            <cite class="t-mono">— Peter Drucker</cite>
+            <p class="quote__mine">
+              I don't want to make things that look good for the sake of it. I want to make things that matter —
+              where taking them away would actually be felt.
+            </p>
+          </blockquote>
         </div>
 
-        <!-- RIGHT — Experience timeline -->
-        <div ref="expRef" class="about-right" style="opacity:0;transform:translateY(20px);">
-
-          <span class="zone-label">Experience</span>
-
-          <div class="timeline-wrap">
-            <!-- Track -->
-            <div class="timeline-track">
-              <div ref="timelineLineRef" class="timeline-fill" />
+        <div class="about__side">
+          <h3 class="about__h t-mono">Experience</h3>
+          <div v-for="job in timeline" :key="job.date" class="ticket">
+            <div class="ticket__main">
+              <span class="t-mono ticket__date">{{ job.date }}</span>
+              <strong class="ticket__role t-display">{{ job.role }}</strong>
+              <span class="ticket__co">{{ job.company }}</span>
             </div>
+            <div class="ticket__stub t-mono">{{ job.badge }}</div>
+          </div>
 
-            <!-- Entries -->
-            <div
-              v-for="(entry, i) in timeline"
-              :key="i"
-              :ref="(el: any) => { if (el) entryRefs[i] = el as HTMLElement }"
-              class="timeline-entry"
+          <h3 class="about__h t-mono" style="margin-top: 40px">Off the clock <span class="about__tap">(tap to flip)</span></h3>
+          <div class="facts">
+            <button
+              v-for="(f, i) in facts"
+              :key="f.front"
+              class="fact"
+              :class="{ 'is-flipped': flipped[i] }"
+              :style="{ '--c': f.color }"
+              data-cursor="flip"
+              :aria-pressed="flipped[i]"
+              @click="flip(i)"
             >
-              <div class="timeline-node" />
-              <h3 class="entry-role">{{ entry.role }}</h3>
-              <p class="entry-company">{{ entry.company }}</p>
-              <p class="entry-date">{{ entry.date }}</p>
-              <div v-if="i < timeline.length - 1" class="entry-divider" />
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Skills marquee — full width below both columns -->
-      <div ref="skillsRef" style="margin-top:clamp(60px,8vh,100px);opacity:0;transform:translateY(20px);">
-        <span class="zone-label" style="margin-bottom:24px;">Skills</span>
-        <div class="marquee-outer">
-          <div class="marquee-track">
-            <span class="marquee-set" aria-hidden="false">
-              <span v-for="(skill, si) in skills" :key="`a-${si}`" class="skill-item">
-                {{ skill }}<span v-if="si < skills.length - 1" class="skill-dot"> · </span>
-              </span>
-            </span>
-            <span class="marquee-set" aria-hidden="true">
-              <span v-for="(skill, si) in skills" :key="`b-${si}`" class="skill-item">
-                {{ skill }}<span v-if="si < skills.length - 1" class="skill-dot"> · </span>
-              </span>
-            </span>
+              <span class="fact__face fact__front"><span class="fact__emoji">{{ f.emoji }}</span><span class="t-display">{{ f.front }}</span></span>
+              <span class="fact__face fact__back">{{ f.back }}</span>
+            </button>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { track } from '@vercel/analytics'
 
-if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
+const { blip } = useSound()
 
-const sectionRef      = ref<HTMLElement | null>(null)
-const headingRef      = ref<HTMLElement | null>(null)
-const helloRef        = ref<HTMLElement | null>(null)
-const ruleRef         = ref<HTMLElement | null>(null)
-const paraRefs        = ref<HTMLElement[]>([])
-const quoteRef        = ref<HTMLElement | null>(null)
-const expRef          = ref<HTMLElement | null>(null)
-const timelineLineRef = ref<HTMLElement | null>(null)
-const entryRefs       = ref<HTMLElement[]>([])
-const skillsRef       = ref<HTMLElement | null>(null)
-
-const triggers: ScrollTrigger[] = []
-
-// ── Data ─────────────────────────────────────────────
-const bioParagraphs = [
+const bio = [
   "I got into engineering because I love building things — taking what exists, pushing it further, and watching complexity fold into something that just works. There's a satisfaction in that I haven't found anywhere else.",
-  "The problems I'm most drawn to are the ones that are genuinely hard. Not hard because nobody thought about them, but hard because they involve real scale, real users, and real consequences if you get it wrong. I've built systems that thousands of people depend on daily. That weight keeps me honest.",
-  "My approach is simple: every problem is solvable. The question is always which solution fits the people who actually have to live with it. I build for the user's mental model, not my own.",
-  "When I'm not at a screen, I'm usually solving puzzles, watching Korean variety shows, or deep in a conversation that went longer than anyone expected. I think the same way I code — looking for the pattern underneath everything.",
-  "Where I want to be is simple. I want to build things that make hard things feel easy — the kind of automation and tooling that turns hours of human effort into seconds. The way AI is reshaping what's possible is exactly the direction I want to be moving.",
+  "The problems I'm drawn to are the genuinely hard ones: real scale, real users, real consequences if you get it wrong. I've built systems thousands of people depend on daily. That weight keeps me honest. Every problem is solvable — the question is which solution fits the people who actually have to live with it.",
+  "Frontend is home — it's where I've spent most of my career, sweating the details that make a screen feel calm instead of chaotic. My speciality is enterprise platforms: the big, permission-heavy, workflow-shaped systems most people find scary. Recently I've started crossing over to the backend too, because the best interfaces come from understanding the whole system.",
+  "Lately I've been taking bioinformatics courses. Genetic code fascinates me — four letters, billions of lines, not a single comment — and the place where biology meets software is exactly where I'd love to build next.",
 ]
 
 const timeline = [
-  { role: 'Frontend Engineer',        company: 'Encentral Solutions · Abuja', date: 'Nov 2022 — Present'  },
-  { role: 'Frontend Engineer Intern', company: 'Encentral Solutions · Abuja', date: 'Apr 2022 — Nov 2022' },
+  { role: 'Software Developer', company: 'Encentral Solutions · frontend → full-stack', date: 'Nov 2022 — Now', badge: 'Current' },
+  { role: 'Frontend Engineer Intern', company: 'Encentral Solutions', date: 'Apr 2022 — Nov 2022', badge: 'Level 1' },
+  { role: 'Hello, World', company: 'Self-taught — tutorials, side projects and a lot of Googling', date: '2021 — 2022', badge: 'Level 0' },
 ]
 
-const skills = ['Angular','React','Vue.js','TypeScript','REST APIs','GraphQL','WebSockets','SSE','CI/CD','OAuth2','JWT','AWS S3']
-
-// ── Section entry animations ─────────────────────────
-function initEntryAnimations() {
-  const section = sectionRef.value
-  if (!section) return
-
-  triggers.push(ScrollTrigger.create({
-    trigger: section,
-    start: 'top 80%',
-    once: true,
-    onEnter: () => {
-      // 1. Heading clip-path reveal
-      gsap.to(headingRef.value, {
-        clipPath: 'inset(0 0 0% 0)',
-        duration: 1,
-        ease: 'power4.out',
-      })
-      // 2. Hello line
-      gsap.to(helloRef.value, {
-        opacity: 1, y: 0,
-        duration: 0.7, ease: 'power3.out', delay: 0.3,
-      })
-      // 3. Rule draws left→right
-      gsap.to(ruleRef.value, {
-        scaleX: 1,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.2,
-      })
-      // 4. Bio paragraphs staggered fade-up
-      paraRefs.value.forEach((el, i) => {
-        if (!el) return
-        gsap.to(el, {
-          opacity: 1, y: 0,
-          duration: 0.65, ease: 'power3.out',
-          delay: 0.4 + i * 0.1,
-        })
-      })
-      // 5. Quote
-      gsap.to(quoteRef.value, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.9 })
-      // 6. Exp column
-      gsap.to(expRef.value, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.5 })
-    },
-  }))
+const facts = [
+  { emoji: '🧩', front: 'Puzzles', back: 'Word puzzles and card puzzles, any day. Same brain I debug with — always hunting for the pattern.', color: 'var(--pop2)' },
+  { emoji: '📺', front: 'K-variety', back: 'Korean variety shows are my comfort watch. No notes.', color: 'var(--pop)' },
+  { emoji: '💬', front: 'Long talks', back: "Usually deep in a conversation that went longer than anyone expected.", color: 'var(--pop3)' },
+]
+const flipped = ref(facts.map(() => false))
+function flip(i: number) {
+  flipped.value[i] = !flipped.value[i]
+  blip(flipped.value[i] ? 660 : 440, 0.07, 'triangle', 0.05)
 }
-
-// ── Timeline scrub ───────────────────────────────────
-function initTimeline() {
-  const line    = timelineLineRef.value
-  const entries = entryRefs.value
-  const wrap    = expRef.value
-  if (!line || !wrap || !entries.length) return
-
-  // Reset
-  line.style.height = '0'
-  entries.forEach((e) => {
-    e.style.opacity   = '0'
-    e.style.transform = 'translateX(16px)'
-    const node = e.querySelector('.timeline-node') as HTMLElement | null
-    if (node) node.style.transform = 'scale(0)'
-  })
-
-  triggers.push(ScrollTrigger.create({
-    trigger: wrap,
-    start: 'top 60%',
-    end: 'bottom 50%',
-    scrub: 1.2,
-    onUpdate: (self) => {
-      line.style.height = `${self.progress * 100}%`
-      entries.forEach((entry, i) => {
-        const threshold = i / entries.length
-        if (self.progress >= threshold + 0.1 && parseFloat(entry.style.opacity) < 1) {
-          gsap.to(entry, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' })
-          const node = entry.querySelector('.timeline-node') as HTMLElement | null
-          if (node) gsap.to(node, { scale: 1, duration: 0.3, ease: 'back.out(2)' })
-        }
-      })
-    },
-  }))
-}
-
-// ── Skills fade ──────────────────────────────────────
-function initSkills() {
-  if (!skillsRef.value) return
-  triggers.push(ScrollTrigger.create({
-    trigger: skillsRef.value,
-    start: 'top 88%',
-    once: true,
-    onEnter: () => gsap.to(skillsRef.value, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }),
-  }))
-}
-
-onMounted(() => {
-  setTimeout(() => {
-    ScrollTrigger.refresh()
-    initEntryAnimations()
-    initTimeline()
-    initSkills()
-  }, 500)
-})
-
-onUnmounted(() => { triggers.forEach((t) => t.kill()) })
 </script>
 
 <style scoped>
-/* ── Outer container ── */
-.about-outer {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 96px clamp(24px, 6vw, 96px) 96px;
+.about { background: var(--paper); color: var(--ink); border-top: 3px solid var(--ink); }
+.about__top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.about__title { font-size: clamp(56px, 8.5vw, 150px); }
+.about__title em { color: var(--bg); }
+
+.about__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 6vw, 100px); margin-top: clamp(48px, 6vw, 80px); }
+.about__p { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.6; margin-bottom: 22px; }
+.about__p:first-child::first-letter { float: left; font-weight: 800; font-size: 4.2em; line-height: 0.8; margin: 6px 10px 0 0; color: var(--bg); }
+
+.quote { margin: 36px 0 0; padding: 28px; background: var(--bg); color: var(--on-bg); transform: rotate(-1deg); }
+.quote .t-serif { font-size: clamp(24px, 2.2vw, 34px); line-height: 1.15; }
+.quote cite { display: block; margin-top: 12px; font-size: 11px; font-style: normal; opacity: 0.8; }
+.quote__mine { margin-top: 20px; padding-top: 18px; border-top: 2px dashed currentColor; font-size: 16px; line-height: 1.5; }
+
+.about__h { font-size: 11px; font-weight: 800; margin-bottom: 14px; }
+.about__tap { opacity: 0.5; }
+
+.ticket { display: flex; border: 3px solid var(--ink); border-radius: 16px; background: #fff; box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; }
+.ticket__main { flex: 1; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+.ticket__date { font-size: 10px; opacity: 0.6; }
+.ticket__role { font-size: clamp(28px, 2.6vw, 40px); }
+.ticket__co { font-size: 14px; }
+.ticket__stub {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  display: grid; place-items: center; padding: 12px 10px;
+  border-right: 3px dashed var(--ink);
+  background: var(--pop2); font-size: 10px; font-weight: 800;
 }
 
-@media (max-width: 768px) {
-  .about-outer { padding: 48px 24px 64px; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.fact { position: relative; aspect-ratio: 3 / 4; perspective: 800px; background: none; border: none; padding: 0; }
+.fact__face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 14px;
+  border: 3px solid var(--ink); border-radius: 16px;
+  backface-visibility: hidden;
+  transition: transform 0.7s var(--ease-bounce);
+  text-align: left;
 }
+.fact__front { background: var(--c); box-shadow: 4px 4px 0 var(--ink); }
+.fact__front .t-display { font-size: clamp(22px, 2vw, 30px); }
+.fact__emoji { font-size: 34px; }
+.fact__back { background: var(--ink); color: var(--paper); transform: rotateY(180deg); font-size: 13px; line-height: 1.4; justify-content: center; }
+.fact.is-flipped .fact__front { transform: rotateY(-180deg); }
+.fact.is-flipped .fact__back { transform: rotateY(0); }
 
-/* ── Large heading ── */
-.about-heading {
-  font-family: 'Kalnia', Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(64px, 14vw, 180px);
-  color: var(--txt-primary);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
+@media (max-width: 900px) {
+  .about__grid { grid-template-columns: 1fr; }
 }
-
-@media (max-width: 768px) {
-  .about-heading { font-size: clamp(64px, 18vw, 100px); }
-}
-
-/* ── Two-column layout ── */
-.about-columns {
-  display: flex;
-  flex-direction: row;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: flex-start;
-}
-.about-left  { flex: 0 0 55%; min-width: 0; }
-.about-right { flex: 1 1 0;   min-width: 0; }
-
-@media (max-width: 768px) {
-  .about-columns  { flex-direction: column; gap: 48px; }
-  .about-left, .about-right { flex: none; width: 100%; }
-}
-
-/* ── Bio ── */
-.bio-block { display: flex; flex-direction: column; }
-.bio-para {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 300;
-  font-size: clamp(16px, 1.5vw, 19px);
-  line-height: 1.85;
-  color: var(--txt-primary);
-  max-width: 580px;
-  margin-bottom: 1.25em;
-}
-
-/* ── Resume button ── */
-.resume-btn {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--txt-primary);
-  text-decoration: none;
-  border: 1px solid var(--txt-primary);
-  border-radius: 4px;
-  padding: 12px 28px;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  display: inline-block;
-}
-.resume-btn:hover {
-  background: var(--txt-primary);
-  color: var(--bg-base);
-}
-
-/* ── Quote ── */
-.quote-block { border-left: 2px solid var(--accent); padding-left: 20px; max-width: 500px; }
-.quote-text  { font-family:'Instrument Serif',Georgia,serif; font-style:italic; font-size:clamp(17px,1.8vw,22px); color:var(--accent); line-height:1.6; }
-.quote-attr  { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--txt-primary); opacity:0.4; margin-top:10px; }
-.quote-reflection { font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(14px,1.3vw,16px); color:var(--txt-primary); opacity:0.75; max-width:500px; margin-top:14px; line-height:1.7; }
-
-/* ── Zone label ── */
-.zone-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--txt-primary);
-  opacity: 0.4;
-  display: block;
-  margin-bottom: 40px;
-}
-
-/* ── Timeline ── */
-.timeline-wrap   { position: relative; }
-.timeline-track  { position:absolute; left:3px; top:8px; bottom:0; width:2px; background:var(--line); }
-.timeline-fill   { width:100%; height:0; background:var(--accent); }
-.timeline-entry  { position:relative; padding:28px 0 28px 44px; }
-@media (max-width:768px) { .timeline-entry { padding-left:28px; } }
-
-.timeline-node   { position:absolute; left:0; top:36px; width:8px; height:8px; background:var(--accent); border-radius:50%; transform:scale(0); }
-.entry-role      { font-family:'Kalnia',serif; font-size:clamp(17px,1.8vw,22px); font-weight:500; color:var(--txt-primary); line-height:1.2; }
-.entry-company   { font-family:'Manrope',sans-serif; font-size:13px; font-weight:400; color:var(--txt-primary); opacity:0.6; margin-top:4px; }
-.entry-date      { font-family:'Space Mono',monospace; font-size:11px; color:var(--txt-primary); opacity:0.4; margin-top:4px; }
-.entry-divider   { height:1px; background:var(--line); margin-top:28px; }
-
-/* ── Skills marquee ── */
-.marquee-outer {
-  overflow: hidden;
-  width: 100%;
-}
-.marquee-track {
-  display: inline-flex;
-  white-space: nowrap;
-  animation: marquee-scroll 30s linear infinite;
-  will-change: transform;
-}
-.marquee-outer:hover .marquee-track {
-  animation-play-state: paused;
-}
-.marquee-set { display: inline-flex; align-items: baseline; }
-.skill-item  { font-family:'Manrope',sans-serif; font-weight:500; font-size:clamp(15px,1.5vw,18px); color:var(--txt-primary); }
-.skill-dot   { padding:0 20px; color:var(--txt-muted); opacity:0.4; }
-
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+@media (max-width: 480px) {
+  .fact__back { font-size: 11px; padding: 10px; }
 }
 </style>

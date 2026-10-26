@@ -1,324 +1,316 @@
 <template>
-  <header
-    ref="navRef"
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-    :class="[scrolled ? 'nav-blur border-b border-line' : '']"
-  >
-    <div class="max-w-site mx-auto px-6 md:px-24 h-20 flex items-center justify-between">
-      <!-- Logo -->
-      <a
-        href="#"
-        ref="logoRef"
-        class="logo-link group relative flex items-center gap-0.5"
-        @click.prevent="scrollToTop"
-        @mouseenter="replayLogo"
-      >
-        <!-- The O -->
-        <span class="logo-char font-display text-2xl md:text-3xl tracking-tight" ref="logoO">O</span>
-        <!-- The dot -->
-        <span class="logo-dot w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent inline-block self-end mb-1.5 md:mb-2 mx-[2px]" ref="logoDot" />
-        <!-- The A -->
-        <span class="logo-char font-display text-2xl md:text-3xl tracking-tight italic" ref="logoA">A</span>
-        <!-- Cursor blink -->
-        <span class="logo-cursor w-[2px] h-5 md:h-6 bg-accent self-end mb-1 ml-0.5 opacity-0" ref="logoCursor" />
+  <div ref="rootRef" class="island" :class="{ 'is-open': open }">
+    <div ref="pillRef" class="pill">
+      <a href="/" class="pill__logo" data-cursor="home" aria-label="rachycodes — back to top" @click.prevent="go('top')" @mouseenter="spinLogo">
+        <span ref="logoRef">r.</span>
       </a>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center gap-10">
-        <a
-          v-for="link in navLinks"
-          :key="link.id"
-          :href="`#${link.id}`"
-          class="nav-link group flex items-center gap-2"
-          @click.prevent="scrollToSection(link.id)"
-          @mouseenter="link.hovered = true"
-          @mouseleave="link.hovered = false"
-        >
-          <span class="font-mono text-[10px] tracking-widest text-txt-muted italic transition-all duration-300 group-hover:text-accent group-hover:-translate-y-0.5">{{ link.number }}</span>
-          <span class="nav-label-wrap">
-            <span class="nav-label font-sans text-sm font-medium tracking-wide" :class="{ 'slide-up': link.hovered }">
-              {{ link.label }}
-            </span>
-            <span class="nav-label-hover font-sans text-sm font-medium tracking-wide text-accent" :class="{ 'slide-up': link.hovered }">
-              {{ link.hoverLabel }}
-            </span>
-          </span>
-        </a>
+      <div class="pill__now" aria-live="polite">
+        <span class="pill__roll">
+          <Transition name="roll" mode="out-in">
+            <span :key="current.id" class="pill__label"><span class="pill__emoji">{{ current.emoji }}</span>{{ current.label }}</span>
+          </Transition>
+        </span>
+        <span class="pill__bar"><span ref="barRef" class="pill__fill" /></span>
+      </div>
 
-        <!-- Theme Toggle -->
-        <button
-          @click="toggleTheme"
-          class="w-9 h-9 rounded-full border border-line flex items-center justify-center transition-smooth hover:border-accent hover:text-accent"
-          aria-label="Toggle theme"
-        >
-          <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </nav>
+      <button class="pill__theme" :style="{ background: currentSwatch }" data-cursor="theme" :aria-label="`Theme: ${currentLabel}. Switch theme`" @click="cycleFlavour">
+        <span class="pill__theme-tip t-mono">{{ currentLabel }}</span>
+      </button>
 
-      <!-- Mobile Hamburger -->
-      <button
-        class="md:hidden flex flex-col gap-1.5 p-2"
-        style="background: none; border: none; outline: none; cursor: pointer;"
-        @click="mobileOpen = !mobileOpen"
-        aria-label="Toggle menu"
-      >
-        <span
-          class="block w-6 h-px bg-txt-primary transition-all duration-300"
-          :class="{ 'rotate-45 translate-y-[4px]': mobileOpen }"
-        />
-        <span
-          class="block w-6 h-px bg-txt-primary transition-all duration-300"
-          :class="{ '-rotate-45 -translate-y-[3px]': mobileOpen, 'opacity-100': !mobileOpen }"
-        />
+      <a href="/#contact" class="pill__cta t-mono" data-cursor="hi!" @click.prevent="go('contact')">Let's talk</a>
+
+      <button class="pill__menu t-mono" :aria-expanded="open" aria-controls="island-panel" data-cursor="menu" @click="toggle">
+        <span class="pill__dots" :class="{ x: open }"><i /><i /></span>
+        <span class="pill__menu-txt">{{ open ? 'Close' : 'Menu' }}</span>
       </button>
     </div>
 
-    <!-- Mobile Drawer -->
-    <Transition name="drawer">
-      <div
-        v-if="mobileOpen"
-        class="md:hidden absolute top-20 left-0 right-0 border-b border-line mobile-drawer"
-      >
-        <nav class="flex flex-col px-6 py-8 gap-6">
+    <Transition :css="false" @enter="panelIn" @leave="panelOut">
+      <div v-if="open" id="island-panel" class="panel">
+        <nav class="panel__grid" aria-label="Sections">
           <a
-            v-for="link in navLinks"
-            :key="link.id"
-            :href="`#${link.id}`"
-            class="flex items-center gap-3 transition-smooth hover:text-accent"
-            @click.prevent="scrollToSection(link.id); mobileOpen = false"
+            v-for="(s, i) in sections.slice(1)"
+            :key="s.id"
+            :href="`/#${s.id}`"
+            class="sticker-link"
+            :style="{ '--c': s.color, '--r': `${i % 2 ? 3 : -3}deg` }"
+            :class="{ 'is-here': current.id === s.id }"
+            @click.prevent="go(s.id)"
+            @mouseenter="thock(1.2 + i * 0.05)"
           >
-            <span class="font-mono text-[10px] tracking-widest text-txt-muted italic">{{ link.number }}</span>
-            <span class="font-sans text-lg font-medium">{{ link.label }}</span>
+            <span class="sticker-link__emoji">{{ s.emoji }}</span>
+            <span class="sticker-link__label t-display">{{ s.label }}</span>
+            <span class="sticker-link__sub">{{ s.sub }}</span>
           </a>
-
-          <button
-            @click="toggleTheme"
-            class="mt-4 px-4 py-2 border border-line rounded-full text-sm font-sans transition-smooth self-start"
-          >
-            {{ isDark ? '☀ Light Mode' : '☾ Dark Mode' }}
-          </button>
         </nav>
+
+        <div class="panel__foot">
+          <div class="panel__flavours" role="group" aria-label="Site theme">
+            <span class="t-mono">Theme</span>
+            <button
+              v-for="f in FLAVOURS"
+              :key="f.id"
+              class="swatch"
+              :class="{ 'is-on': flavour === f.id }"
+              :style="{ background: f.swatch }"
+              :aria-label="`${f.label} flavour`"
+              :aria-pressed="flavour === f.id"
+              :data-cursor="f.label"
+              @click="pickFlavour(f.id)"
+            />
+          </div>
+          <button class="panel__sound t-mono" :aria-pressed="enabled" @click="toggleSound">
+            {{ enabled ? '🔊 Sound on' : '🔇 Sound off' }}
+          </button>
+          <span class="panel__time t-mono">Lagos · {{ time }}</span>
+        </div>
       </div>
     </Transition>
-  </header>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
-import { useTheme } from '~/composables/useTheme'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { track } from '@vercel/analytics'
 import { useLenis } from '~/composables/useLenis'
+import { FLAVOURS, type Flavour } from '~/composables/useFlavour'
 
-const { isDark, toggleTheme } = useTheme()
 const { scrollTo } = useLenis()
+const { thock, blip, enabled, toggle: toggleSound } = useSound()
+const { flavour, setFlavour } = useFlavour()
+const route = useRoute()
 
-const scrolled = ref(false)
-const mobileOpen = ref(false)
+const sections = [
+  { id: 'top', label: 'Hello', emoji: '👋', sub: '', color: 'var(--paper)' },
+  { id: 'work', label: 'Work', emoji: '💼', sub: 'Big systems, small friction', color: 'var(--pop2)' },
+  { id: 'side-quest', label: 'Side quest', emoji: '🔍', sub: 'Solve a murder. Seriously.', color: 'var(--pop3)' },
+  { id: 'toolkit', label: 'Toolkit', emoji: '⌨️', sub: 'Press any key', color: '#8f7bff' },
+  { id: 'about', label: 'About', emoji: '🙋🏾‍♀️', sub: 'The human bit', color: 'var(--pop)' },
+  { id: 'notes', label: 'Notes', emoji: '📝', sub: 'Sign the wall', color: 'var(--paper)' },
+  { id: 'contact', label: 'Contact', emoji: '☎️', sub: "Let's build something", color: 'var(--pop2)' },
+]
+const caseStudy = { id: 'case', label: 'Case study', emoji: '📂', sub: '', color: '' }
 
-// Logo refs
+const open = ref(false)
+const currentId = ref('top')
+const current = computed(() => (route.path === '/' ? sections.find((s) => s.id === currentId.value) ?? sections[0] : caseStudy))
+const time = ref('')
+
+const rootRef = ref<HTMLElement | null>(null)
+const pillRef = ref<HTMLElement | null>(null)
 const logoRef = ref<HTMLElement | null>(null)
-const logoO = ref<HTMLElement | null>(null)
-const logoDot = ref<HTMLElement | null>(null)
-const logoA = ref<HTMLElement | null>(null)
-const logoCursor = ref<HTMLElement | null>(null)
-let logoPlayed = false
+const barRef = ref<HTMLElement | null>(null)
+let triggers: ScrollTrigger[] = []
+let progressTrigger: ScrollTrigger | null = null
+let clock: ReturnType<typeof setInterval> | null = null
 
-const navLinks = reactive([
-  { number: '01', label: 'Projects', hoverLabel: 'Works', id: 'featured-works', hovered: false },
-  { number: '02', label: 'About', hoverLabel: 'Story', id: 'about', hovered: false },
-  { number: '03', label: 'Contact', hoverLabel: 'Say Hi', id: 'contact', hovered: false },
-])
-
-const scrollToSection = (id: string) => {
-  // If not on home page, navigate there first then scroll
-  const isHome = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '')
-  if (!isHome) {
-    window.location.href = `/#${id}`
-    return
-  }
-  scrollTo(`#${id}`, { offset: -80, duration: 1.5 })
+function toggle() {
+  open.value = !open.value
+  blip(open.value ? 620 : 420, 0.08, 'triangle', 0.05)
 }
 
-const scrollToTop = () => {
-  scrollTo(0, { duration: 1.5 })
+function go(id: string) {
+  open.value = false
+  if (route.path !== '/') return navigateTo(id === 'top' ? '/' : `/#${id}`)
+  if (id === 'top') scrollTo(0, { duration: 1.4 })
+  else scrollTo(`#${id}`, { offset: -20, duration: 1.4 })
 }
 
-const onScroll = () => {
-  scrolled.value = window.scrollY > 50
+function pickFlavour(id: Flavour) {
+  setFlavour(id)
+  blip({ midnight: 340, ube: 520, bubblegum: 700, daydream: 880 }[id], 0.12, 'sine', 0.05)
+  track('Flavour changed', { flavour: id })
 }
 
-const playLogoTypewriter = () => {
-  if (!logoO.value || !logoDot.value || !logoA.value || !logoCursor.value) return
+const currentFlavour = computed(() => FLAVOURS.find((f) => f.id === flavour.value) ?? FLAVOURS[0])
+const currentSwatch = computed(() => currentFlavour.value.swatch)
+const currentLabel = computed(() => currentFlavour.value.label)
+function cycleFlavour() {
+  const i = FLAVOURS.findIndex((f) => f.id === flavour.value)
+  pickFlavour(FLAVOURS[(i + 1) % FLAVOURS.length].id)
+}
 
-  const tl = gsap.timeline()
+function spinLogo() {
+  gsap.fromTo(logoRef.value, { rotate: 0 }, { rotate: 360, duration: 0.7, ease: 'back.out(2)' })
+}
 
-  // Reset
-  gsap.set([logoO.value, logoDot.value, logoA.value], {
-    opacity: 0, y: 8, scale: 0.8, filter: 'blur(4px)',
+function panelIn(el: Element, done: () => void) {
+  const tl = gsap.timeline({ onComplete: done })
+  tl.fromTo(el, { clipPath: 'inset(0 0 100% 0 round 24px)', y: -10 }, { clipPath: 'inset(0 0 0% 0 round 24px)', y: 0, duration: 0.5, ease: 'expo.out' })
+  tl.fromTo(el.querySelectorAll('.sticker-link'), { scale: 0, rotate: -25 }, { scale: 1, rotate: 0, duration: 0.6, stagger: 0.04, ease: 'back.out(2.2)' }, 0.08)
+  tl.fromTo(el.querySelector('.panel__foot'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 }, 0.25)
+}
+function panelOut(el: Element, done: () => void) {
+  gsap.to(el, { clipPath: 'inset(0 0 100% 0 round 24px)', duration: 0.3, ease: 'power2.in', onComplete: done })
+}
+
+function onKey(e: KeyboardEvent) { if (e.key === 'Escape') open.value = false }
+function onOutside(e: PointerEvent) {
+  if (open.value && rootRef.value && !rootRef.value.contains(e.target as Node)) open.value = false
+}
+
+function tick() {
+  time.value = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit' })
+}
+
+function watchSections() {
+  triggers.forEach((t) => t.kill())
+  triggers = []
+  if (route.path !== '/') return
+  sections.forEach((s) => {
+    const el = document.getElementById(s.id)
+    if (!el) return
+    triggers.push(ScrollTrigger.create({
+      trigger: el,
+      start: 'top 45%',
+      end: 'bottom 45%',
+      onToggle: (self) => { if (self.isActive) currentId.value = s.id },
+    }))
   })
-  gsap.set(logoCursor.value, { opacity: 1 })
-
-  // Cursor appears + blinks
-  tl.to(logoCursor.value, {
-    opacity: 1,
-    duration: 0.15,
-  }, 0)
-
-  // "O" types in
-  tl.to(logoO.value, {
-    opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
-    duration: 0.25, ease: 'power3.out',
-  }, 0.2)
-
-  // Dot punches in
-  tl.to(logoDot.value, {
-    opacity: 1, y: 0, scale: 1.3, filter: 'blur(0px)',
-    duration: 0.15, ease: 'back.out(3)',
-  }, 0.45)
-  tl.to(logoDot.value, {
-    scale: 1, duration: 0.2, ease: 'power2.out',
-  }, 0.6)
-
-  // "A" types in
-  tl.to(logoA.value, {
-    opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
-    duration: 0.25, ease: 'power3.out',
-  }, 0.65)
-
-  // Cursor blinks then fades
-  tl.to(logoCursor.value, {
-    opacity: 0,
-    duration: 0.15,
-    repeat: 3,
-    yoyo: true,
-    ease: 'steps(1)',
-  }, 0.9)
-  tl.to(logoCursor.value, {
-    opacity: 0,
-    duration: 0.3,
-  }, 1.6)
 }
 
-const replayLogo = () => {
-  playLogoTypewriter()
-}
-
-onMounted(async () => {
-  window.addEventListener('scroll', onScroll, { passive: true })
-  await nextTick()
-  // Slight delay so it plays after nav mounts
-  setTimeout(playLogoTypewriter, 300)
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger)
+  tick()
+  clock = setInterval(tick, 15_000)
+  gsap.from(pillRef.value, { y: -90, scale: 0.6, duration: 1, ease: 'elastic.out(1, 0.6)', delay: 0.2 })
+  // Page scroll progress drives the little bar inside the pill
+  progressTrigger = ScrollTrigger.create({
+    start: 0,
+    end: 'max',
+    onUpdate: (self) => gsap.set(barRef.value, { scaleX: self.progress }),
+  })
+  nextTick(watchSections)
+  window.addEventListener('keydown', onKey)
+  window.addEventListener('pointerdown', onOutside)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
+  triggers.forEach((t) => t.kill())
+  progressTrigger?.kill()
+  if (clock) clearInterval(clock)
+  window.removeEventListener('keydown', onKey)
+  window.removeEventListener('pointerdown', onOutside)
 })
 </script>
 
 <style scoped>
-.drawer-enter-active,
-.drawer-leave-active {
-  transition: all 0.35s cubic-bezier(0.15, 0.9, 0.25, 1);
+.island {
+  position: fixed;
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  width: max-content;
+  max-width: calc(100vw - 24px);
 }
-.drawer-enter-from,
-.drawer-leave-to {
-  opacity: 0;
-  transform: translateY(-12px);
+.pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px;
+  background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
 }
+.pill__logo {
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--ink); color: var(--pop2);
+  font-weight: 800; font-size: 19px; text-decoration: none;
+}
+.pill__logo span { display: inline-block; }
 
-/* Nav link hover — text slides up to reveal alternate label */
-.nav-label-wrap {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  height: 1.25em;
-  overflow: hidden;
-}
+.pill__now { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 150px; padding: 0 10px 0 6px; }
+.pill__roll { display: block; height: 20px; overflow: hidden; }
+.pill__label { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 16px; line-height: 20px; white-space: nowrap; }
+.pill__emoji { font-size: 15px; }
+.pill__bar { display: block; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 12%, transparent); overflow: hidden; }
+.pill__fill { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+.roll-enter-active, .roll-leave-active { transition: transform 0.35s var(--ease-out), opacity 0.35s; }
+.roll-enter-from { transform: translateY(100%); opacity: 0; }
+.roll-leave-to { transform: translateY(-100%); opacity: 0; }
 
-.nav-label,
-.nav-label-hover {
-  display: block;
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  line-height: 1.25em;
+.pill__theme {
+  position: relative; flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 3px solid var(--ink);
+  box-shadow: inset 0 0 0 3px var(--paper);
+  transition: transform 0.35s var(--ease-bounce);
 }
-
-.nav-label-hover {
-  position: absolute;
-  top: 100%;
-  left: 0;
+.pill__theme:hover { transform: rotate(180deg) scale(1.08); }
+.pill__theme-tip {
+  position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) rotate(180deg);
+  padding: 4px 8px; border-radius: 6px; background: var(--ink); color: var(--paper);
+  font-size: 9px; font-weight: 800; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }
-
-.nav-label.slide-up {
-  transform: translateY(-100%);
+.pill__theme:hover .pill__theme-tip { opacity: 1; }
+.pill__cta, .pill__menu {
+  display: flex; align-items: center; gap: 8px;
+  height: 42px; padding: 0 16px;
+  border-radius: 999px; border: 2px solid var(--ink);
+  font-size: 11px; font-weight: 800;
+  text-decoration: none; color: var(--ink);
+  transition: transform 0.2s var(--ease-bounce), background-color 0.2s;
 }
+.pill__cta { background: var(--pop2); }
+.pill__menu { background: var(--pop); }
+.pill__cta:hover, .pill__menu:hover { transform: rotate(-4deg) scale(1.05); }
+.pill__dots { position: relative; width: 14px; height: 14px; }
+.pill__dots i { position: absolute; left: 0; width: 14px; height: 3px; border-radius: 2px; background: var(--ink); transition: transform 0.3s var(--ease-out), top 0.3s var(--ease-out); }
+.pill__dots i:first-child { top: 3px; }
+.pill__dots i:last-child { top: 8px; }
+.pill__dots.x i:first-child { top: 5.5px; transform: rotate(45deg); }
+.pill__dots.x i:last-child { top: 5.5px; transform: rotate(-45deg); }
 
-.nav-label-hover.slide-up {
-  transform: translateY(-100%);
+.panel {
+  margin-top: 10px;
+  padding: 16px;
+  width: min(600px, calc(100vw - 24px));
+  margin-left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
-
-/* Subtle link hover effects */
-.nav-link {
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.panel__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.sticker-link {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 14px;
+  min-height: 116px;
+  background: var(--c); color: #0b0818;
+  border: 3px solid #000; border-radius: 18px;
+  box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.18);
+  text-decoration: none;
+  rotate: var(--r);
+  transition: rotate 0.3s var(--ease-bounce), translate 0.3s var(--ease-bounce);
 }
+.sticker-link:hover { rotate: 0deg; translate: 0 -4px; }
+.sticker-link.is-here { outline: 3px dashed var(--paper); outline-offset: 3px; }
+.sticker-link__emoji { font-size: 24px; }
+.sticker-link__label { font-size: 30px; margin-top: auto; }
+.sticker-link__sub { font-size: 12px; font-weight: 600; opacity: 0.75; }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--accent);
-  transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+.panel__foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 2px dashed rgba(255, 255, 255, 0.2); font-size: 10px; }
+.panel__flavours { display: flex; align-items: center; gap: 8px; }
+.panel__flavours .t-mono { font-size: 10px; font-weight: 800; opacity: 0.7; }
+.swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--paper); transition: transform 0.25s var(--ease-bounce); }
+.swatch:hover { transform: scale(1.15); }
+.swatch.is-on { box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--pop2); }
+.panel__sound { padding: 7px 12px; border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.35); background: transparent; color: var(--paper); font-size: 10px; font-weight: 800; }
+.panel__sound[aria-pressed="true"] { background: var(--pop2); color: var(--ink); border-color: var(--pop2); }
+.panel__time { font-size: 10px; opacity: 0.6; }
 
-.nav-link:hover::after {
-  width: 100%;
-}
-
-/* Logo styles */
-.logo-link {
-  transition: all 0.3s ease;
-}
-
-.logo-char {
-  display: inline-block;
-  will-change: transform, opacity, filter;
-}
-
-.logo-dot {
-  will-change: transform, opacity;
-  transition: background-color 0.3s ease;
-}
-
-.logo-link:hover .logo-dot {
-  box-shadow: 0 0 8px var(--accent);
-}
-
-.logo-cursor {
-  will-change: opacity;
-}
-
-/* Mobile nav dropdown — fully opaque, always above canvas/grain */
-.mobile-drawer {
-  background: var(--bg-base);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  opacity: 1;
-  z-index: 9999;
+@media (max-width: 640px) {
+  .pill__cta { display: none; }
+  .pill__now { min-width: 0; flex: 1; }
+  .pill__menu-txt { display: none; }
+  .pill__menu { width: 42px; padding: 0; justify-content: center; }
+  .island { width: calc(100vw - 24px); }
+  .panel__grid { grid-template-columns: 1fr 1fr; }
+  .sticker-link { min-height: 96px; }
+  .sticker-link__label { font-size: 24px; }
 }
 </style>
