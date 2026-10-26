@@ -88,6 +88,8 @@ function rotation(id: string) {
 
 function registerNote(el: HTMLElement | null, id: string) {
   if (!el || draggables.has(id) || !wallRef.value) return
+  // Dragging notes is a mouse thing — on touch screens it would hijack page scrolling
+  if (!window.matchMedia('(pointer: fine)').matches) return
   const [d] = Draggable.create(el, { type: 'x,y', bounds: wallRef.value, inertia: true, zIndexBoost: true, onPress: () => thock(1.1) })
   draggables.set(id, d)
 }
@@ -234,8 +236,8 @@ onUnmounted(() => {
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22), inset 0 -18px 30px -24px rgba(0, 0, 0, 0.3);
   rotate: var(--r);
   display: flex; flex-direction: column; justify-content: space-between;
-  touch-action: none;
 }
+@media (pointer: fine) { .sticky { touch-action: none; } }
 .sticky--solo { margin: 120px auto 0; width: 260px; }
 .sticky__tape { position: absolute; top: -12px; left: 50%; width: 70px; height: 24px; margin-left: -35px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(0, 0, 0, 0.08); rotate: -4deg; }
 .sticky__msg { font-size: 23px; line-height: 1.05; word-break: break-word; }
@@ -261,8 +263,13 @@ onUnmounted(() => {
 
 @media (max-width: 900px) {
   .gb__wrap { grid-template-columns: 1fr; }
-  .wall { min-height: 380px; padding: 16px; }
-  .sticky { width: calc(50% - 8px); min-width: 0; }
+  /* Phones: one note after another, zig-zagging down the wall */
+  .wall { min-height: 0; padding: 22px 14px; flex-direction: column; flex-wrap: nowrap; gap: 22px; }
+  .sticky { width: 86%; min-width: 0; min-height: 0; }
+  .sticky:nth-child(odd) { align-self: flex-start; }
+  .sticky:nth-child(even) { align-self: flex-end; }
+  .sticky__msg { font-size: 21px; }
+  .sticky--solo { margin: 40px auto; align-self: center !important; }
   .wall__empty { padding-top: 120px; }
 }
 </style>

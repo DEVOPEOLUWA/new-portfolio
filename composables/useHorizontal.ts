@@ -46,7 +46,22 @@ export function useHorizontal() {
       ScrollTrigger.addEventListener('refresh', refit)
       refit()
 
+      // Panels can grow after load (e.g. guestbook notes arrive), so re-measure
+      // the track's length whenever its size changes — otherwise the scroll ends early
+      let pending: ReturnType<typeof setTimeout> | null = null
+      let lastWidth = track.scrollWidth
+      const ro = new ResizeObserver(() => {
+        if (track.scrollWidth === lastWidth) return
+        lastWidth = track.scrollWidth
+        if (pending) clearTimeout(pending)
+        pending = setTimeout(() => ScrollTrigger.refresh(), 150)
+      })
+      ro.observe(track)
+      ;[...track.children].forEach((c) => ro.observe(c))
+
       return () => {
+        ro.disconnect()
+        if (pending) clearTimeout(pending)
         ScrollTrigger.removeEventListener('refresh', refit)
         track.querySelectorAll<HTMLElement>('[data-fit]').forEach((el) => gsap.set(el, { clearProps: 'scale' }))
         st = null
@@ -88,6 +103,12 @@ export function useHorizontal() {
     })
   }
 
+  /** Vertical scroll position for a point `frac` (0–1) along the whole track. */
+  function scrollAt(frac: number): number | null {
+    if (!st) return null
+    return st.start + Math.min(1, Math.max(0, frac)) * (st.end - st.start)
+  }
+
   /** Each panel's position along the track, 0–1. */
   function stops(): { id: string; at: number }[] {
     if (!st || !trackEl) return []
@@ -98,5 +119,5 @@ export function useHorizontal() {
     }))
   }
 
-  return { setup, scrollFor, stops, active, progress }
+  return { setup, scrollFor, scrollAt, stops, active, progress }
 }
