@@ -32,8 +32,11 @@
       <!-- Sticker portrait -->
       <div class="hero__portrait">
         <div ref="stickerRef" class="sticker" data-cursor="hi!" @pointerenter="wave">
-          <img src="/images/profile.jpg" alt="Opeoluwa Ayodeji smiling, in a pink top against a purple backdrop" width="1120" height="1400" />
-          <div ref="bubbleRef" class="bubble t-hand">hi, I'm Ope! <span ref="handRef" class="bubble__hand">👋</span></div>
+          <img ref="photoRef" src="/images/profile.jpg" alt="Opeoluwa Ayodeji smiling, in a pink top against a purple backdrop" width="1120" height="1400" />
+          <div ref="bubbleRef" class="bubble t-hand" aria-live="polite">
+            {{ covered ? "you can't cover my faceee" : "hi, I'm Ope!" }}
+            <span ref="handRef" class="bubble__hand">{{ covered ? '😤' : '👋' }}</span>
+          </div>
         </div>
 
         <svg class="badge" viewBox="0 0 200 200" aria-hidden="true">
@@ -84,7 +87,7 @@ import { H_QUERY } from '~/composables/useHorizontal'
 
 const props = defineProps<{ revealed: boolean }>()
 const { scrollTo } = useLenis()
-const { thock } = useSound()
+const { thock, blip } = useSound()
 
 const keycaps = [
   { label: 'TS', x: '47%', y: '18%', r: -12, color: 'var(--pop3)', cls: 'hide-sm' },
@@ -100,8 +103,10 @@ const heroRef = ref<HTMLElement | null>(null)
 const stickerRef = ref<HTMLElement | null>(null)
 const bubbleRef = ref<HTMLElement | null>(null)
 const handRef = ref<HTMLElement | null>(null)
+const photoRef = ref<HTMLImageElement | null>(null)
 const capRefs = ref<HTMLElement[]>([])
 const time = ref('')
+const covered = ref(false)
 
 let rx: gsap.QuickToFunc | null = null
 let ry: gsap.QuickToFunc | null = null
@@ -125,6 +130,26 @@ function resetTilt() { ry?.(0); rx?.(0) }
 
 function wave() {
   gsap.fromTo(handRef.value, { rotate: 0 }, { keyframes: { rotate: [0, 22, -10, 22, 0] }, duration: 0.9, ease: 'none', transformOrigin: '70% 80%' })
+}
+
+/** Is this keycap sitting on my face? (Face ≈ an ellipse in the upper middle of the photo.) */
+function onFace(cap: HTMLElement) {
+  const photo = photoRef.value?.getBoundingClientRect()
+  if (!photo) return false
+  const c = cap.getBoundingClientRect()
+  const dx = (c.left + c.width / 2 - (photo.left + photo.width * 0.45)) / (photo.width * 0.16 + c.width * 0.3)
+  const dy = (c.top + c.height / 2 - (photo.top + photo.height * 0.27)) / (photo.height * 0.17 + c.height * 0.3)
+  return dx * dx + dy * dy < 1
+}
+
+function checkFace() {
+  const now = capRefs.value.some(onFace)
+  if (now === covered.value) return
+  covered.value = now
+  if (now) {
+    blip(320, 0.12, 'square', 0.04)
+    gsap.fromTo(bubbleRef.value, { scale: 1.2 }, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+  }
 }
 
 function intro() {
@@ -163,6 +188,8 @@ onMounted(() => {
     onPress() { thock(1.2); gsap.to(this.target, { scale: 1.15, duration: 0.2 }) },
     onRelease() { gsap.to(this.target, { scale: 1, duration: 0.4, ease: 'back.out(3)' }) },
     onDragStart() { gsap.to('.hero .hint', { opacity: 0, duration: 0.3 }) },
+    onDrag: checkFace,
+    onThrowUpdate: checkFace,
   })
 
   // Vertical parallax only makes sense when the page scrolls vertically (phones)
